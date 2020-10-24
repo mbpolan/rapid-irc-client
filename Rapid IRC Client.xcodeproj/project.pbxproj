@@ -1,0 +1,717 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
+		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
+		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
+		27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D12543ABDA00DA4598 /* Preview Assets.xcassets */; };
+		27CF74D52543ABDA00DA4598 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D32543ABDA00DA4598 /* Main.storyboard */; };
+		27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */; };
+		27CF74EC2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */; };
+		27CF74FD2543C19400DA4598 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74FC2543C19400DA4598 /* ChatListView.swift */; };
+		27CF75022543C25D00DA4598 /* ChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75012543C25D00DA4598 /* ChannelView.swift */; };
+		27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF750C2543F1BC00DA4598 /* ConnectionService.swift */; };
+		27CF75202544BB2A00DA4598 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF751F2544BB2A00DA4598 /* DIContainer.swift */; };
+		27CF75282544BB5F00DA4598 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75272544BB5F00DA4598 /* Services.swift */; };
+		27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */; };
+		27CF75392544E75E00DA4598 /* ServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75382544E75E00DA4598 /* ServerInfo.swift */; };
+		A4A1BBBC5F8F91D19735FB8F /* libPods-Rapid IRC Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 118EB9D299E9BEB63B54D710 /* libPods-Rapid IRC Client.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		27CF74DD2543ABDA00DA4598 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27CF74BF2543ABD800DA4598 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27CF74C62543ABD800DA4598;
+			remoteInfo = "Rapid IRC Client";
+		};
+		27CF74E82543ABDA00DA4598 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27CF74BF2543ABD800DA4598 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27CF74C62543ABD800DA4598;
+			remoteInfo = "Rapid IRC Client";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0E5656B1C8802B51E9DF04FB /* Pods-Rapid IRC Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.release.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.release.xcconfig"; sourceTree = "<group>"; };
+		118EB9D299E9BEB63B54D710 /* libPods-Rapid IRC Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rapid IRC Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27CF74CA2543ABD900DA4598 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		27CF74CC2543ABD900DA4598 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		27CF74CE2543ABDA00DA4598 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27CF74D12543ABDA00DA4598 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		27CF74D42543ABDA00DA4598 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		27CF74D62543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27CF74D72543ABDA00DA4598 /* Rapid_IRC_Client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Rapid_IRC_Client.entitlements; sourceTree = "<group>"; };
+		27CF74DC2543ABDA00DA4598 /* Rapid IRC ClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rapid_IRC_ClientTests.swift; sourceTree = "<group>"; };
+		27CF74E22543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27CF74E72543ABDA00DA4598 /* Rapid IRC ClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rapid_IRC_ClientUITests.swift; sourceTree = "<group>"; };
+		27CF74ED2543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27CF74FC2543C19400DA4598 /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
+		27CF75012543C25D00DA4598 /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
+		27CF750C2543F1BC00DA4598 /* ConnectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionService.swift; sourceTree = "<group>"; };
+		27CF751F2544BB2A00DA4598 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
+		27CF75272544BB5F00DA4598 /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
+		27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectDialog.swift; sourceTree = "<group>"; };
+		27CF75382544E75E00DA4598 /* ServerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfo.swift; sourceTree = "<group>"; };
+		D063EC6CDE7268D8F2230E33 /* Pods-Rapid IRC Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.debug.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27CF74C42543ABD800DA4598 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4A1BBBC5F8F91D19735FB8F /* libPods-Rapid IRC Client.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27CF74D92543ABDA00DA4598 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27CF74E42543ABDA00DA4598 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		27CF74BE2543ABD800DA4598 = {
+			isa = PBXGroup;
+			children = (
+				27CF74C92543ABD900DA4598 /* Rapid IRC Client */,
+				27CF74DF2543ABDA00DA4598 /* Rapid IRC ClientTests */,
+				27CF74EA2543ABDA00DA4598 /* Rapid IRC ClientUITests */,
+				27CF74C82543ABD900DA4598 /* Products */,
+				9EB5DC3A5CDB76FBB3F6D74E /* Pods */,
+				345992B46F4A483589E013E6 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		27CF74C82543ABD900DA4598 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */,
+				27CF74DC2543ABDA00DA4598 /* Rapid IRC ClientTests.xctest */,
+				27CF74E72543ABDA00DA4598 /* Rapid IRC ClientUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		27CF74C92543ABD900DA4598 /* Rapid IRC Client */ = {
+			isa = PBXGroup;
+			children = (
+				27CF75372544E74C00DA4598 /* Models */,
+				27CF751E2544BB0500DA4598 /* Containers */,
+				27CF751A2544BA2900DA4598 /* System */,
+				27CF75192544B9FE00DA4598 /* UI */,
+				27CF75182544B9F000DA4598 /* Services */,
+				27CF74CE2543ABDA00DA4598 /* Assets.xcassets */,
+				27CF74D32543ABDA00DA4598 /* Main.storyboard */,
+				27CF74D62543ABDA00DA4598 /* Info.plist */,
+				27CF74D72543ABDA00DA4598 /* Rapid_IRC_Client.entitlements */,
+				27CF74D02543ABDA00DA4598 /* Preview Content */,
+			);
+			path = "Rapid IRC Client";
+			sourceTree = "<group>";
+		};
+		27CF74D02543ABDA00DA4598 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				27CF74D12543ABDA00DA4598 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		27CF74DF2543ABDA00DA4598 /* Rapid IRC ClientTests */ = {
+			isa = PBXGroup;
+			children = (
+				27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */,
+				27CF74E22543ABDA00DA4598 /* Info.plist */,
+			);
+			path = "Rapid IRC ClientTests";
+			sourceTree = "<group>";
+		};
+		27CF74EA2543ABDA00DA4598 /* Rapid IRC ClientUITests */ = {
+			isa = PBXGroup;
+			children = (
+				27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */,
+				27CF74ED2543ABDA00DA4598 /* Info.plist */,
+			);
+			path = "Rapid IRC ClientUITests";
+			sourceTree = "<group>";
+		};
+		27CF75182544B9F000DA4598 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				27CF750C2543F1BC00DA4598 /* ConnectionService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		27CF75192544B9FE00DA4598 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				27CF74CC2543ABD900DA4598 /* ContentView.swift */,
+				27CF75012543C25D00DA4598 /* ChannelView.swift */,
+				27CF74FC2543C19400DA4598 /* ChatListView.swift */,
+				27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		27CF751A2544BA2900DA4598 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				27CF74CA2543ABD900DA4598 /* AppDelegate.swift */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		27CF751E2544BB0500DA4598 /* Containers */ = {
+			isa = PBXGroup;
+			children = (
+				27CF751F2544BB2A00DA4598 /* DIContainer.swift */,
+				27CF75272544BB5F00DA4598 /* Services.swift */,
+			);
+			path = Containers;
+			sourceTree = "<group>";
+		};
+		27CF75372544E74C00DA4598 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				27CF75382544E75E00DA4598 /* ServerInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		345992B46F4A483589E013E6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				118EB9D299E9BEB63B54D710 /* libPods-Rapid IRC Client.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9EB5DC3A5CDB76FBB3F6D74E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D063EC6CDE7268D8F2230E33 /* Pods-Rapid IRC Client.debug.xcconfig */,
+				0E5656B1C8802B51E9DF04FB /* Pods-Rapid IRC Client.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		27CF74C62543ABD800DA4598 /* Rapid IRC Client */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27CF74F02543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC Client" */;
+			buildPhases = (
+				07527C5DFC366A0D8B5E0A58 /* [CP] Check Pods Manifest.lock */,
+				27CF74C32543ABD800DA4598 /* Sources */,
+				27CF74C42543ABD800DA4598 /* Frameworks */,
+				27CF74C52543ABD800DA4598 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Rapid IRC Client";
+			productName = "Rapid IRC Client";
+			productReference = 27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */;
+			productType = "com.apple.product-type.application";
+		};
+		27CF74DB2543ABDA00DA4598 /* Rapid IRC ClientTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27CF74F32543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC ClientTests" */;
+			buildPhases = (
+				27CF74D82543ABDA00DA4598 /* Sources */,
+				27CF74D92543ABDA00DA4598 /* Frameworks */,
+				27CF74DA2543ABDA00DA4598 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27CF74DE2543ABDA00DA4598 /* PBXTargetDependency */,
+			);
+			name = "Rapid IRC ClientTests";
+			productName = "Rapid IRC ClientTests";
+			productReference = 27CF74DC2543ABDA00DA4598 /* Rapid IRC ClientTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		27CF74E62543ABDA00DA4598 /* Rapid IRC ClientUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27CF74F62543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC ClientUITests" */;
+			buildPhases = (
+				27CF74E32543ABDA00DA4598 /* Sources */,
+				27CF74E42543ABDA00DA4598 /* Frameworks */,
+				27CF74E52543ABDA00DA4598 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27CF74E92543ABDA00DA4598 /* PBXTargetDependency */,
+			);
+			name = "Rapid IRC ClientUITests";
+			productName = "Rapid IRC ClientUITests";
+			productReference = 27CF74E72543ABDA00DA4598 /* Rapid IRC ClientUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		27CF74BF2543ABD800DA4598 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1210;
+				LastUpgradeCheck = 1210;
+				TargetAttributes = {
+					27CF74C62543ABD800DA4598 = {
+						CreatedOnToolsVersion = 12.1;
+					};
+					27CF74DB2543ABDA00DA4598 = {
+						CreatedOnToolsVersion = 12.1;
+						TestTargetID = 27CF74C62543ABD800DA4598;
+					};
+					27CF74E62543ABDA00DA4598 = {
+						CreatedOnToolsVersion = 12.1;
+						TestTargetID = 27CF74C62543ABD800DA4598;
+					};
+				};
+			};
+			buildConfigurationList = 27CF74C22543ABD800DA4598 /* Build configuration list for PBXProject "Rapid IRC Client" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 27CF74BE2543ABD800DA4598;
+			productRefGroup = 27CF74C82543ABD900DA4598 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				27CF74C62543ABD800DA4598 /* Rapid IRC Client */,
+				27CF74DB2543ABDA00DA4598 /* Rapid IRC ClientTests */,
+				27CF74E62543ABDA00DA4598 /* Rapid IRC ClientUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		27CF74C52543ABD800DA4598 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27CF74D52543ABDA00DA4598 /* Main.storyboard in Resources */,
+				27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */,
+				27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27CF74DA2543ABDA00DA4598 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27CF74E52543ABDA00DA4598 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		07527C5DFC366A0D8B5E0A58 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Rapid IRC Client-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		27CF74C32543ABD800DA4598 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */,
+				27CF75022543C25D00DA4598 /* ChannelView.swift in Sources */,
+				27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */,
+				27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */,
+				27CF75282544BB5F00DA4598 /* Services.swift in Sources */,
+				27CF75392544E75E00DA4598 /* ServerInfo.swift in Sources */,
+				27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */,
+				27CF75202544BB2A00DA4598 /* DIContainer.swift in Sources */,
+				27CF74FD2543C19400DA4598 /* ChatListView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27CF74D82543ABDA00DA4598 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27CF74E32543ABDA00DA4598 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27CF74EC2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27CF74DE2543ABDA00DA4598 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27CF74C62543ABD800DA4598 /* Rapid IRC Client */;
+			targetProxy = 27CF74DD2543ABDA00DA4598 /* PBXContainerItemProxy */;
+		};
+		27CF74E92543ABDA00DA4598 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27CF74C62543ABD800DA4598 /* Rapid IRC Client */;
+			targetProxy = 27CF74E82543ABDA00DA4598 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		27CF74D32543ABDA00DA4598 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27CF74D42543ABDA00DA4598 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		27CF74EE2543ABDA00DA4598 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		27CF74EF2543ABDA00DA4598 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		27CF74F12543ABDA00DA4598 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D063EC6CDE7268D8F2230E33 /* Pods-Rapid IRC Client.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Rapid IRC Client/Rapid_IRC_Client.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Rapid IRC Client/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Rapid IRC Client/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-Client";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		27CF74F22543ABDA00DA4598 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0E5656B1C8802B51E9DF04FB /* Pods-Rapid IRC Client.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Rapid IRC Client/Rapid_IRC_Client.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Rapid IRC Client/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Rapid IRC Client/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-Client";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		27CF74F42543ABDA00DA4598 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Rapid IRC ClientTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Rapid IRC Client.app/Contents/MacOS/Rapid IRC Client";
+			};
+			name = Debug;
+		};
+		27CF74F52543ABDA00DA4598 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Rapid IRC ClientTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Rapid IRC Client.app/Contents/MacOS/Rapid IRC Client";
+			};
+			name = Release;
+		};
+		27CF74F72543ABDA00DA4598 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Rapid IRC ClientUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Rapid IRC Client";
+			};
+			name = Debug;
+		};
+		27CF74F82543ABDA00DA4598 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Rapid IRC ClientUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Rapid IRC Client";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27CF74C22543ABD800DA4598 /* Build configuration list for PBXProject "Rapid IRC Client" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27CF74EE2543ABDA00DA4598 /* Debug */,
+				27CF74EF2543ABDA00DA4598 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27CF74F02543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC Client" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27CF74F12543ABDA00DA4598 /* Debug */,
+				27CF74F22543ABDA00DA4598 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27CF74F32543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC ClientTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27CF74F42543ABDA00DA4598 /* Debug */,
+				27CF74F52543ABDA00DA4598 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27CF74F62543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC ClientUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27CF74F72543ABDA00DA4598 /* Debug */,
+				27CF74F82543ABDA00DA4598 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 27CF74BF2543ABD800DA4598 /* Project object */;
+}
