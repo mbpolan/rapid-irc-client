@@ -3,11 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2757C243254501E4002335CB /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C242254501E4002335CB /* DIContainer.swift */; };
+		2757C25D2545F30B002335CB /* NIO in Frameworks */ = {isa = PBXBuildFile; productRef = 2757C25C2545F30B002335CB /* NIO */; };
+		2757C2632545FD11002335CB /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 2757C2622545FD11002335CB /* Swinject */; };
 		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
 		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
 		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
@@ -22,7 +24,6 @@
 		27CF75392544E75E00DA4598 /* ServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75382544E75E00DA4598 /* ServerInfo.swift */; };
 		27CF753E2544EC2E00DA4598 /* ConnectionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */; };
 		27CF75462544EC8C00DA4598 /* ServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75452544EC8C00DA4598 /* ServerConnection.swift */; };
-		5803BA4BDB2CBC8D3E3476D0 /* Pods_Rapid_IRC_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51ACED66BD6797BC888A7355 /* Pods_Rapid_IRC_Client.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +44,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0E5656B1C8802B51E9DF04FB /* Pods-Rapid IRC Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.release.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.release.xcconfig"; sourceTree = "<group>"; };
 		2757C242254501E4002335CB /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74CA2543ABD900DA4598 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -66,8 +66,6 @@
 		27CF75382544E75E00DA4598 /* ServerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfo.swift; sourceTree = "<group>"; };
 		27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsStore.swift; sourceTree = "<group>"; };
 		27CF75452544EC8C00DA4598 /* ServerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnection.swift; sourceTree = "<group>"; };
-		51ACED66BD6797BC888A7355 /* Pods_Rapid_IRC_Client.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rapid_IRC_Client.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D063EC6CDE7268D8F2230E33 /* Pods-Rapid IRC Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.debug.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +73,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5803BA4BDB2CBC8D3E3476D0 /* Pods_Rapid_IRC_Client.framework in Frameworks */,
+				2757C25D2545F30B002335CB /* NIO in Frameworks */,
+				2757C2632545FD11002335CB /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,8 +102,6 @@
 				27CF74DF2543ABDA00DA4598 /* Rapid IRC ClientTests */,
 				27CF74EA2543ABDA00DA4598 /* Rapid IRC ClientUITests */,
 				27CF74C82543ABD900DA4598 /* Products */,
-				9EB5DC3A5CDB76FBB3F6D74E /* Pods */,
-				345992B46F4A483589E013E6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -198,23 +195,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		345992B46F4A483589E013E6 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				51ACED66BD6797BC888A7355 /* Pods_Rapid_IRC_Client.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		9EB5DC3A5CDB76FBB3F6D74E /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D063EC6CDE7268D8F2230E33 /* Pods-Rapid IRC Client.debug.xcconfig */,
-				0E5656B1C8802B51E9DF04FB /* Pods-Rapid IRC Client.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -222,17 +202,19 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27CF74F02543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC Client" */;
 			buildPhases = (
-				07527C5DFC366A0D8B5E0A58 /* [CP] Check Pods Manifest.lock */,
 				27CF74C32543ABD800DA4598 /* Sources */,
 				27CF74C42543ABD800DA4598 /* Frameworks */,
 				27CF74C52543ABD800DA4598 /* Resources */,
-				0827FEC3D323B857C0A2F369 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "Rapid IRC Client";
+			packageProductDependencies = (
+				2757C25C2545F30B002335CB /* NIO */,
+				2757C2622545FD11002335CB /* Swinject */,
+			);
 			productName = "Rapid IRC Client";
 			productReference = 27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */;
 			productType = "com.apple.product-type.application";
@@ -304,6 +286,10 @@
 				Base,
 			);
 			mainGroup = 27CF74BE2543ABD800DA4598;
+			packageReferences = (
+				2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */,
+				2757C2612545FD11002335CB /* XCRemoteSwiftPackageReference "Swinject" */,
+			);
 			productRefGroup = 27CF74C82543ABD900DA4598 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -341,48 +327,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		07527C5DFC366A0D8B5E0A58 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Rapid IRC Client-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0827FEC3D323B857C0A2F369 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		27CF74C32543ABD800DA4598 /* Sources */ = {
@@ -562,7 +506,6 @@
 		};
 		27CF74F12543ABDA00DA4598 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D063EC6CDE7268D8F2230E33 /* Pods-Rapid IRC Client.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -585,7 +528,6 @@
 		};
 		27CF74F22543ABDA00DA4598 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0E5656B1C8802B51E9DF04FB /* Pods-Rapid IRC Client.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -726,6 +668,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.23.0;
+			};
+		};
+		2757C2612545FD11002335CB /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2757C25C2545F30B002335CB /* NIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIO;
+		};
+		2757C2622545FD11002335CB /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2757C2612545FD11002335CB /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27CF74BF2543ABD800DA4598 /* Project object */;
 }

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ServerInfo {
     
+    var nick: String
     var name: String
     var server: String
-    var port: Int32
+    var port: Int
 }

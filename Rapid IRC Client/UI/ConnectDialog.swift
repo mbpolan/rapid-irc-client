@@ -12,11 +12,16 @@ struct ConnectDialog: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var nick = "mike"
     @State private var server = "localhost"
     @State private var port = "6667"
     
     var body: some View {
         VStack {
+            HStack {
+                Text("Nick")
+                TextField("", text: $nick)
+            }
             HStack {
                 Text("Server")
                 TextField("", text: $server)
@@ -40,9 +45,10 @@ struct ConnectDialog: View {
                     NotificationCenter.default.post(
                         name: .doConnectToServer,
                         object: ServerInfo(
+                            nick: self.nick,
                             name: self.server,
                             server: self.server,
-                            port: Int32(self.port) ?? 0))
+                            port: Int(self.port) ?? 0))
                     
                     self.presentationMode.wrappedValue.dismiss()
                 }

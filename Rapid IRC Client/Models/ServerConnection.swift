@@ -5,11 +5,12 @@
 //  Created by Mike Polan on 10/24/20.
 //
 
-import SwiftSocket
+import SwiftUI
+import NIO
 
 struct ServerConnection {
     
     let id = UUID()
     var info: ServerInfo
-    var client: TCPClient
+    var channel: Channel
 }
