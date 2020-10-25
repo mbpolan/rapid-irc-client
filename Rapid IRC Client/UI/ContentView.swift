@@ -19,11 +19,13 @@ struct ContentView: View {
     private let connectToServer = NotificationCenter
         .default
         .publisher(for: .connectToServer)
+        .receive(on: RunLoop.main)
     
     // listener for the server connection initiation event
     private let doConnectToServer = NotificationCenter
         .default
         .publisher(for: .doConnectToServer)
+        .receive(on: RunLoop.main)
     
     init(connectionsStore: ConnectionsStore, container: Container) {
         self.connectionsStore = connectionsStore

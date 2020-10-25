@@ -6,8 +6,10 @@
 //
 
 import Combine
+import SwiftUI
 
 final class ConnectionsStore: ObservableObject {
     
     @Published var connections: [ServerConnection] = []
+    @Published var currentConnection: UUID?
 }
