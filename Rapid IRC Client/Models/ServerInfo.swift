@@ -5,8 +5,11 @@
 //  Created by Mike Polan on 10/24/20.
 //
 
+import SwiftUI
+
 struct ServerInfo {
     
+    var name: String
     var server: String
-    var port: UInt32
+    var port: Int32
 }

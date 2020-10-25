@@ -7,15 +7,29 @@
 
 import Cocoa
 import SwiftUI
+import Swinject
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     var window: NSWindow!
+    
+    let connectionStore: ConnectionsStore
+    let container: Container = Container()
+    
+    override init() {
+        let connectionStore = ConnectionsStore()
+        
+        container.register(ConnectionService.self) { _ in
+            DefaultConnectionService(store: connectionStore)
+        }
+        
+        self.connectionStore = connectionStore;
+    }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView()
+        let contentView = ContentView(connectionsStore: connectionStore, container: container)
 
         // Create the window and set the content view.
         window = NSWindow(

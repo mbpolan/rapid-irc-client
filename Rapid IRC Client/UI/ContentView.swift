@@ -5,19 +5,30 @@
 //  Created by Mike Polan on 10/23/20.
 //
 
+import Swinject
 import SwiftUI
 
 struct ContentView: View {
     
-    @State private var connectToServerOpen = true
+    @State private var connectToServerOpen = false
     
+    private let connectionsStore: ConnectionsStore
+    private let container: Container
+    
+    // listener for the connect to server event
     private let connectToServer = NotificationCenter
         .default
         .publisher(for: .connectToServer)
     
+    // listener for the server connection initiation event
     private let doConnectToServer = NotificationCenter
         .default
         .publisher(for: .doConnectToServer)
+    
+    init(connectionsStore: ConnectionsStore, container: Container) {
+        self.connectionsStore = connectionsStore
+        self.container = container
+    }
     
     var body: some View {
         HSplitView /*@START_MENU_TOKEN@*/{
@@ -33,16 +44,18 @@ struct ContentView: View {
         .sheet(isPresented: $connectToServerOpen) {
             ConnectDialog()
         }
+        .environmentObject(self.connectionsStore)
     }
     
     private func connect(info: ServerInfo) {
-        
+        let service = self.container.resolve(ConnectionService.self)!
+        service.addConnection(info: info)
     }
 }
 
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(connectionsStore: ConnectionsStore(), container: Container())
     }
 }

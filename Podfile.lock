@@ -1,16 +1,20 @@
 PODS:
   - SwiftSocket (2.0.2)
+  - Swinject (2.7.1)
 
 DEPENDENCIES:
   - SwiftSocket
+  - Swinject
 
 SPEC REPOS:
   trunk:
     - SwiftSocket
+    - Swinject
 
 SPEC CHECKSUMS:
   SwiftSocket: 6f4c9c63fbc5c1d61188936bb3c599fd546f40ae
+  Swinject: ddf78b8486dd9b71a667b852cad919ab4484478e
 
-PODFILE CHECKSUM: e5b1d5c77452fd3d4262bc9be3ec368e995bc2a4
+PODFILE CHECKSUM: 191f317249522766dff28865df34c25c3f49c7ec
 
 COCOAPODS: 1.10.0

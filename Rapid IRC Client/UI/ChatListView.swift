@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct ChatListView: View {
-    var items = ["Mike", "Jase"]
+    
+    @EnvironmentObject var store: ConnectionsStore
     
     var body: some View {
-        List(items, id: \.self) { item in
-            Text(item)
+        List {
+            ForEach(store.connections, id: \.id) { item in
+                Text(item.info.name)
+            }
         }
     }
 }

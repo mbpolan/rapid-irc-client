@@ -5,31 +5,38 @@
 //  Created by Mike Polan on 10/24/20.
 //
 
-import Foundation
+import SwiftUI
 import SwiftSocket
 
 protocol ConnectionService {
-    
-    func addConnection()
-}
 
-struct Connection {
-    var host: String
-    var port: Int
-    var client: TCPClient
+    func addConnection(info: ServerInfo)
 }
 
 struct DefaultConnectionService: ConnectionService {
+
+    private let store: ConnectionsStore
     
-    private var connections = [Connection]()
-    
-    func addConnection() {
+    init(store: ConnectionsStore) {
+        self.store = store
+    }
+
+    func addConnection(info: ServerInfo) {
+        let client = TCPClient(address: info.server, port: info.port)
         
+        switch client.connect(timeout: 3000) {
+        case .success:
+            print("success")
+        case .failure(let error):
+            print(error)
+        }
+
+        store.connections.append(ServerConnection(info: info, client: client))
     }
 }
 
 struct StubConnectionService: ConnectionService {
-    
-    func addConnection() {
+
+    func addConnection(info: ServerInfo) {
     }
 }

@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2757C243254501E4002335CB /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C242254501E4002335CB /* DIContainer.swift */; };
 		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
 		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
 		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
@@ -17,11 +18,11 @@
 		27CF74FD2543C19400DA4598 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74FC2543C19400DA4598 /* ChatListView.swift */; };
 		27CF75022543C25D00DA4598 /* ChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75012543C25D00DA4598 /* ChannelView.swift */; };
 		27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF750C2543F1BC00DA4598 /* ConnectionService.swift */; };
-		27CF75202544BB2A00DA4598 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF751F2544BB2A00DA4598 /* DIContainer.swift */; };
-		27CF75282544BB5F00DA4598 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75272544BB5F00DA4598 /* Services.swift */; };
 		27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */; };
 		27CF75392544E75E00DA4598 /* ServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75382544E75E00DA4598 /* ServerInfo.swift */; };
-		A4A1BBBC5F8F91D19735FB8F /* libPods-Rapid IRC Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 118EB9D299E9BEB63B54D710 /* libPods-Rapid IRC Client.a */; };
+		27CF753E2544EC2E00DA4598 /* ConnectionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */; };
+		27CF75462544EC8C00DA4598 /* ServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75452544EC8C00DA4598 /* ServerConnection.swift */; };
+		5803BA4BDB2CBC8D3E3476D0 /* Pods_Rapid_IRC_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51ACED66BD6797BC888A7355 /* Pods_Rapid_IRC_Client.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +44,7 @@
 
 /* Begin PBXFileReference section */
 		0E5656B1C8802B51E9DF04FB /* Pods-Rapid IRC Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.release.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.release.xcconfig"; sourceTree = "<group>"; };
-		118EB9D299E9BEB63B54D710 /* libPods-Rapid IRC Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rapid IRC Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2757C242254501E4002335CB /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74CA2543ABD900DA4598 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27CF74CC2543ABD900DA4598 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -61,10 +62,11 @@
 		27CF74FC2543C19400DA4598 /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		27CF75012543C25D00DA4598 /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
 		27CF750C2543F1BC00DA4598 /* ConnectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionService.swift; sourceTree = "<group>"; };
-		27CF751F2544BB2A00DA4598 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
-		27CF75272544BB5F00DA4598 /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
 		27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectDialog.swift; sourceTree = "<group>"; };
 		27CF75382544E75E00DA4598 /* ServerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfo.swift; sourceTree = "<group>"; };
+		27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsStore.swift; sourceTree = "<group>"; };
+		27CF75452544EC8C00DA4598 /* ServerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnection.swift; sourceTree = "<group>"; };
+		51ACED66BD6797BC888A7355 /* Pods_Rapid_IRC_Client.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rapid_IRC_Client.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D063EC6CDE7268D8F2230E33 /* Pods-Rapid IRC Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.debug.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4A1BBBC5F8F91D19735FB8F /* libPods-Rapid IRC Client.a in Frameworks */,
+				5803BA4BDB2CBC8D3E3476D0 /* Pods_Rapid_IRC_Client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +122,6 @@
 			isa = PBXGroup;
 			children = (
 				27CF75372544E74C00DA4598 /* Models */,
-				27CF751E2544BB0500DA4598 /* Containers */,
 				27CF751A2544BA2900DA4598 /* System */,
 				27CF75192544B9FE00DA4598 /* UI */,
 				27CF75182544B9F000DA4598 /* Services */,
@@ -182,23 +183,17 @@
 			isa = PBXGroup;
 			children = (
 				27CF74CA2543ABD900DA4598 /* AppDelegate.swift */,
+				2757C242254501E4002335CB /* DIContainer.swift */,
 			);
 			path = System;
-			sourceTree = "<group>";
-		};
-		27CF751E2544BB0500DA4598 /* Containers */ = {
-			isa = PBXGroup;
-			children = (
-				27CF751F2544BB2A00DA4598 /* DIContainer.swift */,
-				27CF75272544BB5F00DA4598 /* Services.swift */,
-			);
-			path = Containers;
 			sourceTree = "<group>";
 		};
 		27CF75372544E74C00DA4598 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				27CF75382544E75E00DA4598 /* ServerInfo.swift */,
+				27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */,
+				27CF75452544EC8C00DA4598 /* ServerConnection.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -206,7 +201,7 @@
 		345992B46F4A483589E013E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				118EB9D299E9BEB63B54D710 /* libPods-Rapid IRC Client.a */,
+				51ACED66BD6797BC888A7355 /* Pods_Rapid_IRC_Client.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -231,6 +226,7 @@
 				27CF74C32543ABD800DA4598 /* Sources */,
 				27CF74C42543ABD800DA4598 /* Frameworks */,
 				27CF74C52543ABD800DA4598 /* Resources */,
+				0827FEC3D323B857C0A2F369 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -369,6 +365,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		0827FEC3D323B857C0A2F369 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -377,13 +390,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */,
+				27CF75462544EC8C00DA4598 /* ServerConnection.swift in Sources */,
+				2757C243254501E4002335CB /* DIContainer.swift in Sources */,
+				27CF753E2544EC2E00DA4598 /* ConnectionsStore.swift in Sources */,
 				27CF75022543C25D00DA4598 /* ChannelView.swift in Sources */,
 				27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */,
 				27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */,
-				27CF75282544BB5F00DA4598 /* Services.swift in Sources */,
 				27CF75392544E75E00DA4598 /* ServerInfo.swift in Sources */,
 				27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */,
-				27CF75202544BB2A00DA4598 /* DIContainer.swift in Sources */,
 				27CF74FD2543C19400DA4598 /* ChatListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
