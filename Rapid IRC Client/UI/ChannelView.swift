@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct ChannelView: View {
-    
+
     @EnvironmentObject var store: ConnectionsStore
-    @State private var line = ""
-    @State private var flag: Bool = false
-    @State private var messageViews = [UUID: MessageView]()
-    
+    @State var line = ""
+
     var body: some View {
         let binding = Binding(
             get: { self.line },
@@ -21,36 +19,25 @@ struct ChannelView: View {
                 self.line = $0
                 print($0)
             })
-        
-        var messageView: MessageView?
-        if store.currentConnection != nil {
-            let connection = store.connections.first { conn in conn.id == store.currentConnection }!
-            messageView = self.messageViews[store.currentConnection!]
-            
-            if messageView == nil {
-                print("added new view")
-                messageView = MessageView(connection: connection)
-                
-                // FIXME: update during state change
-                messageViews[store.currentConnection!] = messageView
-            }
-        }
-        
+
+        let connection = store.connections.first { conn in conn.id == store.currentConnection }
+        let messageView = connection != nil ? MessageView(connection: connection!) : nil
+
         print("refreshing")
-        
-        return VStack(alignment: .leading, spacing: nil, content: {
-            ScrollView {
-                VStack {
-                    messageView
-                }
-            }
+
+        return VStack {
+            messageView
             HStack {
                 TextField("", text: binding)
-                Button("OK") {
+                Button("Send") {
+                    NotificationCenter.default.post(
+                        name: .sendMessage,
+                        object: Message(connection: connection!, message: line))
                     
+                    line = ""
                 }
             }
-        })
+        }
     }
 }
 

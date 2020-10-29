@@ -7,29 +7,16 @@
 
 import Cocoa
 import SwiftUI
-import Swinject
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     var window: NSWindow!
-    
-    let connectionStore: ConnectionsStore
-    let container: Container = Container()
-    
-    override init() {
-        let connectionStore = ConnectionsStore()
-        
-        container.register(ConnectionService.self) { _ in
-            DefaultConnectionService(store: connectionStore)
-        }
-        
-        self.connectionStore = connectionStore;
-    }
+    let store = Store(reducer: rootReducer)
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView(connectionsStore: connectionStore, container: container)
+        let contentView = ContentView().environmentObject(store)
 
         // Create the window and set the content view.
         window = NSWindow(
@@ -46,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
-    
+
     @IBAction func connectToServer(_ sender: AnyObject) {
         NotificationCenter.default.post(name: .connectToServer, object: nil)
     }
@@ -55,6 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 extension Notification.Name {
     static let connectToServer = Notification.Name("connect_to_server")
     static let doConnectToServer = Notification.Name("do_connect_to_server")
+    static let sendMessage = Notification.Name("send_message")
 }
 
 

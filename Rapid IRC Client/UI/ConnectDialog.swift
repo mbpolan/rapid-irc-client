@@ -9,13 +9,14 @@ import Combine
 import SwiftUI
 
 struct ConnectDialog: View {
-    
-    @Environment(\.presentationMode) var presentationMode
-    
+
+    @Binding var shown: Bool
+    var onClose: (Result) -> Void
+
     @State private var nick = "mike"
     @State private var server = "localhost"
     @State private var port = "6667"
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -29,40 +30,45 @@ struct ConnectDialog: View {
             HStack {
                 Text("Port")
                 TextField("", text: $port)
-//                onReceive(Just(port)) { newValue in
-//                    let filtered = newValue.filter { "0123456789".contains($0)
-//                    }
-//
-//                    if filtered != newValue {
-//                        self.port = filtered
-//                    }
-//                }
             }
             HStack {
                 Spacer()
                 Button("OK") {
                     print("OK")
-                    NotificationCenter.default.post(
-                        name: .doConnectToServer,
-                        object: ServerInfo(
-                            nick: self.nick,
-                            name: self.server,
-                            server: self.server,
-                            port: Int(self.port) ?? 0))
-                    
-                    self.presentationMode.wrappedValue.dismiss()
+                    self.shown = false
+                    onClose(Result(
+                        accepted: true,
+                        server: ServerInfo(
+                            nick: nick,
+                            host: server,
+                            port: Int(port) ?? -1)))
                 }
                 Button("Cancel") {
-                    self.presentationMode.wrappedValue.dismiss()
+                    self.shown = false
+                    onClose(Result(accepted: false))
                 }
             }
-        }
-        .padding()
+        }.padding()
     }
 }
 
-struct ConnectDialog_Previews: PreviewProvider {
-    static var previews: some View {
-        ConnectDialog()
+extension ConnectDialog {
+    struct Result {
+        var accepted: Bool
+        var server: ServerInfo?
     }
 }
+
+//struct ConnectDialog_Previews: PreviewProvider {
+//    static var previews: some View {
+//
+//        var result = ConnectDialog.Result(
+//            shown: false,
+//            server: ServerInfo(
+//                nick: "",
+//                host: "",
+//                port: -1))
+//
+//        return ConnectDialog(result: $result)
+//    }
+//}

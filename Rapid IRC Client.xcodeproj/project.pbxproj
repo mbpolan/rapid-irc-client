@@ -7,11 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2757C243254501E4002335CB /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C242254501E4002335CB /* DIContainer.swift */; };
 		2757C25D2545F30B002335CB /* NIO in Frameworks */ = {isa = PBXBuildFile; productRef = 2757C25C2545F30B002335CB /* NIO */; };
 		2757C2632545FD11002335CB /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 2757C2622545FD11002335CB /* Swinject */; };
-		2757C27125460607002335CB /* IRCChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C27025460607002335CB /* IRCChannel.swift */; };
-		2757C27C25461456002335CB /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C27B25461456002335CB /* MessageView.swift */; };
+		2757C2CC254A4F78002335CB /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2CB254A4F78002335CB /* Store.swift */; };
+		2757C2D4254A5377002335CB /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D3254A5377002335CB /* MessageView.swift */; };
+		2757C2DA254A5483002335CB /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D9254A5483002335CB /* Reducer.swift */; };
+		2757C2E2254A5496002335CB /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2E1254A5496002335CB /* Actions.swift */; };
+		2757C2E7254A575D002335CB /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2E6254A575D002335CB /* Types.swift */; };
+		2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2EB254A5873002335CB /* ChannelListView.swift */; };
+		2757C2F1254A5AD5002335CB /* ActiveChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */; };
+		2757C2F8254A5DE0002335CB /* ServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2F7254A5DE0002335CB /* ServerInfo.swift */; };
 		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
 		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
 		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
@@ -19,13 +24,8 @@
 		27CF74D52543ABDA00DA4598 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D32543ABDA00DA4598 /* Main.storyboard */; };
 		27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */; };
 		27CF74EC2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */; };
-		27CF74FD2543C19400DA4598 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74FC2543C19400DA4598 /* ChatListView.swift */; };
-		27CF75022543C25D00DA4598 /* ChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75012543C25D00DA4598 /* ChannelView.swift */; };
 		27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF750C2543F1BC00DA4598 /* ConnectionService.swift */; };
 		27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */; };
-		27CF75392544E75E00DA4598 /* ServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75382544E75E00DA4598 /* ServerInfo.swift */; };
-		27CF753E2544EC2E00DA4598 /* ConnectionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */; };
-		27CF75462544EC8C00DA4598 /* ServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF75452544EC8C00DA4598 /* ServerConnection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,9 +46,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2757C242254501E4002335CB /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
-		2757C27025460607002335CB /* IRCChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRCChannel.swift; sourceTree = "<group>"; };
-		2757C27B25461456002335CB /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		2757C2CB254A4F78002335CB /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		2757C2D3254A5377002335CB /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		2757C2D9254A5483002335CB /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
+		2757C2E1254A5496002335CB /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
+		2757C2E6254A575D002335CB /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		2757C2EB254A5873002335CB /* ChannelListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelListView.swift; sourceTree = "<group>"; };
+		2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveChannelView.swift; sourceTree = "<group>"; };
+		2757C2F7254A5DE0002335CB /* ServerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfo.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74CA2543ABD900DA4598 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27CF74CC2543ABD900DA4598 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -63,13 +68,8 @@
 		27CF74E72543ABDA00DA4598 /* Rapid IRC ClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rapid_IRC_ClientUITests.swift; sourceTree = "<group>"; };
 		27CF74ED2543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		27CF74FC2543C19400DA4598 /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
-		27CF75012543C25D00DA4598 /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
 		27CF750C2543F1BC00DA4598 /* ConnectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionService.swift; sourceTree = "<group>"; };
 		27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectDialog.swift; sourceTree = "<group>"; };
-		27CF75382544E75E00DA4598 /* ServerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfo.swift; sourceTree = "<group>"; };
-		27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsStore.swift; sourceTree = "<group>"; };
-		27CF75452544EC8C00DA4598 /* ServerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +99,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2757C2CA254A4F68002335CB /* State */ = {
+			isa = PBXGroup;
+			children = (
+				2757C2D8254A5456002335CB /* Connections */,
+				2757C2CB254A4F78002335CB /* Store.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		2757C2D8254A5456002335CB /* Connections */ = {
+			isa = PBXGroup;
+			children = (
+				2757C2D9254A5483002335CB /* Reducer.swift */,
+				2757C2E1254A5496002335CB /* Actions.swift */,
+				2757C2E6254A575D002335CB /* Types.swift */,
+			);
+			path = Connections;
+			sourceTree = "<group>";
+		};
+		2757C2F6254A5DD5002335CB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2757C2F7254A5DE0002335CB /* ServerInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		27CF74BE2543ABD800DA4598 = {
 			isa = PBXGroup;
 			children = (
@@ -122,7 +149,8 @@
 		27CF74C92543ABD900DA4598 /* Rapid IRC Client */ = {
 			isa = PBXGroup;
 			children = (
-				27CF75372544E74C00DA4598 /* Models */,
+				2757C2F6254A5DD5002335CB /* Models */,
+				2757C2CA254A4F68002335CB /* State */,
 				27CF751A2544BA2900DA4598 /* System */,
 				27CF75192544B9FE00DA4598 /* UI */,
 				27CF75182544B9F000DA4598 /* Services */,
@@ -173,10 +201,10 @@
 			isa = PBXGroup;
 			children = (
 				27CF74CC2543ABD900DA4598 /* ContentView.swift */,
-				27CF75012543C25D00DA4598 /* ChannelView.swift */,
-				27CF74FC2543C19400DA4598 /* ChatListView.swift */,
 				27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */,
-				2757C27B25461456002335CB /* MessageView.swift */,
+				2757C2D3254A5377002335CB /* MessageView.swift */,
+				2757C2EB254A5873002335CB /* ChannelListView.swift */,
+				2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -185,20 +213,8 @@
 			isa = PBXGroup;
 			children = (
 				27CF74CA2543ABD900DA4598 /* AppDelegate.swift */,
-				2757C242254501E4002335CB /* DIContainer.swift */,
 			);
 			path = System;
-			sourceTree = "<group>";
-		};
-		27CF75372544E74C00DA4598 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				27CF75382544E75E00DA4598 /* ServerInfo.swift */,
-				27CF753D2544EC2E00DA4598 /* ConnectionsStore.swift */,
-				27CF75452544EC8C00DA4598 /* ServerConnection.swift */,
-				2757C27025460607002335CB /* IRCChannel.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -339,18 +355,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2757C27C25461456002335CB /* MessageView.swift in Sources */,
+				2757C2F1254A5AD5002335CB /* ActiveChannelView.swift in Sources */,
+				2757C2D4254A5377002335CB /* MessageView.swift in Sources */,
+				2757C2F8254A5DE0002335CB /* ServerInfo.swift in Sources */,
+				2757C2E2254A5496002335CB /* Actions.swift in Sources */,
+				2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */,
 				27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */,
-				27CF75462544EC8C00DA4598 /* ServerConnection.swift in Sources */,
-				2757C243254501E4002335CB /* DIContainer.swift in Sources */,
-				27CF753E2544EC2E00DA4598 /* ConnectionsStore.swift in Sources */,
-				27CF75022543C25D00DA4598 /* ChannelView.swift in Sources */,
+				2757C2CC254A4F78002335CB /* Store.swift in Sources */,
 				27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */,
+				2757C2DA254A5483002335CB /* Reducer.swift in Sources */,
+				2757C2E7254A575D002335CB /* Types.swift in Sources */,
 				27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */,
-				27CF75392544E75E00DA4598 /* ServerInfo.swift in Sources */,
 				27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */,
-				27CF74FD2543C19400DA4598 /* ChatListView.swift in Sources */,
-				2757C27125460607002335CB /* IRCChannel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
