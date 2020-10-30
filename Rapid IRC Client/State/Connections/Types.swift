@@ -7,8 +7,18 @@
 
 import SwiftUI
 
-struct Connection {
+class Connection {
     
     var name: String
-    var messages: [String]
+    var client: ServerConnection
+    var messages: [String] = []
+    
+    init(name: String, client: ServerConnection) {
+        self.name = name
+        self.client = client
+    }
+    
+    func addMessage(_ message: String) {
+        messages.append(message)
+    }
 }

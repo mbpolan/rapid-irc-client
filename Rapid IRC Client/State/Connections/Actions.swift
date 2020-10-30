@@ -7,3 +7,12 @@
 
 protocol ConnectionsAction: Action {
 }
+
+struct ConnectAction: ConnectionsAction {
+    var server: ServerInfo
+}
+
+struct MessageReceivedAction: ConnectionsAction {
+    var connection: ServerConnection
+    var message: String
+}

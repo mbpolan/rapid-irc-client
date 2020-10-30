@@ -27,7 +27,11 @@ struct ContentView: View {
     }
 
     private func handleConnectToServer(result: ConnectDialog.Result) {
-        print(result.accepted)
+        if !result.accepted {
+            return
+        }
+        
+        store.dispatch(action: ConnectAction(server: result.server!))
     }
 }
 

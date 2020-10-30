@@ -19,13 +19,19 @@ struct MessageView: View {
     
     private func makeText() -> some View {
         if store.state.connections.current == -1 {
+            print("no connection")
             return Text("")
         }
         
         let connection = store.state.connections.connections[store.state.connections.current]
         var text = Text("")
         
+        
+        
+        print("connection mesgg: \(connection.messages.count)")
+        
         for message in connection.messages {
+            print("line: \(message)")
             text = text + Text(message)
         }
         

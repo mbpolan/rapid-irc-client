@@ -10,13 +10,36 @@ struct ConnectionsState {
     var current = -1
 }
 
-func connectionsReducer(state: AppState, action: Action) -> AppState {
+func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
     var newState = state
+
+    switch action.action {
+    case let act as ConnectAction:
+        let connection = Connection(
+            name: act.server.host,
+            client: ServerConnection(server: act.server, store: action.store))
+        
+        connection.client.connect()
+
+        newState.connections.connections.append(connection)
+        newState.connections.current = newState.connections.connections.count - 1
     
-    switch action {
+    case let act as MessageReceivedAction:
+        let connection = newState.connections.connections.first { conn in
+            conn.client === act.connection
+        }
+        
+        if connection != nil {
+            print("added: \(act.message)")
+            connection!.addMessage(act.message)
+        } else {
+            print("**ERROR**")
+        }
+    
     default:
         break
     }
-    
+
     return newState
 }
+
