@@ -26,12 +26,7 @@ struct MessageView: View {
         let connection = store.state.connections.connections[store.state.connections.current]
         var text = Text("")
         
-        
-        
-        print("connection mesgg: \(connection.messages.count)")
-        
         for message in connection.messages {
-            print("line: \(message)")
             text = text + Text(message)
         }
         

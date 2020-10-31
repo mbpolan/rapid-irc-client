@@ -16,3 +16,7 @@ struct MessageReceivedAction: ConnectionsAction {
     var connection: ServerConnection
     var message: String
 }
+
+struct MessageSentAction: ConnectionsAction {
+    var message: String
+}

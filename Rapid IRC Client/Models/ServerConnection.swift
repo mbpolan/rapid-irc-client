@@ -36,6 +36,10 @@ class ServerConnection {
             }
         }
     }
+
+    func sendMessage(_ message: String) {
+        handler?.send(message)
+    }
 }
 
 extension ServerConnection {
@@ -66,9 +70,13 @@ extension ServerConnection {
             if let received = buffer.readString(length: bytes) {
                 DispatchQueue.main.async {
                     print(received)
-                    self.connection.store.dispatch(action: MessageReceivedAction(
-                        connection: self.connection,
-                        message: received))
+                    let lines = received.split(separator: "\n")
+
+                    lines.forEach { line in
+                        self.connection.store.dispatch(action: MessageReceivedAction(
+                            connection: self.connection,
+                            message: received))
+                    }
                 }
             }
         }
@@ -77,13 +85,17 @@ extension ServerConnection {
             print(error)
         }
 
-        private func send(_ message: String, context: ChannelHandlerContext) {
+        func send(_ message: String) {
+            send(message, context: nil)
+        }
+
+        private func send(_ message: String, context: ChannelHandlerContext?) {
             // each message must end with a carriage return/line feed sequence
             let fullMessage = message + "\r\n"
 
             // convert the message into ascii characters and write it into a new buffer
             let data = fullMessage.compactMap { $0.asciiValue }
-            var buffer = context.channel.allocator.buffer(capacity: data.count)
+            var buffer = (context == nil ? channel.allocator : context!.channel.allocator).buffer(capacity: data.count)
             buffer.writeBytes(data)
 
             channel.writeAndFlush(wrapOutboundOut(buffer), promise: nil)

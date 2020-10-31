@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ActiveChannelView: View {
-    
+
     @EnvironmentObject var store: Store
     @State private var input: String = ""
-    
+
     var body: some View {
         return VStack {
             MessageView()
@@ -19,7 +19,11 @@ struct ActiveChannelView: View {
                 TextField("", text: $input)
                 Spacer()
                 Button("OK") {
+                    let connection = store.state.connections.connections[store.state.connections.current]
+                    store.dispatch(action: MessageSentAction(
+                        message: input))
                     
+                    input = ""
                 }
             }
         }

@@ -18,7 +18,6 @@ struct ChannelListView: View {
     }
     
     private func makeList() -> some View {
-        print(store.state.connections.connections.count)
         return VStack {
             ForEach(store.state.connections.connections, id: \.name) { item in
                 Text(item.name)

@@ -36,6 +36,10 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
             print("**ERROR**")
         }
     
+    case let act as MessageSentAction:
+        let connection = newState.connections.connections[newState.connections.current]
+        connection.client.sendMessage(act.message)
+        
     default:
         break
     }
