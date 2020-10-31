@@ -38,7 +38,9 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
     
     case let act as MessageSentAction:
         let connection = newState.connections.connections[newState.connections.current]
-        connection.client.sendMessage(act.message)
+        
+        let message = act.message.starts(with: "/") ? act.message.subString(from: 1) : act.message
+        connection.client.sendMessage(message)
         
     default:
         break

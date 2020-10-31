@@ -18,6 +18,7 @@
 		2757C2F1254A5AD5002335CB /* ActiveChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */; };
 		2757C2F8254A5DE0002335CB /* ServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2F7254A5DE0002335CB /* ServerInfo.swift */; };
 		2757C2FD254A6A54002335CB /* ServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2FC254A6A54002335CB /* ServerConnection.swift */; };
+		2757C303254D23C7002335CB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C302254D23C7002335CB /* String.swift */; };
 		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
 		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
 		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
@@ -56,6 +57,7 @@
 		2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveChannelView.swift; sourceTree = "<group>"; };
 		2757C2F7254A5DE0002335CB /* ServerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfo.swift; sourceTree = "<group>"; };
 		2757C2FC254A6A54002335CB /* ServerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnection.swift; sourceTree = "<group>"; };
+		2757C302254D23C7002335CB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74CA2543ABD900DA4598 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27CF74CC2543ABD900DA4598 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -129,6 +131,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		2757C301254D23B8002335CB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2757C302254D23C7002335CB /* String.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		27CF74BE2543ABD800DA4598 = {
 			isa = PBXGroup;
 			children = (
@@ -152,6 +162,7 @@
 		27CF74C92543ABD900DA4598 /* Rapid IRC Client */ = {
 			isa = PBXGroup;
 			children = (
+				2757C301254D23B8002335CB /* Extensions */,
 				2757C2F6254A5DD5002335CB /* Models */,
 				2757C2CA254A4F68002335CB /* State */,
 				27CF751A2544BA2900DA4598 /* System */,
@@ -362,6 +373,7 @@
 				2757C2D4254A5377002335CB /* MessageView.swift in Sources */,
 				2757C2F8254A5DE0002335CB /* ServerInfo.swift in Sources */,
 				2757C2E2254A5496002335CB /* Actions.swift in Sources */,
+				2757C303254D23C7002335CB /* String.swift in Sources */,
 				2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */,
 				27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */,
 				2757C2CC254A4F78002335CB /* Store.swift in Sources */,

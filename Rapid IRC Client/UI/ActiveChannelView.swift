@@ -16,17 +16,20 @@ struct ActiveChannelView: View {
         return VStack {
             MessageView()
             HStack {
-                TextField("", text: $input)
+                TextField("", text: $input, onCommit: {
+                    submit()
+                })
                 Spacer()
                 Button("OK") {
-                    let connection = store.state.connections.connections[store.state.connections.current]
-                    store.dispatch(action: MessageSentAction(
-                        message: input))
-                    
-                    input = ""
+                    submit()
                 }
             }
         }
+    }
+    
+    private func submit() {
+        store.dispatch(action: MessageSentAction(message: input))
+        input = ""
     }
 }
 

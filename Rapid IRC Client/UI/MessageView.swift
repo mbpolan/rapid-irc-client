@@ -13,7 +13,12 @@ struct MessageView: View {
     
     var body: some View {
         ScrollView {
-            makeText()
+            HStack {
+                VStack(alignment: .leading) {
+                    makeText()
+                }
+                Spacer()
+            }
         }
     }
     
@@ -27,7 +32,7 @@ struct MessageView: View {
         var text = Text("")
         
         for message in connection.messages {
-            text = text + Text(message)
+            text = text + Text("\(message)\n")
         }
         
         return text

@@ -68,15 +68,10 @@ extension ServerConnection {
             let bytes = buffer.readableBytes
 
             if let received = buffer.readString(length: bytes) {
-                DispatchQueue.main.async {
-                    print(received)
-                    let lines = received.split(separator: "\n")
-
-                    lines.forEach { line in
-                        self.connection.store.dispatch(action: MessageReceivedAction(
-                            connection: self.connection,
-                            message: received))
-                    }
+                let lines = received.split(separator: "\r\n")
+                
+                lines.forEach { line in
+                    processMessage(String(line))
                 }
             }
         }
@@ -88,6 +83,35 @@ extension ServerConnection {
         func send(_ message: String) {
             send(message, context: nil)
         }
+        
+        private func processMessage(_ message: String) {
+            let parts = message.split(separator: " ")
+            
+            switch parts.first?.lowercased() {
+            case "ping":
+                handlePing(parts)
+            default:
+                dispatchMessage(message)
+            }
+            
+        }
+        
+        private func handlePing(_ parts: [String.SubSequence]) {
+            if parts.count > 1 {
+                let server = String(parts.last!)
+                send("PONG \(server)")
+            } else {
+                send("PONG")
+            }
+        }
+        
+        private func dispatchMessage(_ message: String) {
+            DispatchQueue.main.async {
+                self.connection.store.dispatch(action: MessageReceivedAction(
+                    connection: self.connection,
+                    message: message))
+            }
+        }
 
         private func send(_ message: String, context: ChannelHandlerContext?) {
             // each message must end with a carriage return/line feed sequence
@@ -98,6 +122,7 @@ extension ServerConnection {
             var buffer = (context == nil ? channel.allocator : context!.channel.allocator).buffer(capacity: data.count)
             buffer.writeBytes(data)
 
+            print("Sent: \(message)")
             channel.writeAndFlush(wrapOutboundOut(buffer), promise: nil)
         }
     }
