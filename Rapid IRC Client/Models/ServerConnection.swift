@@ -69,7 +69,7 @@ extension ServerConnection {
 
             if let received = buffer.readString(length: bytes) {
                 let lines = received.split(separator: "\r\n")
-                
+
                 lines.forEach { line in
                     processMessage(String(line))
                 }
@@ -83,33 +83,59 @@ extension ServerConnection {
         func send(_ message: String) {
             send(message, context: nil)
         }
-        
+
         private func processMessage(_ message: String) {
-            let parts = message.split(separator: " ")
-            
-            switch parts.first?.lowercased() {
-            case "ping":
-                handlePing(parts)
+            let ircMessage = IRCMessage.parse(message)
+
+            switch ircMessage.command {
+            case .join:
+                handleJoin(ircMessage)
+            case .part:
+                handlePart(ircMessage)
+            case .ping:
+                handlePing(ircMessage)
             default:
-                dispatchMessage(message)
+                dispatchMessage(ircMessage)
             }
-            
+
+//
+//            let parts = message.split(separator: " ")
+//
+//            switch parts.first?.lowercased() {
+//            case "ping":
+//                handlePing(parts)
+//            case "join":
+//                handleJoin(parts)
+//            case "part":
+//                handlePart(parts)
+//            default:
+//                dispatchMessage(message)
+//            }
+//
         }
-        
-        private func handlePing(_ parts: [String.SubSequence]) {
-            if parts.count > 1 {
-                let server = String(parts.last!)
+
+        private func handlePing(_ message: IRCMessage) {
+            if message.parameters.count > 1 {
+                let server = String(message.parameters.last!)
                 send("PONG \(server)")
             } else {
                 send("PONG")
             }
         }
-        
-        private func dispatchMessage(_ message: String) {
+
+        private func handleJoin(_ message: IRCMessage) {
+
+        }
+
+        private func handlePart(_ message: IRCMessage) {
+
+        }
+
+        private func dispatchMessage(_ message: IRCMessage) {
             DispatchQueue.main.async {
                 self.connection.store.dispatch(action: MessageReceivedAction(
                     connection: self.connection,
-                    message: message))
+                    message: message.raw))
             }
         }
 
