@@ -23,6 +23,7 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
 
         newState.connections.connections.append(connection)
         newState.connections.current = newState.connections.connections.count - 1
+        print("Current: \(newState.connections.current)")
     
     case let act as MessageReceivedAction:
         let connection = newState.connections.connections.first { conn in
@@ -31,7 +32,7 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
         
         if connection != nil {
             print("added: \(act.message)")
-            connection!.addMessage(act.message)
+            connection!.addMessage(channel: "Server", message: act.message)
         } else {
             print("**ERROR**")
         }

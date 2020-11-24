@@ -24,13 +24,14 @@ struct IRCMessage {
         
         // prefix is optional, but if it exists, it's always lead by a colon
         var prefix: String? = nil
-        if parts.first == ":" {
+        if parts.first!.starts(with: ":") {
             prefix = String(parts.first!).subString(from: 1)
             parts.removeFirst()
         }
         
         // command is either a text string or a three digit numeric
-        let command = Command(rawValue: String(parts.first!))
+        let rawCommand = String(parts.first!).lowercased()
+        let command = Command(rawValue: rawCommand)
 //        if let numericCommand = Int(command) {
 //            // TODO
 //        }

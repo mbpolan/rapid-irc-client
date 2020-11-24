@@ -57,6 +57,10 @@ extension ServerConnection {
 
         func channelActive(context: ChannelHandlerContext) {
             print("connected")
+            connection.store.dispatch(action: JoinedChannelAction(
+                                        connection: self.connection,
+                                        channel: Connection.serverChannel))
+            
             let nick = connection.server.nick
 
             send("NICK \(nick)", context: context)
@@ -97,21 +101,6 @@ extension ServerConnection {
             default:
                 dispatchMessage(ircMessage)
             }
-
-//
-//            let parts = message.split(separator: " ")
-//
-//            switch parts.first?.lowercased() {
-//            case "ping":
-//                handlePing(parts)
-//            case "join":
-//                handleJoin(parts)
-//            case "part":
-//                handlePart(parts)
-//            default:
-//                dispatchMessage(message)
-//            }
-//
         }
 
         private func handlePing(_ message: IRCMessage) {
@@ -124,18 +113,24 @@ extension ServerConnection {
         }
 
         private func handleJoin(_ message: IRCMessage) {
+            print("JOINED")
 
+            self.connection.store.dispatch(action: JoinedChannelAction(
+                    connection: self.connection,
+                    channel: "#mike"
+            ))
         }
 
         private func handlePart(_ message: IRCMessage) {
-
         }
 
         private func dispatchMessage(_ message: IRCMessage) {
             DispatchQueue.main.async {
                 self.connection.store.dispatch(action: MessageReceivedAction(
                     connection: self.connection,
-                    message: message.raw))
+                    message: message.raw,
+                                                
+                                                                            channel: "Server"))
             }
         }
 

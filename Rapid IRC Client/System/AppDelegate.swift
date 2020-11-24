@@ -43,6 +43,7 @@ extension Notification.Name {
     static let connectToServer = Notification.Name("connect_to_server")
     static let doConnectToServer = Notification.Name("do_connect_to_server")
     static let sendMessage = Notification.Name("send_message")
+    static let joinedChannel = Notification.Name("joined_channel")
 }
 
 

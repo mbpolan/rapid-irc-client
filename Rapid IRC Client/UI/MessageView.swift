@@ -23,15 +23,14 @@ struct MessageView: View {
     }
     
     private func makeText() -> some View {
-        if store.state.connections.current == -1 {
+        if store.state.ui.currentChannel == nil {
             print("no connection")
             return Text("")
         }
         
-        let connection = store.state.connections.connections[store.state.connections.current]
         var text = Text("")
         
-        for message in connection.messages {
+        for message in store.state.ui.currentChannel!.messages {
             text = text + Text("\(message)\n")
         }
         

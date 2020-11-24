@@ -15,8 +15,14 @@ struct ConnectAction: ConnectionsAction {
 struct MessageReceivedAction: ConnectionsAction {
     var connection: ServerConnection
     var message: String
+    var channel: String
 }
 
 struct MessageSentAction: ConnectionsAction {
     var message: String
+}
+
+struct JoinedChannelAction: ConnectionsAction {
+    var connection: ServerConnection
+    var channel: String
 }

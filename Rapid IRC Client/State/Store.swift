@@ -10,6 +10,7 @@ import SwiftUI
 
 struct AppState {
     var connections: ConnectionsState = ConnectionsState()
+    var ui: UIState = UIState()
 }
 
 struct StateWrapper {
@@ -27,7 +28,8 @@ struct ActionWrapper {
 typealias Reducer = (AppState, ActionWrapper) -> AppState
 
 let reducers = [
-    connectionsReducer
+    connectionsReducer,
+    uiReducer
 ]
 
 func rootReducer(state: AppState, action: ActionWrapper) -> AppState {
@@ -51,8 +53,10 @@ class Store: ObservableObject {
     }
 
     func dispatch(action: Action) {
-        self.state = self.reducer(state, ActionWrapper(store: self, action: action))
-        objectWillChange.send()
+        DispatchQueue.main.async {
+            self.state = self.reducer(self.state, ActionWrapper(store: self, action: action))
+            self.objectWillChange.send()
+        }
     }
 }
 

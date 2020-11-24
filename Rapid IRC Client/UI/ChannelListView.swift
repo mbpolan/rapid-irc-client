@@ -20,7 +20,8 @@ struct ChannelListView: View {
         VStack {
             Picker(selection: $connection, label: Text("")) {
                 ForEach(0..<store.state.connections.connections.count, id: \.self) {
-                    Text(store.state.connections.connections[$0].name).tag($0)
+                    Text(store.state.connections.connections[$0].name)
+                        .tag($0)
                 }
             }
             ScrollView {
@@ -30,9 +31,22 @@ struct ChannelListView: View {
     }
 
     private func makeList() -> some View {
+        var channels: [IRCChannel]
+        var current: Connection? = nil
+        if (store.state.connections.current == -1) {
+            channels = []
+        } else {
+            current = store.state.connections.connections[store.state.connections.current]
+            channels = current!.channels
+        }
+        
+        print(store.state.connections.current)
+        
         return VStack {
-            ForEach(store.state.connections.connections, id: \.name) { item in
-                Text(item.name)
+            ForEach(channels, id: \.name) { item in
+                Button(item.name) {
+                    store.dispatch(action: SetChannelAction(connection: current!, channel: item.name))
+                }.buttonStyle(BorderlessButtonStyle())
             }
         }
     }
