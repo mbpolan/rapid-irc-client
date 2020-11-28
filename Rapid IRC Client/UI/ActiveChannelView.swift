@@ -13,16 +13,26 @@ struct ActiveChannelView: View {
     @State private var input: String = ""
 
     var body: some View {
-        return VStack {
-            MessageView()
-            HStack {
-                TextField("", text: $input, onCommit: {
-                    submit()
-                })
-                Spacer()
-                Button("OK") {
-                    submit()
+        HSplitView {
+            // display messages and channel activity on the left side
+            VStack {
+                MessageView()
+                HStack {
+                    TextField("", text: $input, onCommit: {
+                        submit()
+                    })
+                    Spacer()
+                    Button("OK") {
+                        submit()
+                    }
                 }
+            }.layoutPriority(2)
+            
+            // display a list of users on the right side
+            if store.state.ui.currentChannel != nil && store.state.ui.currentChannel?.name != Connection.serverChannel {
+                List(store.state.ui.currentChannel!.users) { item in
+                    Text(item.name)
+                }.layoutPriority(1)
             }
         }
     }

@@ -98,6 +98,8 @@ extension ServerConnection {
                 handlePart(ircMessage)
             case .ping:
                 handlePing(ircMessage)
+            case .nameReply:
+                handleNameReply(ircMessage)
 
             case .welcome,
                  .created,
@@ -152,6 +154,40 @@ extension ServerConnection {
                 connection: self.connection,
                 channel: channel!))
         }
+        
+        private func handleNameReply(_ message: IRCMessage) {
+            // at least three parameters are expected
+            if message.parameters.count < 3 {
+                print("ERROR: not enough params in NAMES reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel type
+            let type = IRCChannel.AccessType(rawValue: message.parameters[0])
+            
+            // second parameter is the channel name
+            let channel = message.parameters[1]
+            
+            // remaining parameters are a list of usernames
+            let users = message.parameters[2...].map { nick -> User in
+                // drop leading colons
+                var nickname = nick.first == ":" ? String(nick.dropFirst()) : nick
+                
+                // does this user have elevated privileges in this channel? if so, parse the prefix and remove it
+                // from the nick itself
+                let privilege = User.ChannelPrivilege(rawValue: nickname.first!)
+                if privilege != nil {
+                    nickname = String(nickname.dropFirst())
+                }
+                
+                return User(name: nickname, privilege: privilege)
+            }
+            
+            self.connection.store.dispatch(action: UsersInChannelAction(
+                connection: self.connection,
+                users: users,
+                channel: channel))
+        }
 
         private func handleServerMessage(_ message: IRCMessage) {
             // combine parameters into a single string message
@@ -165,7 +201,7 @@ extension ServerConnection {
             self.connection.store.dispatch(action: MessageReceivedAction(
                 connection: self.connection,
                 message: text,
-                                            channel: Connection.serverChannel))
+                channel: Connection.serverChannel))
         }
 
         private func dispatchMessage(_ message: IRCMessage) {

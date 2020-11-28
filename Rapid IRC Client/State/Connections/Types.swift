@@ -32,7 +32,11 @@ class Connection: Identifiable {
     }
     
     func leaveChannel(channel: String) {
-        channels.first { $0.name == channel }?.state = .parted
+        let channel = channels.first { $0.name == channel }
+        if channel != nil {
+            channel!.state = .parted
+            channel!.users.removeAll()
+        }
     }
     
     func addServerMessage(_ message: String) {
@@ -54,7 +58,9 @@ class IRCChannel {
     
     var name: String
     var state: State
+    var access: AccessType?
     var messages: [String] = []
+    var users: [User] = []
     
     init(name: String, state: State) {
         self.name = name
@@ -66,5 +72,35 @@ extension IRCChannel {
     enum State {
         case joined
         case parted
+    }
+    
+    enum AccessType: String {
+        case secretAccess = "@"
+        case privateAccess = "*"
+        case publicAccess = "="
+    }
+}
+
+class User: Identifiable {
+    var id: String {
+        return name
+    }
+    
+    var name: String
+    var privilege: ChannelPrivilege?
+    
+    init(name: String, privilege: ChannelPrivilege?) {
+        self.name = name
+        self.privilege = privilege
+    }
+}
+
+extension User {
+    enum ChannelPrivilege: Character {
+        case owner = "~"
+        case admin = "&"
+        case fullOperator = "@"
+        case halfOperator = "%"
+        case voiced = "+"
     }
 }

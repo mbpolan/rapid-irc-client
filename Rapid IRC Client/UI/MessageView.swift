@@ -24,7 +24,6 @@ struct MessageView: View {
     
     private func makeText() -> some View {
         if store.state.ui.currentChannel == nil {
-            print("no connection")
             return Text("")
         }
         
