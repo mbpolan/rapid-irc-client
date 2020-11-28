@@ -58,9 +58,9 @@ extension ServerConnection {
         func channelActive(context: ChannelHandlerContext) {
             print("connected")
             connection.store.dispatch(action: JoinedChannelAction(
-                                        connection: self.connection,
-                                        channel: Connection.serverChannel))
-            
+                connection: self.connection,
+                channel: Connection.serverChannel))
+
             let nick = connection.server.nick
 
             send("NICK \(nick)", context: context)
@@ -98,40 +98,82 @@ extension ServerConnection {
                 handlePart(ircMessage)
             case .ping:
                 handlePing(ircMessage)
+
+            case .welcome,
+                 .created,
+                 .yourHost,
+                 .myInfo,
+                 .iSupport,
+                 .statsLine,
+                 .listUsers,
+                 .listUserChannels,
+                 .listUserMe,
+                 .localUsers,
+                 .globalUsers,
+                 .motd,
+                 .serverMotd,
+                 .endMotd:
+                handleServerMessage(ircMessage)
+
             default:
-                dispatchMessage(ircMessage)
+                print("Unknown message: \(message)")
             }
         }
 
         private func handlePing(_ message: IRCMessage) {
-            if message.parameters.count > 1 {
-                let server = String(message.parameters.last!)
-                send("PONG \(server)")
-            } else {
-                send("PONG")
+            let server = message.parameters.first
+            if server != nil {
+                send("PONG \(server!)")
             }
         }
 
         private func handleJoin(_ message: IRCMessage) {
-            print("JOINED")
+            var channel = message.parameters.first
+            if channel == nil {
+                print("ERROR: no channel in JOIN message: \(message)")
+                return
+            }
+
+            channel = channel!.first == ":" ? channel!.subString(from: 1) : channel
 
             self.connection.store.dispatch(action: JoinedChannelAction(
-                    connection: self.connection,
-                    channel: "#mike"
-            ))
+                connection: self.connection,
+                channel: channel!
+                ))
         }
 
         private func handlePart(_ message: IRCMessage) {
+            let channel = message.parameters.first
+            if channel == nil {
+                print("ERROR: no channel in PART message: \(message)")
+                return
+            }
+
+            self.connection.store.dispatch(action: PartChannelAction(
+                connection: self.connection,
+                channel: channel!))
+        }
+
+        private func handleServerMessage(_ message: IRCMessage) {
+            // combine parameters into a single string message
+            var text = message.parameters.joined(separator: " ")
+
+            // drop leading colons
+            if text.first == ":" {
+                text = text.subString(from: 1)
+            }
+
+            self.connection.store.dispatch(action: MessageReceivedAction(
+                connection: self.connection,
+                message: text,
+                channel: "Server"))
         }
 
         private func dispatchMessage(_ message: IRCMessage) {
-            DispatchQueue.main.async {
-                self.connection.store.dispatch(action: MessageReceivedAction(
-                    connection: self.connection,
-                    message: message.raw,
-                                                
-                                                                            channel: "Server"))
-            }
+            self.connection.store.dispatch(action: MessageReceivedAction(
+                connection: self.connection,
+                message: message.raw,
+                channel: "Server"))
         }
 
         private func send(_ message: String, context: ChannelHandlerContext?) {

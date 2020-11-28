@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class Connection {
+class Connection: Identifiable {
     
     static let serverChannel = "Server"
     

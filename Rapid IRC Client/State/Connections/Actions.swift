@@ -26,3 +26,8 @@ struct JoinedChannelAction: ConnectionsAction {
     var connection: ServerConnection
     var channel: String
 }
+
+struct PartChannelAction: ConnectionsAction {
+    var connection: ServerConnection
+    var channel: String
+}

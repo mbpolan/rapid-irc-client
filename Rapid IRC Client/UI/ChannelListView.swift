@@ -18,12 +18,6 @@ struct ChannelListView: View {
 
     var body: some View {
         VStack {
-            Picker(selection: $connection, label: Text("")) {
-                ForEach(0..<store.state.connections.connections.count, id: \.self) {
-                    Text(store.state.connections.connections[$0].name)
-                        .tag($0)
-                }
-            }
             ScrollView {
                 makeList()
             }.padding()
@@ -31,6 +25,21 @@ struct ChannelListView: View {
     }
 
     private func makeList() -> some View {
+//        let model = store.state.connections.connections.map { conn in
+//            return ListItem(
+//                name: conn.name,
+//                type: .server,
+//                children: conn.channels.map { chan in
+//                    return ListItem(
+//                        name: chan.name,
+//                        type: .channel,
+//                        children: nil)
+//                })
+//        }
+//
+//        return List(model, children: \.children) { row in
+//            Text(row.name)
+//        }
         var channels: [IRCChannel]
         var current: Connection? = nil
         if (store.state.connections.current == -1) {
@@ -39,9 +48,7 @@ struct ChannelListView: View {
             current = store.state.connections.connections[store.state.connections.current]
             channels = current!.channels
         }
-        
-        print(store.state.connections.current)
-        
+
         return VStack {
             ForEach(channels, id: \.name) { item in
                 Button(item.name) {
@@ -49,6 +56,23 @@ struct ChannelListView: View {
                 }.buttonStyle(BorderlessButtonStyle())
             }
         }
+    }
+}
+
+extension ChannelListView {
+    enum ListItemType {
+        case server
+        case channel
+    }
+    
+    struct ListItem: Identifiable {
+        var id: String {
+            return name
+        }
+        
+        var name: String
+        var type: ListItemType
+        var children: [ListItem]?
     }
 }
 
