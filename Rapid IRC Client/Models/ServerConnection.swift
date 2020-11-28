@@ -57,9 +57,9 @@ extension ServerConnection {
 
         func channelActive(context: ChannelHandlerContext) {
             print("connected")
-            connection.store.dispatch(action: JoinedChannelAction(
-                connection: self.connection,
-                channel: Connection.serverChannel))
+//            connection.store.dispatch(action: JoinedChannelAction(
+//                connection: self.connection,
+//                channel: Connection.serverChannel))
 
             let nick = connection.server.nick
 
@@ -166,14 +166,14 @@ extension ServerConnection {
             self.connection.store.dispatch(action: MessageReceivedAction(
                 connection: self.connection,
                 message: text,
-                channel: "Server"))
+                                            channel: Connection.serverChannel))
         }
 
         private func dispatchMessage(_ message: IRCMessage) {
             self.connection.store.dispatch(action: MessageReceivedAction(
                 connection: self.connection,
                 message: message.raw,
-                channel: "Server"))
+                channel: Connection.serverChannel))
         }
 
         private func send(_ message: String, context: ChannelHandlerContext?) {

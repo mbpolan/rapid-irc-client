@@ -30,7 +30,7 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
         }
         
         if connection != nil {
-            connection!.addMessage(channel: "Server", message: act.message)
+            connection!.addMessage(channel: Connection.serverChannel, message: act.message)
         } else {
             print("**ERROR**")
         }

@@ -9,7 +9,7 @@ import SwiftUI
 
 class Connection: Identifiable {
     
-    static let serverChannel = "Server"
+    static let serverChannel = "_"
     
     var name: String
     var client: ServerConnection
@@ -18,10 +18,14 @@ class Connection: Identifiable {
     init(name: String, client: ServerConnection) {
         self.name = name
         self.client = client
+        addChannel(name: Connection.serverChannel)
     }
     
     func addChannel(name: String) {
-        self.channels.append(IRCChannel(name: name))
+        // avoid adding a channel with the same name
+        if !channels.contains(where: { $0.name == name }) {
+            channels.append(IRCChannel(name: name))
+        }
     }
     
     func addServerMessage(_ message: String) {
