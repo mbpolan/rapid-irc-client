@@ -50,11 +50,11 @@ extension Command {
             return .listUserChannels
         case "255":
             return .listUserMe
-        case "255":
-            return .localUsers
         case "265":
-            return .globalUsers
+            return .localUsers
         case "266":
+            return .globalUsers
+        case "353":
             return .nameReply
         case "366":
             return .endOfNames
