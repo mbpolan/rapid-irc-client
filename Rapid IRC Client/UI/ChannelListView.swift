@@ -35,6 +35,7 @@ struct ChannelListView: View {
             return ListItem(
                 name: conn.name,
                 channelName: Connection.serverChannel,
+                active: true,
                 connection: conn,
                 type: .server,
                 children: conn.channels
@@ -42,6 +43,7 @@ struct ChannelListView: View {
                         return ListItem(
                             name: chan.name,
                             channelName: chan.name,
+                            active: chan.state == .joined,
                             connection: conn,
                             type: .channel,
                             children: nil)
@@ -52,13 +54,16 @@ struct ChannelListView: View {
         // the list will never show children after the fact.
         if model.count == 0 {
             model = [
-                ListItem(name: "", channelName: "empty", connection: nil, type: .server, children: [
-                    ListItem(name: "", channelName: "empty", connection: nil, type: .server, children: nil)
+                ListItem(name: "", channelName: "empty", active: false, connection: nil, type: .server, children: [
+                    ListItem(name: "", channelName: "empty", active: false, connection: nil, type: .server, children: nil)
                 ])
             ]
         }
 
         return List(model, children: \.children) { row in
+            // determine an appropriate style depending on the state of the item            
+            let fontStyle = row.active ? Font.body.bold() : Font.body.italic()
+            
             VStack {
                 // do not display server channels in the list directly as children
                 if !(row.type == .channel && row.name == "_") {
@@ -66,6 +71,7 @@ struct ChannelListView: View {
                         store.dispatch(action: SetChannelAction(connection: row.connection!, channel: row.channelName))
                     }
                     .buttonStyle(BorderlessButtonStyle())
+                    .font(fontStyle)
                 }
             }
         }
@@ -84,7 +90,8 @@ extension ChannelListView {
         }
         
         var name: String
-        var channelName: String;
+        var channelName: String
+        var active: Bool
         var connection: Connection?
         var type: ListItemType
         var children: [ListItem]?

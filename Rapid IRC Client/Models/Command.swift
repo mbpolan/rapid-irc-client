@@ -75,6 +75,8 @@ extension Command {
         switch name.lowercased() {
         case "join":
             return .join
+        case "part":
+            return .part
         case "ping":
             return .ping
         default:

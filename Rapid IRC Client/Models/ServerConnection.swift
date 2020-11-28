@@ -138,8 +138,7 @@ extension ServerConnection {
 
             self.connection.store.dispatch(action: JoinedChannelAction(
                 connection: self.connection,
-                channel: channel!
-                ))
+                channel: channel!))
         }
 
         private func handlePart(_ message: IRCMessage) {

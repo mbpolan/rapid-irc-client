@@ -22,10 +22,17 @@ class Connection: Identifiable {
     }
     
     func addChannel(name: String) {
-        // avoid adding a channel with the same name
-        if !channels.contains(where: { $0.name == name }) {
-            channels.append(IRCChannel(name: name))
+        // avoid adding a channel with the same name. if it does exist, set it as joined.
+        let channel = channels.first { $0.name == name }
+        if channel == nil {
+            channels.append(IRCChannel(name: name, state: .joined))
+        } else if channel!.state != .joined {
+            channel!.state = .joined
         }
+    }
+    
+    func leaveChannel(channel: String) {
+        channels.first { $0.name == channel }?.state = .parted
     }
     
     func addServerMessage(_ message: String) {
@@ -35,7 +42,7 @@ class Connection: Identifiable {
     func addMessage(channel: String, message: String) {
         var ircChannel = channels.first { $0.name == channel }
         if (ircChannel == nil) {
-            ircChannel = IRCChannel(name: channel)
+            ircChannel = IRCChannel(name: channel, state: .joined)
             channels.append(ircChannel!)
         }
         
@@ -46,9 +53,18 @@ class Connection: Identifiable {
 class IRCChannel {
     
     var name: String
+    var state: State
     var messages: [String] = []
     
-    init(name: String) {
+    init(name: String, state: State) {
         self.name = name
+        self.state = state
+    }
+}
+
+extension IRCChannel {
+    enum State {
+        case joined
+        case parted
     }
 }

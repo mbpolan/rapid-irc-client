@@ -53,7 +53,7 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
             conn.client === act.connection
         }
         
-        // TODO
+        connection?.leaveChannel(channel: act.channel)
         
     default:
         break
