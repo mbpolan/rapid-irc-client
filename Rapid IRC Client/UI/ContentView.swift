@@ -18,7 +18,9 @@ struct ContentView: View {
     var body: some View {
         HSplitView {
             ChannelListView()
+                .layoutPriority(1)
             ActiveChannelView()
+                .layoutPriority(2)
         }.sheet(isPresented: $connectDialogShown, content: {
             ConnectDialog(shown: $connectDialogShown, onClose: handleConnectToServer)
         }).onReceive(onConnectToServer) { event in
