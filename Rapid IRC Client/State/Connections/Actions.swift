@@ -19,7 +19,9 @@ struct MessageReceivedAction: ConnectionsAction {
 }
 
 struct MessageSentAction: ConnectionsAction {
+    var connection: ServerConnection
     var message: String
+    var channel: String
 }
 
 struct JoinedChannelAction: ConnectionsAction {

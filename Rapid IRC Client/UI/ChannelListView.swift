@@ -33,6 +33,7 @@ struct ChannelListView: View {
     private func makeList() -> some View {
         var model = store.state.connections.connections.map { conn in
             return ListItem(
+                id: conn.getServerChannel()!.id,
                 name: conn.name,
                 channelName: Connection.serverChannel,
                 active: true,
@@ -41,6 +42,7 @@ struct ChannelListView: View {
                 children: conn.channels
                     .map { chan in
                         return ListItem(
+                            id: chan.id,
                             name: chan.name,
                             channelName: chan.name,
                             active: chan.state == .joined,
@@ -54,24 +56,26 @@ struct ChannelListView: View {
         // the list will never show children after the fact.
         if model.count == 0 {
             model = [
-                ListItem(name: "", channelName: "empty", active: false, connection: nil, type: .server, children: [
-                    ListItem(name: "", channelName: "empty", active: false, connection: nil, type: .server, children: nil)
+                ListItem(id: "", name: "", channelName: "empty", active: false, connection: nil, type: .server, children: [
+                    ListItem(id: "", name: "", channelName: "empty", active: false, connection: nil, type: .server, children: nil)
                 ])
             ]
         }
 
         return List(model, children: \.children) { row in
-            // determine an appropriate style depending on the state of the item            
+            // determine an appropriate style depending on the state of the item
+            let color =  store.state.ui.currentChannel == row.id ? Color.primary : Color.secondary
             let fontStyle = row.active ? Font.body.bold() : Font.body.italic()
             
             VStack {
                 // do not display server channels in the list directly as children
                 if !(row.type == .channel && row.name == "_") {
                     Button(row.name) {
-                        store.dispatch(action: SetChannelAction(connection: row.connection!, channel: row.channelName))
+                        store.dispatch(action: SetChannelAction(connection: row.connection!, channel: row.id))
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     .font(fontStyle)
+                    .foregroundColor(color)
                 }
             }
         }
@@ -85,10 +89,7 @@ extension ChannelListView {
     }
     
     struct ListItem: Identifiable {
-        var id: String {
-            return name
-        }
-        
+        var id: String
         var name: String
         var channelName: String
         var active: Bool

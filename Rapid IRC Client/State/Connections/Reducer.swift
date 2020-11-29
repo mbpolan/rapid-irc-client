@@ -7,7 +7,7 @@
 
 struct ConnectionsState {
     var connections: [Connection] = []
-    var current = -1
+    var channelUuids: [String: IRCChannel] = [:]
 }
 
 func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
@@ -19,10 +19,13 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
             name: act.server.host,
             client: ServerConnection(server: act.server, store: action.store))
         
+        let serverChannel = connection.addChannel(name: Connection.serverChannel)
+        newState.connections.channelUuids[serverChannel.id] = serverChannel
+        newState.ui.currentChannel = serverChannel.id
+        
         connection.client.connect()
 
         newState.connections.connections.append(connection)
-        newState.connections.current = newState.connections.connections.count - 1
     
     case let act as MessageReceivedAction:
         let connection = newState.connections.connections.first { conn in
@@ -36,17 +39,18 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
         }
         
     case let act as MessageSentAction:
-        let connection = newState.connections.connections[newState.connections.current]
-        
         let message = act.message.starts(with: "/") ? act.message.subString(from: 1) : act.message
-        connection.client.sendMessage(message)
+        act.connection.sendMessage(message)
         
     case let act as JoinedChannelAction:
         let connection = newState.connections.connections.first { conn in
             conn.client === act.connection
         }
         
-        connection?.addChannel(name: act.channel)
+        if connection != nil {
+            let channel = connection!.addChannel(name: act.channel)
+            newState.connections.channelUuids[channel.id] = channel
+        }
         
     case let act as PartChannelAction:
         let connection = newState.connections.connections.first { conn in

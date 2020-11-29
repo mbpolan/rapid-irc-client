@@ -18,17 +18,23 @@ class Connection: Identifiable {
     init(name: String, client: ServerConnection) {
         self.name = name
         self.client = client
-        addChannel(name: Connection.serverChannel)
     }
     
-    func addChannel(name: String) {
+    func addChannel(name: String) -> IRCChannel {
         // avoid adding a channel with the same name. if it does exist, set it as joined.
-        let channel = channels.first { $0.name == name }
+        var channel = channels.first { $0.name == name }
         if channel == nil {
-            channels.append(IRCChannel(name: name, state: .joined))
+            channel = IRCChannel(connection: self, name: name, state: .joined)
+            channels.append(channel!)
         } else if channel!.state != .joined {
             channel!.state = .joined
         }
+        
+        return channel!
+    }
+    
+    func getServerChannel() -> IRCChannel? {
+        return channels.first { $0.name == Connection.serverChannel }
     }
     
     func leaveChannel(channel: String) {
@@ -46,7 +52,7 @@ class Connection: Identifiable {
     func addMessage(channel: String, message: String) {
         var ircChannel = channels.first { $0.name == channel }
         if (ircChannel == nil) {
-            ircChannel = IRCChannel(name: channel, state: .joined)
+            ircChannel = IRCChannel(connection: self, name: channel, state: .joined)
             channels.append(ircChannel!)
         }
         
@@ -54,15 +60,18 @@ class Connection: Identifiable {
     }
 }
 
-class IRCChannel {
+class IRCChannel: Identifiable {
     
+    var id: String = UUID().uuidString
+    var connection: Connection
     var name: String
     var state: State
     var access: AccessType?
     var messages: [String] = []
     var users: [User] = []
     
-    init(name: String, state: State) {
+    init(connection: Connection, name: String, state: State) {
+        self.connection = connection
         self.name = name
         self.state = state
     }

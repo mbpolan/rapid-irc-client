@@ -29,8 +29,13 @@ struct MessageView: View {
         
         var text = Text("")
         
-        for message in store.state.ui.currentChannel!.messages {
-            text = text + Text("\(message)\n")
+        let channel = store.state.connections.channelUuids[store.state.ui.currentChannel ?? ""]
+        if channel == nil {
+            print("ERROR: no channel with UUID \(String(describing: store.state.ui.currentChannel))")
+        } else {
+            for message in channel!.messages {
+                text = text + Text("\(message)\n")
+            }
         }
         
         return text

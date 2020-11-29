@@ -6,7 +6,7 @@
 //
 
 struct UIState {
-    var currentChannel: IRCChannel?
+    var currentChannel: String?
 }
 
 func uiReducer(state: AppState, action: ActionWrapper) -> AppState {
@@ -14,8 +14,7 @@ func uiReducer(state: AppState, action: ActionWrapper) -> AppState {
 
     switch action.action {
     case let act as SetChannelAction:
-        newState.ui.currentChannel = act.connection.channels.first { $0.name == act.channel}
-        print(newState.ui.currentChannel)
+        newState.ui.currentChannel = act.channel
     
     default:
         break
