@@ -34,6 +34,12 @@ struct PartChannelAction: ConnectionsAction {
     var channel: String
 }
 
+struct ChannelTopicAction: ConnectionsAction {
+    var connection: ServerConnection
+    var channel: String
+    var topic: String
+}
+
 struct UsersInChannelAction: ConnectionsAction {
     var connection: ServerConnection
     var users: [User]

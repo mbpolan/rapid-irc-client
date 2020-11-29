@@ -21,6 +21,14 @@ extension String {
 
         return String(self[startIndex...endIndex])
     }
+    
+    func dropLeadingColon() -> String {
+        if first == ":" {
+            return String(dropFirst())
+        }
+        
+        return self
+    }
 
     var isNumber: Bool {
         return !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil

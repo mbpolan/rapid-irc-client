@@ -64,6 +64,7 @@ class IRCChannel: Identifiable {
     
     var id: String = UUID().uuidString
     var connection: Connection
+    var topic: String?
     var name: String
     var state: State
     var access: AccessType?
@@ -111,5 +112,22 @@ extension User {
         case fullOperator = "@"
         case halfOperator = "%"
         case voiced = "+"
+    }
+}
+
+extension User.ChannelPrivilege {
+    func ordinal() -> Int {
+        switch self {
+        case .owner:
+            return 5
+        case .admin:
+            return 4
+        case .fullOperator:
+            return 3
+        case.halfOperator:
+            return 2
+        case .voiced:
+            return 1
+        }
     }
 }

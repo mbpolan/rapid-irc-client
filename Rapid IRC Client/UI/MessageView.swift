@@ -38,7 +38,7 @@ struct MessageView: View {
             }
         }
         
-        return text
+        return text.font(.system(size: 14, design: .monospaced))
     }
 }
 

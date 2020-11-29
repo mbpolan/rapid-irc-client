@@ -20,6 +20,7 @@ enum Command {
     case listUserMe
     case localUsers
     case globalUsers
+    case topic
     case nameReply
     case endOfNames
     case motd
@@ -27,6 +28,7 @@ enum Command {
     case endMotd
     
     case errorNoOrigin
+    case errorNickInUse
 }
 
 extension Command {
@@ -54,6 +56,8 @@ extension Command {
             return .localUsers
         case "266":
             return .globalUsers
+        case "332":
+            return .topic
         case "353":
             return .nameReply
         case "366":
@@ -66,6 +70,8 @@ extension Command {
             return .endMotd
         case "409":
             return .errorNoOrigin
+        case "433":
+            return .errorNickInUse
         default:
             return nil
         }

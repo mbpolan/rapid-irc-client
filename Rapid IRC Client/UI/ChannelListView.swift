@@ -61,23 +61,34 @@ struct ChannelListView: View {
                 ])
             ]
         }
-
-        return List(model, children: \.children) { row in
-            // determine an appropriate style depending on the state of the item
-            let color =  store.state.ui.currentChannel == row.id ? Color.primary : Color.secondary
-            let fontStyle = row.active ? Font.body.bold() : Font.body.italic()
-            
-            VStack {
-                // do not display server channels in the list directly as children
-                if !(row.type == .channel && row.name == "_") {
-                    Button(row.name) {
-                        store.dispatch(action: SetChannelAction(connection: row.connection!, channel: row.id))
+        
+        return GeometryReader { geo in
+            List(model, children: \.children) { row in
+                // determine an appropriate style depending on the state of the item
+                let color =  store.state.ui.currentChannel == row.id ? Color.primary : Color.secondary
+                let fontStyle = row.active ? Font.body.bold() : Font.body.italic()
+                
+                HStack {
+                    // do not display server channels in the list directly as children
+                    if !(row.type == .channel && row.name == "_") {
+                        Button(action: {
+                            store.dispatch(action: SetChannelAction(connection: row.connection!, channel: row.id))
+                        }) {
+                            Text(row.name)
+                                .font(fontStyle)
+                                .foregroundColor(color)
+                        }.buttonStyle(BorderlessButtonStyle())
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            
+                        }) {
+                            Image(systemName: "xmark")
+                        }.buttonStyle(BorderlessButtonStyle())
                     }
-                    .buttonStyle(BorderlessButtonStyle())
-                    .font(fontStyle)
-                    .foregroundColor(color)
                 }
-            }
+            }.frame(width: geo.size.width)
         }
     }
 }

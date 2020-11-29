@@ -100,6 +100,8 @@ extension ServerConnection {
                 handlePing(ircMessage)
             case .nameReply:
                 handleNameReply(ircMessage)
+            case .topic:
+                handleTopic(ircMessage)
 
             case .welcome,
                  .created,
@@ -116,6 +118,9 @@ extension ServerConnection {
                  .serverMotd,
                  .endMotd:
                 handleServerMessage(ircMessage)
+            
+            case .errorNickInUse:
+                handleNickInUseError(ircMessage)
 
             default:
                 print("Unknown message: \(message)")
@@ -188,6 +193,25 @@ extension ServerConnection {
                 users: users,
                 channel: channel))
         }
+        
+        private func handleTopic(_ message: IRCMessage) {
+            // expect least two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in TOPIC reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel
+            let channel = message.parameters[0]
+            
+            // remaining parameter is the topic text
+            let topic = message.parameters[1...].joined(separator: " ").dropLeadingColon()
+            
+            self.connection.store.dispatch(action: ChannelTopicAction(
+                connection: self.connection,
+                channel: channel,
+                topic: topic))
+        }
 
         private func handleServerMessage(_ message: IRCMessage) {
             // combine parameters into a single string message
@@ -201,6 +225,25 @@ extension ServerConnection {
             self.connection.store.dispatch(action: MessageReceivedAction(
                 connection: self.connection,
                 message: text,
+                channel: Connection.serverChannel))
+        }
+        
+        private func handleNickInUseError(_ message: IRCMessage) {
+            // expect two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in error nick in use reply: \(message)")
+                return
+            }
+            
+            // first parameter is the nick
+            let nick = message.parameters[0]
+            
+            // second parameter is the reason
+            let reason = message.parameters[1].dropLeadingColon()
+            
+            self.connection.store.dispatch(action: MessageReceivedAction(
+                connection: self.connection,
+                message: "\(nick) \(reason)",
                 channel: Connection.serverChannel))
         }
 

@@ -65,6 +65,13 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
         }
         
         connection?.channels.first { $0.name == act.channel }?.users.append(contentsOf: act.users)
+    
+    case let act as ChannelTopicAction:
+        let connection = newState.connections.connections.first { conn in
+            conn.client === act.connection
+        }
+        
+        connection?.channels.first { $0.name == act.channel }?.topic = act.topic
         
     default:
         break
