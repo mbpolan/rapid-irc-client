@@ -98,6 +98,8 @@ extension ServerConnection {
                 handlePart(ircMessage)
             case .ping:
                 handlePing(ircMessage)
+            case .privateMessage:
+                handlePrivateMessage(ircMessage)
             case .nameReply:
                 handleNameReply(ircMessage)
             case .topic:
@@ -152,8 +154,8 @@ extension ServerConnection {
 
             self.connection.store.dispatch(action: JoinedChannelAction(
                                             connection: self.connection,
-                                            qualifiedUsername: message.prefix!.raw,
-                                            user: message.prefix!.subject,
+                                            identifier: message.prefix!.raw,
+                                            nick: message.prefix!.subject,
                                             channel: channel))
         }
 
@@ -178,10 +180,40 @@ extension ServerConnection {
 
             self.connection.store.dispatch(action: PartChannelAction(
                                             connection: self.connection,
-                                            qualifiedUsername: message.prefix!.raw,
-                                            user: message.prefix!.subject,
+                                            identifier: message.prefix!.raw,
+                                            nick: message.prefix!.subject,
                                             message: reason,
                                             channel: channel))
+        }
+        
+        private func handlePrivateMessage(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in PART message: \(message)")
+                return
+            }
+            
+            // expect at least one parameter
+            if message.parameters.count < 1 {
+                print("ERROR: no channel in PART message: \(message)")
+                return
+            }
+            
+            // first parameter is the intended channel or user
+            let recipient = message.parameters[0]
+            
+            // remaining parameters aree the message content
+            let text = message.parameters[1...].joined(separator: " ").dropLeadingColon()
+            
+            self.connection.store.dispatch(action: PrivateMessageAction(
+                                            connection: connection,
+                                            identifier: message.prefix!.raw,
+                                            nick: message.prefix!.subject,
+                                            recipient: recipient,
+                                            message: ChannelMessage(
+                                                sender: message.prefix!.subject,
+                                                text: text,
+                                                variant: .privateMessage)))
         }
         
         private func handleNameReply(_ message: IRCMessage) {

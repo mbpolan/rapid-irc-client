@@ -64,12 +64,14 @@ class Connection: Identifiable {
 
 struct ChannelMessage {
     
+    var sender: String?
     var text: String
     var variant: Variant
 }
 
 extension ChannelMessage {
     enum Variant {
+        case privateMessage
         case userJoined
         case userParted
         case error

@@ -9,6 +9,7 @@ enum Command {
     case join
     case part
     case ping
+    case privateMessage
     case welcome
     case yourHost
     case created
@@ -85,6 +86,8 @@ extension Command {
             return .part
         case "ping":
             return .ping
+        case "privmsg":
+            return .privateMessage
         default:
             return nil
         }

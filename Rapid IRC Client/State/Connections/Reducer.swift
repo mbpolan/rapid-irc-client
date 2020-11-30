@@ -59,11 +59,11 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
             newState.connections.channelUuids[channel.id] = channel
             
             channel.messages.append(ChannelMessage(
-                                        text: "\(act.qualifiedUsername) has joined \(act.channel)",
+                                        text: "\(act.identifier) has joined \(act.channel)",
                                         variant: .userJoined))
             
             channel.users.insert(User(
-                                    name: act.user,
+                                    name: act.nick,
                                     privilege: nil))
         }
         
@@ -76,15 +76,27 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
             let channel = connection!.channels.first { $0.name == act.channel }!
             
             channel.messages.append(ChannelMessage(
-                                        text: "\(act.qualifiedUsername) has left \(act.channel)",
+                                        text: "\(act.identifier) has left \(act.channel)",
                                         variant: .userParted))
             
             // does this message refer to us? if so, part the channel from our perspective.
             // if another user has left, remove them from the user list.
-            if act.qualifiedUsername == connection?.identifier {
+            if act.identifier == connection?.identifier {
                 connection!.leaveChannel(channel: act.channel)
-            } else if let targetUser = channel.users.first(where: { $0.name == act.user }) {
+            } else if let targetUser = channel.users.first(where: { $0.name == act.nick }) {
                 channel.users.remove(targetUser)
+            }
+        }
+        
+    case let act as PrivateMessageAction:
+        let connection = newState.connections.connections.first { conn in
+            conn.client === act.connection
+        }
+        
+        if connection != nil {
+            // FIXME: this can also include other users instead of just channels
+            if let channel = connection!.channels.first(where: { $0.name == act.recipient }) {
+                channel.messages.append(act.message)
             }
         }
         
