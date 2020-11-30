@@ -12,9 +12,14 @@ struct ConnectAction: ConnectionsAction {
     var server: ServerInfo
 }
 
+struct WelcomeAction: ConnectionsAction {
+    var connection: ServerConnection
+    var identifier: String
+}
+
 struct MessageReceivedAction: ConnectionsAction {
     var connection: ServerConnection
-    var message: String
+    var message: ChannelMessage
     var channel: String
 }
 
@@ -26,11 +31,16 @@ struct MessageSentAction: ConnectionsAction {
 
 struct JoinedChannelAction: ConnectionsAction {
     var connection: ServerConnection
+    var qualifiedUsername: String
+    var user: String
     var channel: String
 }
 
 struct PartChannelAction: ConnectionsAction {
     var connection: ServerConnection
+    var qualifiedUsername: String
+    var user: String
+    var message: String?
     var channel: String
 }
 

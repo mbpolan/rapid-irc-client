@@ -48,7 +48,7 @@ struct ActiveChannelView: View {
         }
     }
     
-    private func sortUsers(_ users: [User]) -> [User] {
+    private func sortUsers(_ users: Set<User>) -> [User] {
         return users.sorted(by: { (a, b) -> Bool in
             let aOrdinal = a.privilege?.ordinal() ?? 0
             let bOrdinal = b.privilege?.ordinal() ?? 0
@@ -98,15 +98,15 @@ struct ActiveChannelView_Previews: PreviewProvider {
         
         channel.topic = "some topic message for this channel"
         
-        channel.users.append(User(
+        channel.users.insert(User(
                                 name: "mike",
                                 privilege: nil))
         
-        channel.users.append(User(
+        channel.users.insert(User(
                                 name: "piotr",
                                 privilege: .voiced))
         
-        channel.users.append(User(
+        channel.users.insert(User(
                                 name: "jase",
                                 privilege: .fullOperator))
         

@@ -34,7 +34,7 @@ struct MessageView: View {
             print("ERROR: no channel with UUID \(String(describing: store.state.ui.currentChannel))")
         } else {
             for message in channel!.messages {
-                text = text + Text("\(message)\n")
+                text = text + Text("\(message.text)\n")
             }
         }
         

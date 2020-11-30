@@ -26,6 +26,13 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
         connection.client.connect()
 
         newState.connections.connections.append(connection)
+        
+    case let act as WelcomeAction:
+        let connection = newState.connections.connections.first { conn in
+            conn.client === act.connection
+        }
+        
+        connection?.identifier = act.identifier
     
     case let act as MessageReceivedAction:
         let connection = newState.connections.connections.first { conn in
@@ -50,6 +57,14 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
         if connection != nil {
             let channel = connection!.addChannel(name: act.channel)
             newState.connections.channelUuids[channel.id] = channel
+            
+            channel.messages.append(ChannelMessage(
+                                        text: "\(act.qualifiedUsername) has joined \(act.channel)",
+                                        variant: .userJoined))
+            
+            channel.users.insert(User(
+                                    name: act.user,
+                                    privilege: nil))
         }
         
     case let act as PartChannelAction:
@@ -57,14 +72,28 @@ func connectionsReducer(state: AppState, action: ActionWrapper) -> AppState {
             conn.client === act.connection
         }
         
-        connection?.leaveChannel(channel: act.channel)
+        if connection != nil {
+            let channel = connection!.channels.first { $0.name == act.channel }!
+            
+            channel.messages.append(ChannelMessage(
+                                        text: "\(act.qualifiedUsername) has left \(act.channel)",
+                                        variant: .userParted))
+            
+            // does this message refer to us? if so, part the channel from our perspective.
+            // if another user has left, remove them from the user list.
+            if act.qualifiedUsername == connection?.identifier {
+                connection!.leaveChannel(channel: act.channel)
+            } else if let targetUser = channel.users.first(where: { $0.name == act.user }) {
+                channel.users.remove(targetUser)
+            }
+        }
         
     case let act as UsersInChannelAction:
         let connection = newState.connections.connections.first { conn in
             conn.client === act.connection
         }
         
-        connection?.channels.first { $0.name == act.channel }?.users.append(contentsOf: act.users)
+        connection?.channels.first { $0.name == act.channel }?.users.formUnion(act.users)
     
     case let act as ChannelTopicAction:
         let connection = newState.connections.connections.first { conn in

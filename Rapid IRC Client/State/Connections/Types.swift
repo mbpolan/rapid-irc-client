@@ -12,8 +12,10 @@ class Connection: Identifiable {
     static let serverChannel = "_"
     
     var name: String
+    var identifier: String?
     var client: ServerConnection
     var channels: [IRCChannel] = []
+    var pendingChannels: [String] = []
     
     init(name: String, client: ServerConnection) {
         self.name = name
@@ -45,11 +47,11 @@ class Connection: Identifiable {
         }
     }
     
-    func addServerMessage(_ message: String) {
+    func addServerMessage(_ message: ChannelMessage) {
         addMessage(channel: Connection.serverChannel, message: message)
     }
     
-    func addMessage(channel: String, message: String) {
+    func addMessage(channel: String, message: ChannelMessage) {
         var ircChannel = channels.first { $0.name == channel }
         if (ircChannel == nil) {
             ircChannel = IRCChannel(connection: self, name: channel, state: .joined)
@@ -57,6 +59,21 @@ class Connection: Identifiable {
         }
         
         ircChannel!.messages.append(message)
+    }
+}
+
+struct ChannelMessage {
+    
+    var text: String
+    var variant: Variant
+}
+
+extension ChannelMessage {
+    enum Variant {
+        case userJoined
+        case userParted
+        case error
+        case other
     }
 }
 
@@ -68,8 +85,8 @@ class IRCChannel: Identifiable {
     var name: String
     var state: State
     var access: AccessType?
-    var messages: [String] = []
-    var users: [User] = []
+    var messages: [ChannelMessage] = []
+    var users: Set<User> = []
     
     init(connection: Connection, name: String, state: State) {
         self.connection = connection
@@ -91,7 +108,16 @@ extension IRCChannel {
     }
 }
 
-class User: Identifiable {
+class User: Identifiable, Hashable {
+    
+    static func == (lhs: User, rhs: User) -> Bool {
+        return lhs.name == rhs.name && lhs.privilege == rhs.privilege
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self).hashValue)
+    }
+    
     var id: String {
         return name
     }

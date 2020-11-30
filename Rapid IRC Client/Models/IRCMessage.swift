@@ -10,7 +10,7 @@ import SwiftUI
 struct IRCMessage {
     
     var raw: String
-    var prefix: String?
+    var prefix: Prefix?
     var command: Command?
     var target: String?
     var parameters: [String] = []
@@ -25,9 +25,9 @@ struct IRCMessage {
         }
         
         // prefix is optional, but if it exists, it's always lead by a colon
-        var prefix: String? = nil
+        var prefix: Prefix? = nil
         if parts.first!.starts(with: ":") {
-            prefix = String(parts.first!).subString(from: 1)
+            prefix = Prefix.parse(String(parts.first!).subString(from: 1))
             parts.removeFirst()
         }
         
@@ -59,10 +59,55 @@ struct IRCMessage {
         self.parameters = []
     }
     
-    private init(raw: String, prefix: String?, command: Command?, target: String?, parameters: [String]?) {
+    private init(raw: String, prefix: Prefix?, command: Command?, target: String?, parameters: [String]?) {
         self.raw = raw
         self.prefix = prefix
         self.command = command
         self.parameters = parameters ?? []
+    }
+}
+
+extension IRCMessage {
+    struct Prefix {
+        
+        // the raw prefix, without the leading colon
+        var raw: String
+        
+        // either the server name or nick
+        var subject: String
+        
+        // optional username from the !user@host segment
+        var user: String?
+        
+        // optioanl hostname from the !user@host segment
+        var host: String?
+        
+        static func parse(_ raw: String) -> Prefix? {
+            let subject: String
+            var user: String?
+            var host: String?
+            
+            // check for presence of ! separator
+            if let ex = raw.range(of: "!") {
+                subject = String(raw[..<ex.lowerBound])
+                let network = raw[ex.upperBound...]
+                
+                // check for presence of @ separator
+                if let at = network.range(of: "@") {
+                    user = String(network[..<at.lowerBound])
+                    host = String(network[at.upperBound...])
+                } else {
+                    user = String(network)
+                }
+            } else {
+                subject = raw
+            }
+            
+            return Prefix(
+                raw: raw,
+                subject: subject,
+                user: user,
+                host: host)
+        }
     }
 }

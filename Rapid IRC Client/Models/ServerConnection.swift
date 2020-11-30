@@ -102,21 +102,21 @@ extension ServerConnection {
                 handleNameReply(ircMessage)
             case .topic:
                 handleTopic(ircMessage)
-
-            case .welcome,
-                 .created,
-                 .yourHost,
-                 .myInfo,
-                 .iSupport,
-                 .statsLine,
-                 .listUsers,
-                 .listUserChannels,
-                 .listUserMe,
-                 .localUsers,
-                 .globalUsers,
-                 .motd,
-                 .serverMotd,
-                 .endMotd:
+            case .welcome:
+                handleServerWelcome(ircMessage)
+            case.created,
+                .yourHost,
+                .myInfo,
+                .iSupport,
+                .statsLine,
+                .listUsers,
+                .listUserChannels,
+                .listUserMe,
+                .localUsers,
+                .globalUsers,
+                .motd,
+                .serverMotd,
+                .endMotd:
                 handleServerMessage(ircMessage)
             
             case .errorNickInUse:
@@ -135,29 +135,53 @@ extension ServerConnection {
         }
 
         private func handleJoin(_ message: IRCMessage) {
-            var channel = message.parameters.first
-            if channel == nil {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in JOIN message: \(message)")
+                return
+            }
+            
+            // expect at least one parameter
+            if message.parameters.count < 1 {
                 print("ERROR: no channel in JOIN message: \(message)")
                 return
             }
 
-            channel = channel!.first == ":" ? channel!.subString(from: 1) : channel
+            // first parameter is the channel
+            let channel = message.parameters[0].dropLeadingColon()
 
             self.connection.store.dispatch(action: JoinedChannelAction(
-                connection: self.connection,
-                channel: channel!))
+                                            connection: self.connection,
+                                            qualifiedUsername: message.prefix!.raw,
+                                            user: message.prefix!.subject,
+                                            channel: channel))
         }
 
         private func handlePart(_ message: IRCMessage) {
-            let channel = message.parameters.first
-            if channel == nil {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in PART message: \(message)")
+                return
+            }
+            
+            // expect at least one parameter
+            if message.parameters.count < 1 {
                 print("ERROR: no channel in PART message: \(message)")
                 return
             }
+            
+            // first parameter is the channel
+            let channel = message.parameters[0]
+            
+            // second parameter is an optional message
+            let reason = message.parameters.count > 1 ? message.parameters[1] : nil
 
             self.connection.store.dispatch(action: PartChannelAction(
-                connection: self.connection,
-                channel: channel!))
+                                            connection: self.connection,
+                                            qualifiedUsername: message.prefix!.raw,
+                                            user: message.prefix!.subject,
+                                            message: reason,
+                                            channel: channel))
         }
         
         private func handleNameReply(_ message: IRCMessage) {
@@ -212,6 +236,21 @@ extension ServerConnection {
                 channel: channel,
                 topic: topic))
         }
+        
+        private func handleServerWelcome(_ message: IRCMessage) {
+            // expect least one parameter
+            if message.parameters.count < 1 {
+                print("ERROR: not enough params in WELCOME reply: \(message)")
+                return
+            }
+            
+            // take the last element of the parameter list and assume it's the client identifier
+            let identifier = message.parameters.last!
+            
+            self.connection.store.dispatch(action: WelcomeAction(
+                                            connection: self.connection,
+                                            identifier: identifier))
+        }
 
         private func handleServerMessage(_ message: IRCMessage) {
             // combine parameters into a single string message
@@ -224,7 +263,7 @@ extension ServerConnection {
 
             self.connection.store.dispatch(action: MessageReceivedAction(
                 connection: self.connection,
-                message: text,
+                message: ChannelMessage(text: text, variant: .other),
                 channel: Connection.serverChannel))
         }
         
@@ -243,14 +282,14 @@ extension ServerConnection {
             
             self.connection.store.dispatch(action: MessageReceivedAction(
                 connection: self.connection,
-                message: "\(nick) \(reason)",
+                message: ChannelMessage(text: "\(nick) \(reason)", variant: .error),
                 channel: Connection.serverChannel))
         }
 
         private func dispatchMessage(_ message: IRCMessage) {
             self.connection.store.dispatch(action: MessageReceivedAction(
                 connection: self.connection,
-                message: message.raw,
+                message: ChannelMessage(text: message.raw, variant: .other),
                 channel: Connection.serverChannel))
         }
 
