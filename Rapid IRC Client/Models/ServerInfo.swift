@@ -5,7 +5,7 @@
 //  Created by Mike Polan on 10/28/20.
 //
 
-struct ServerInfo {
+struct ServerInfo: Equatable {
     var nick: String
     var host: String
     var port: Int

@@ -10,6 +10,7 @@ import SwiftUI
 
 class ServerConnection {
 
+    internal var connection: Connection?
     internal let server: ServerInfo
     internal let store: Store
     private let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
@@ -18,6 +19,10 @@ class ServerConnection {
     init(server: ServerInfo, store: Store) {
         self.server = server
         self.store = store
+    }
+    
+    func withConnection(_ connection: Connection) {
+        self.connection = connection
     }
 
     func connect() {
@@ -152,11 +157,11 @@ extension ServerConnection {
             // first parameter is the channel
             let channel = message.parameters[0].dropLeadingColon()
 
-            self.connection.store.dispatch(action: JoinedChannelAction(
-                                            connection: self.connection,
-                                            identifier: message.prefix!.raw,
-                                            nick: message.prefix!.subject,
-                                            channel: channel))
+//            self.connection.store.dispatch(action: JoinedChannelAction(
+//                                            connection: self.connection,
+//                                            identifier: message.prefix!.raw,
+//                                            nick: message.prefix!.subject,
+//                                            channel: channel))
         }
 
         private func handlePart(_ message: IRCMessage) {
@@ -178,12 +183,12 @@ extension ServerConnection {
             // second parameter is an optional message
             let reason = message.parameters.count > 1 ? message.parameters[1] : nil
 
-            self.connection.store.dispatch(action: PartChannelAction(
-                                            connection: self.connection,
-                                            identifier: message.prefix!.raw,
-                                            nick: message.prefix!.subject,
-                                            message: reason,
-                                            channel: channel))
+//            self.connection.store.dispatch(action: PartChannelAction(
+//                                            connection: self.connection,
+//                                            identifier: message.prefix!.raw,
+//                                            nick: message.prefix!.subject,
+//                                            message: reason,
+//                                            channel: channel))
         }
         
         private func handlePrivateMessage(_ message: IRCMessage) {
@@ -205,15 +210,15 @@ extension ServerConnection {
             // remaining parameters aree the message content
             let text = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
-            self.connection.store.dispatch(action: PrivateMessageAction(
-                                            connection: connection,
-                                            identifier: message.prefix!.raw,
-                                            nick: message.prefix!.subject,
-                                            recipient: recipient,
-                                            message: ChannelMessage(
-                                                sender: message.prefix!.subject,
-                                                text: text,
-                                                variant: .privateMessage)))
+//            self.connection.store.dispatch(action: PrivateMessageAction(
+//                                            connection: connection,
+//                                            identifier: message.prefix!.raw,
+//                                            nick: message.prefix!.subject,
+//                                            recipient: recipient,
+//                                            message: ChannelMessage(
+//                                                sender: message.prefix!.subject,
+//                                                text: text,
+//                                                variant: .privateMessage)))
         }
         
         private func handleNameReply(_ message: IRCMessage) {
@@ -244,10 +249,10 @@ extension ServerConnection {
                 return User(name: nickname, privilege: privilege)
             }
             
-            self.connection.store.dispatch(action: UsersInChannelAction(
-                connection: self.connection,
-                users: users,
-                channel: channel))
+//            self.connection.store.dispatch(action: UsersInChannelAction(
+//                connection: self.connection,
+//                users: users,
+//                channel: channel))
         }
         
         private func handleTopic(_ message: IRCMessage) {
@@ -263,10 +268,10 @@ extension ServerConnection {
             // remaining parameter is the topic text
             let topic = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
-            self.connection.store.dispatch(action: ChannelTopicAction(
-                connection: self.connection,
-                channel: channel,
-                topic: topic))
+//            self.connection.store.dispatch(action: ChannelTopicAction(
+//                connection: self.connection,
+//                channel: channel,
+//                topic: topic))
         }
         
         private func handleServerWelcome(_ message: IRCMessage) {
@@ -279,9 +284,9 @@ extension ServerConnection {
             // take the last element of the parameter list and assume it's the client identifier
             let identifier = message.parameters.last!
             
-            self.connection.store.dispatch(action: WelcomeAction(
-                                            connection: self.connection,
-                                            identifier: identifier))
+//            self.connection.store.dispatch(action: WelcomeAction(
+//                                            connection: self.connection,
+//                                            identifier: identifier))
         }
 
         private func handleServerMessage(_ message: IRCMessage) {
@@ -292,11 +297,15 @@ extension ServerConnection {
             if text.first == ":" {
                 text = text.subString(from: 1)
             }
-
-            self.connection.store.dispatch(action: MessageReceivedAction(
-                connection: self.connection,
-                message: ChannelMessage(text: text, variant: .other),
-                channel: Connection.serverChannel))
+            
+            if let channel = connection.connection?.channels.first(where: { $0.name == Connection.serverChannel }) {
+                connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                channel,
+                                                ChannelMessage(
+                                                    text: text,
+                                                    variant: .other))))
+            }
         }
         
         private func handleNickInUseError(_ message: IRCMessage) {
@@ -312,17 +321,17 @@ extension ServerConnection {
             // second parameter is the reason
             let reason = message.parameters[1].dropLeadingColon()
             
-            self.connection.store.dispatch(action: MessageReceivedAction(
-                connection: self.connection,
-                message: ChannelMessage(text: "\(nick) \(reason)", variant: .error),
-                channel: Connection.serverChannel))
+//            self.connection.store.dispatch(action: MessageReceivedAction(
+//                connection: self.connection,
+//                message: ChannelMessage(text: "\(nick) \(reason)", variant: .error),
+//                channel: Connection.serverChannel))
         }
 
         private func dispatchMessage(_ message: IRCMessage) {
-            self.connection.store.dispatch(action: MessageReceivedAction(
-                connection: self.connection,
-                message: ChannelMessage(text: message.raw, variant: .other),
-                channel: Connection.serverChannel))
+//            self.connection.store.dispatch(action: MessageReceivedAction(
+//                connection: self.connection,
+//                message: ChannelMessage(text: message.raw, variant: .other),
+//                channel: Connection.serverChannel))
         }
 
         private func send(_ message: String, context: ChannelHandlerContext?) {

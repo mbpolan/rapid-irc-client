@@ -17,9 +17,10 @@ class Connection: Identifiable {
     var channels: [IRCChannel] = []
     var pendingChannels: [String] = []
     
-    init(name: String, client: ServerConnection) {
+    init(name: String, serverInfo: ServerInfo, store: Store) {
         self.name = name
-        self.client = client
+        self.client = ServerConnection(server: serverInfo, store: store)
+        self.client.withConnection(self)
     }
     
     func addChannel(name: String) -> IRCChannel {
@@ -79,7 +80,7 @@ extension ChannelMessage {
     }
 }
 
-class IRCChannel: Identifiable {
+class IRCChannel: Identifiable, Equatable {
     
     var id: String = UUID().uuidString
     var connection: Connection
@@ -89,6 +90,10 @@ class IRCChannel: Identifiable {
     var access: AccessType?
     var messages: [ChannelMessage] = []
     var users: Set<User> = []
+    
+    static func == (lhs: IRCChannel, rhs: IRCChannel) -> Bool {
+        return lhs.id == rhs.id
+    }
     
     init(connection: Connection, name: String, state: State) {
         self.connection = connection

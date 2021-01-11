@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import CombineRex
+import SwiftRex
 
 struct ChannelListView: View {
-
-    @EnvironmentObject var store: Store
+    
+    @ObservedObject var viewModel: ObservableViewModel<ChannelListViewModel.ViewAction, ChannelListViewModel.ViewState>
+    
     @State var connection = 0 {
         didSet {
             print("SET \(connection)")
@@ -21,17 +24,9 @@ struct ChannelListView: View {
             makeList()
         }
     }
-    
-    struct Test: Identifiable {
-        var id: String {
-            return name
-        }
-        var name: String
-        var children: [Test]?
-    }
 
     private func makeList() -> some View {
-        var model = store.state.connections.connections.map { conn in
+        var model = viewModel.state.connections.map { conn in
             return ListItem(
                 id: conn.getServerChannel()!.id,
                 name: conn.name,
@@ -65,14 +60,16 @@ struct ChannelListView: View {
         return GeometryReader { geo in
             List(model, children: \.children) { row in
                 // determine an appropriate style depending on the state of the item
-                let color =  store.state.ui.currentChannel == row.id ? Color.primary : Color.secondary
+                let color =  viewModel.state.currentChannel?.id == row.id ? Color.primary : Color.secondary
                 let fontStyle = row.active ? Font.body.bold() : Font.body.italic()
                 
                 HStack {
                     // do not display server channels in the list directly as children
                     if !(row.type == .channel && row.name == "_") {
                         Button(action: {
-                            store.dispatch(action: SetChannelAction(connection: row.connection!, channel: row.id))
+                            if let channel = row.connection!.channels.first(where: { $0.id == row.id }) {
+                                self.viewModel.dispatch(.setChannel(channel))
+                            }
                         }) {
                             Text(row.name)
                                 .font(fontStyle)
@@ -89,6 +86,60 @@ struct ChannelListView: View {
                     }
                 }
             }.frame(width: geo.size.width)
+        }
+    }
+}
+
+enum ChannelListViewModel {
+    
+    static func viewModel<S: StoreType>(from store: S) -> ObservableViewModel<ViewAction, ViewState> where S.ActionType == AppAction, S.StateType == AppState {
+        store.projection(
+            action: transform(viewAction:),
+            state: transform(appState:)
+        ).asObservableViewModel(initialState: .empty)
+    }
+
+    struct ViewState: Equatable {
+        static func == (lhs: ChannelListViewModel.ViewState, rhs: ChannelListViewModel.ViewState) -> Bool {
+            return false
+        }
+        
+        let connections: [Connection]
+        let currentChannel: IRCChannel?
+        
+        static var empty: ViewState {
+            .init(connections: [], currentChannel: nil)
+        }
+    }
+
+    enum ViewAction {
+        case setChannel(IRCChannel)
+    }
+    
+    private static func transform(viewAction: ViewAction) -> AppAction? {
+        switch viewAction {
+        case .setChannel:
+            let channel = viewAction.setChannel!
+            return .ui(.changeChannel(channel))
+        }
+    }
+    
+    private static func transform(appState: AppState) -> ViewState {
+        ViewState(
+            connections: appState.network.connections,
+            currentChannel: appState.ui.currentChannel)
+    }
+}
+
+extension ChannelListViewModel.ViewAction {
+    public var setChannel: IRCChannel? {
+        get {
+            guard case let .setChannel(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .setChannel = self, let value = newValue else { return }
+            self = .setChannel(value)
         }
     }
 }
@@ -110,8 +161,8 @@ extension ChannelListView {
     }
 }
 
-struct ChannelListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ChannelListView()
-    }
-}
+//struct ChannelListView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ChannelListView()
+//    }
+//}

@@ -5,20 +5,24 @@
 //  Created by Mike Polan on 11/23/20.
 //
 
-struct UIState {
-    var currentChannel: String?
-}
+import SwiftRex
 
-func uiReducer(state: AppState, action: ActionWrapper) -> AppState {
-    var newState = state
-
-    switch action.action {
-    case let act as SetChannelAction:
-        newState.ui.currentChannel = act.channel
+// MARK: - Reducer
+let uiReducer = Reducer<UIAction, UIState> { action, state in
+    switch action {
+    case .toggleConnectSheet(let value):
+        return UIState(
+            connectSheetShown: value,
+            currentChannel: state.currentChannel)
     
-    default:
-        break
+    case .connectionAdded(let connection):
+        return UIState(
+            connectSheetShown: state.connectSheetShown,
+            currentChannel: connection.channels.first)
+        
+    case .changeChannel:
+        return UIState(
+            connectSheetShown: state.connectSheetShown,
+            currentChannel: action.changeChannel)
     }
-
-    return newState
 }

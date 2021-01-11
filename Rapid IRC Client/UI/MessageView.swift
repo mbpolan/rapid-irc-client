@@ -5,11 +5,13 @@
 //  Created by Mike Polan on 10/28/20.
 //
 
+import CombineRex
+import SwiftRex
 import SwiftUI
 
 struct MessageView: View {
     
-    @EnvironmentObject var store: Store
+    @ObservedObject var viewModel: ObservableViewModel<MessageViewModel.ViewAction, MessageViewModel.ViewState>
     
     var body: some View {
         GeometryReader { geo in
@@ -32,21 +34,18 @@ struct MessageView: View {
     }
     
     private func makeText() -> some View {
-        if store.state.ui.currentChannel == nil {
+        if viewModel.state.currentChannel == nil {
             return Text("")
         }
-        
+
         var text = Text("")
-        
-        let channel = store.state.connections.channelUuids[store.state.ui.currentChannel ?? ""]
-        if channel == nil {
-            print("ERROR: no channel with UUID \(String(describing: store.state.ui.currentChannel))")
-        } else {
-            for message in channel!.messages {
+
+        if let channel = viewModel.state.currentChannel {
+            for message in channel.messages {
                 text = text + makeMessage(message)
             }
         }
-        
+
         return text.font(.system(size: 14, design: .monospaced))
     }
     
@@ -78,31 +77,55 @@ struct MessageView: View {
     }
 }
 
+enum MessageViewModel {
+    
+    static func viewModel<S: StoreType>(from store: S) -> ObservableViewModel<ViewAction, ViewState> where S.ActionType == AppAction, S.StateType == AppState {
+        store.projection(
+            action: transform(viewAction:),
+            state: transform(appState:)
+        ).asObservableViewModel(initialState: .empty)
+    }
+
+    struct ViewState: Equatable {
+        static func == (lhs: MessageViewModel.ViewState, rhs: MessageViewModel.ViewState) -> Bool {
+            return lhs.currentChannel?.id == rhs.currentChannel?.id
+        }
+        
+        let currentChannel: IRCChannel?
+        
+        static var empty: ViewState {
+            .init(currentChannel: nil)
+        }
+    }
+
+    enum ViewAction {
+    }
+    
+    private static func transform(viewAction: ViewAction) -> AppAction? {
+        return nil
+    }
+    
+    private static func transform(appState: AppState) -> ViewState {
+        ViewState(
+            currentChannel: appState.ui.currentChannel)
+    }
+}
+
 struct MessageView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = Store(
-            reducer: { state, action in
-                return state
-            },
-            state: AppState(
-                connections: ConnectionsState(
-                    connections: [],
-                    channelUuids: [:]),
-                ui: UIState(
-                    currentChannel: "123")))
+        let store = Store()
         
         let channel = IRCChannel(
             connection: Connection(
                 name: "mike",
-                client: ServerConnection(
-                    server: ServerInfo(
-                        nick: "mike",
-                        host: "localhost",
-                        port: 6667),
-                    store: store)),
+                serverInfo: ServerInfo(
+                    nick: "mike",
+                    host: "localhost",
+                    port: 6667),
+                store: store),
             name: "mike",
             state: .joined)
-        
+
         channel.messages.append(contentsOf: [
             ChannelMessage(sender: "jase", text: "hey gyus", variant: .privateMessage),
             ChannelMessage(sender: "mike", text: "a somewhat long message to text this situation", variant: .privateMessage),
@@ -110,9 +133,9 @@ struct MessageView_Previews: PreviewProvider {
             ChannelMessage(text: "piotr has left #mike", variant: .userParted),
         ])
         
-        store.state.connections.channelUuids["123"] = channel
-        
-        return MessageView()
-            .environmentObject(store)
+        let viewModel = MessageViewModel.viewModel(from: store)
+        viewModel.state = MessageViewModel.ViewState(currentChannel: channel)
+
+        return MessageView(viewModel: viewModel)
     }
 }
