@@ -128,6 +128,8 @@ extension ServerConnection {
                 
             case .errorNickInUse:
                 handleNickInUseError(ircMessage)
+            case .errorNeedMoreParams:
+                handleNotEnoughParamsError(ircMessage)
                 
             default:
                 print("Unknown message: \(message)")
@@ -212,15 +214,16 @@ extension ServerConnection {
             // remaining parameters aree the message content
             let text = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
-            //            self.connection.store.dispatch(action: PrivateMessageAction(
-            //                                            connection: connection,
-            //                                            identifier: message.prefix!.raw,
-            //                                            nick: message.prefix!.subject,
-            //                                            recipient: recipient,
-            //                                            message: ChannelMessage(
-            //                                                sender: message.prefix!.subject,
-            //                                                text: text,
-            //                                                variant: .privateMessage)))
+            self.connection.store.dispatch(.network(
+                                            .privateMessageReceived(
+                                                self.connection.connection,
+                                                message.prefix!.raw,
+                                                message.prefix!.subject,
+                                                recipient,
+                                                ChannelMessage(
+                                                    sender: message.prefix!.subject,
+                                                    text: text,
+                                                    variant: .privateMessage))))
         }
         
         private func handleNameReply(_ message: IRCMessage) {
@@ -251,10 +254,11 @@ extension ServerConnection {
                 return User(name: nickname, privilege: privilege)
             }
             
-            //            self.connection.store.dispatch(action: UsersInChannelAction(
-            //                connection: self.connection,
-            //                users: users,
-            //                channel: channel))
+            self.connection.store.dispatch(.network(
+                                            .usersInChannel(
+                                                self.connection.connection,
+                                                channel,
+                                                users)))
         }
         
         private func handleTopic(_ message: IRCMessage) {
@@ -270,10 +274,11 @@ extension ServerConnection {
             // remaining parameter is the topic text
             let topic = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
-            //            self.connection.store.dispatch(action: ChannelTopicAction(
-            //                connection: self.connection,
-            //                channel: channel,
-            //                topic: topic))
+            self.connection.store.dispatch(.network(
+                                            .channelTopic(
+                                                self.connection.connection,
+                                                channel,
+                                                topic)))
         }
         
         private func handleServerWelcome(_ message: IRCMessage) {
@@ -324,17 +329,36 @@ extension ServerConnection {
             // second parameter is the reason
             let reason = message.parameters[1].dropLeadingColon()
             
-            //            self.connection.store.dispatch(action: MessageReceivedAction(
-            //                connection: self.connection,
-            //                message: ChannelMessage(text: "\(nick) \(reason)", variant: .error),
-            //                channel: Connection.serverChannel))
+            self.connection.store.dispatch(.network(
+                                            .errorReceived(
+                                                self.connection.connection,
+                                                ChannelMessage(
+                                                    text: "\(nick) \(reason)",
+                                                    variant: .error))))
         }
         
-        private func dispatchMessage(_ message: IRCMessage) {
-            //            self.connection.store.dispatch(action: MessageReceivedAction(
-            //                connection: self.connection,
-            //                message: ChannelMessage(text: message.raw, variant: .other),
-            //                channel: Connection.serverChannel))
+        private func handleNotEnoughParamsError(_ message: IRCMessage) {
+            // expect at least three parameters
+            if message.parameters.count < 3 {
+                print("ERROR: not enough params in parameters error reply: \(message)")
+                return
+            }
+            
+            // first parameter is the nick
+            let nick = message.parameters[0]
+            
+            // second parameter is the command
+            let command = message.parameters[1]
+            
+            // remaining parameters are the reason message
+            let reason = message.parameters[2...].joined(separator: " ").dropLeadingColon()
+            
+            self.connection.store.dispatch(.network(
+                                            .errorReceived(
+                                                self.connection.connection,
+                                                ChannelMessage(
+                                                    text: "\(nick) \(command) \(reason)",
+                                                    variant: .error))))
         }
         
         private func send(_ message: String, context: ChannelHandlerContext?) {

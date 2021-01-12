@@ -40,11 +40,11 @@ struct ActiveChannelView: View {
             }.layoutPriority(2)
             
             // display a list of users on the right side
-//            if channel != nil && channel!.name != Connection.serverChannel {
-//                List(sortUsers(channel!.users)) { item in
-//                    Text(item.name)
-//                }.layoutPriority(1)
-//            }
+            if let channel = viewModel.state.currentChannel, channel.name != Connection.serverChannel {
+                List(sortUsers(channel.users)) { item in
+                    Text(item.name)
+                }.layoutPriority(1)
+            }
         }
     }
     
@@ -112,49 +112,38 @@ extension ActiveChannelViewModel.ViewAction {
     }
 }
 
-//
-//struct ActiveChannelView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let store = Store(
-//            reducer: { state, action in
-//                return state
-//            },
-//            state: AppState(
-//                connections: ConnectionsState(
-//                    connections: [],
-//                    channelUuids: [:]),
-//                ui: UIState(
-//                    currentChannel: "123")))
-//
-//        let channel = IRCChannel(
-//            connection: Connection(
-//                name: "mike",
-//                client: ServerConnection(
-//                    server: ServerInfo(
-//                        nick: "mike",
-//                        host: "localhost",
-//                        port: 6667),
-//                    store: store)),
-//            name: "mike",
-//            state: .joined)
-//
-//        channel.topic = "some topic message for this channel"
-//
-//        channel.users.insert(User(
-//                                name: "mike",
-//                                privilege: nil))
-//
-//        channel.users.insert(User(
-//                                name: "piotr",
-//                                privilege: .voiced))
-//
-//        channel.users.insert(User(
-//                                name: "jase",
-//                                privilege: .fullOperator))
-//
-//        store.state.connections.channelUuids["123"] = channel
-//
-//        return ActiveChannelView()
-//            .environmentObject(store)
-//    }
-//}
+struct ActiveChannelView_Previews: PreviewProvider {
+    static var previews: some View {
+        let store = Store()
+
+        let channel = IRCChannel(
+            connection: Connection(
+                name: "mike",
+                serverInfo: ServerInfo(
+                    nick: "mike",
+                    host: "localhost",
+                    port: 6667),
+                store: store),
+            name: "mike",
+            state: .joined)
+
+        channel.topic = "some topic message for this channel"
+
+        channel.users.insert(User(
+                                name: "mike",
+                                privilege: nil))
+
+        channel.users.insert(User(
+                                name: "piotr",
+                                privilege: .voiced))
+
+        channel.users.insert(User(
+                                name: "jase",
+                                privilege: .fullOperator))
+
+        let viewModel = ActiveChannelViewModel.viewModel(from: store)
+        viewModel.state = ActiveChannelViewModel.ViewState(currentChannel: channel)
+
+        return ActiveChannelView(viewModel: viewModel)
+    }
+}

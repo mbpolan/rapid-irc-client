@@ -13,8 +13,13 @@ enum NetworkAction {
     case connectionAdded(Connection, IRCChannel)
     case welcomeReceived(Connection, String)
     case messageReceived(IRCChannel, ChannelMessage)
+    case channelTopic(Connection, String, String)
+    case usersInChannel(Connection, String, [User])
     case joinedChannel(Connection, String, String, String)
     case partedChannel(Connection, String, String, String, String?)
+    case privateMessageReceived(Connection, String, String, String, ChannelMessage)
+    
+    case errorReceived(Connection, ChannelMessage)
 }
 
 // MARK: - Action properties
@@ -74,6 +79,28 @@ extension NetworkAction {
         }
     }
     
+    public var channelTopic: (Connection, String, String)? {
+        get {
+            guard case let .channelTopic(value1, value2, value3) = self else { return nil }
+            return (value1, value2, value3)
+        }
+        set {
+            guard case .channelTopic = self, let (value1, value2, value3) = newValue else { return }
+            self = .channelTopic(value1, value2, value3)
+        }
+    }
+    
+    public var usersInChannel: (Connection, String, [User])? {
+        get {
+            guard case let .usersInChannel(value1, value2, value3) = self else { return nil }
+            return (value1, value2, value3)
+        }
+        set {
+            guard case .usersInChannel = self, let (value1, value2, value3) = newValue else { return }
+            self = .usersInChannel(value1, value2, value3)
+        }
+    }
+    
     public var joinedChannel: (Connection, String, String, String)? {
         get {
             guard case let .joinedChannel(value1, value2, value3, value4) = self else { return nil }
@@ -95,63 +122,26 @@ extension NetworkAction {
             self = .partedChannel(value1, value2, value3, value4, value5)
         }
     }
+    
+    public var privateMessageReceived: (Connection, String, String, String, ChannelMessage)? {
+        get {
+            guard case let .privateMessageReceived(value1, value2, value3, value4, value5) = self else { return nil }
+            return (value1, value2, value3, value4, value5)
+        }
+        set {
+            guard case .privateMessageReceived = self, let (value1, value2, value3, value4, value5) = newValue else { return }
+            self = .privateMessageReceived(value1, value2, value3, value4, value5)
+        }
+    }
+    
+    public var errorReceived: (Connection, ChannelMessage)? {
+        get {
+            guard case let .errorReceived(value1, value2) = self else { return nil }
+            return (value1, value2)
+        }
+        set {
+            guard case .errorReceived = self, let (value1, value2) = newValue else { return }
+            self = .errorReceived(value1, value2)
+        }
+    }
 }
-//
-//protocol ConnectionsAction: Action {
-//}
-//
-//struct ConnectAction: ConnectionsAction {
-//    var server: ServerInfo
-//}
-//
-//struct WelcomeAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var identifier: String
-//}
-//
-//struct PrivateMessageAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var identifier: String
-//    var nick: String
-//    var recipient: String
-//    var message: ChannelMessage
-//}
-//
-//struct MessageReceivedAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var message: ChannelMessage
-//    var channel: String
-//}
-//
-//struct MessageSentAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var message: String
-//    var channel: String
-//}
-//
-//struct JoinedChannelAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var identifier: String
-//    var nick: String
-//    var channel: String
-//}
-//
-//struct PartChannelAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var identifier: String
-//    var nick: String
-//    var message: String?
-//    var channel: String
-//}
-//
-//struct ChannelTopicAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var channel: String
-//    var topic: String
-//}
-//
-//struct UsersInChannelAction: ConnectionsAction {
-//    var connection: ServerConnection
-//    var users: [User]
-//    var channel: String
-//}

@@ -12,12 +12,6 @@ import SwiftRex
 struct ChannelListView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<ChannelListViewModel.ViewAction, ChannelListViewModel.ViewState>
-    
-    @State var connection = 0 {
-        didSet {
-            print("SET \(connection)")
-        }
-    }
 
     var body: some View {
         VStack {
