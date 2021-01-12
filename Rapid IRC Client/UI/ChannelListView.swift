@@ -161,8 +161,10 @@ extension ChannelListView {
     }
 }
 
-//struct ChannelListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ChannelListView()
-//    }
-//}
+struct ChannelListView_Previews: PreviewProvider {
+    static var previews: some View {
+        let store = Store()
+        
+        ChannelListView(viewModel: ChannelListViewModel.viewModel(from: store))
+    }
+}

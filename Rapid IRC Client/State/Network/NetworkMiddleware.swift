@@ -36,8 +36,10 @@ class NetworkMiddleware: Middleware {
             
             output.dispatch(.network(.connectionAdded(connection, serverChannel)))
             output.dispatch(.ui(.connectionAdded(connection)))
-        
             
+        case .messageSent(let channel, let text):
+            let message = text.starts(with: "/") ? text.subString(from: 1) : text
+            channel.connection.client.sendMessage(message)
         
         default:
             break

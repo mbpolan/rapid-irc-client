@@ -58,16 +58,10 @@ struct ActiveChannelView: View {
     }
     
     private func submit() {
-//        let channel = store.state.ui.currentChannel == nil ? nil : store.state.connections.channelUuids[store.state.ui.currentChannel!]
-//        
-//        if channel != nil {
-//            store.dispatch(action: MessageSentAction(
-//                            connection: channel!.connection.client,
-//                            message: input,
-//                            channel: channel!.id))
-//        }
-//        
-//        input = ""
+        if let channel = viewModel.state.currentChannel {
+            viewModel.dispatch(.sendMessage(channel, input))
+            input = ""
+        }
     }
 }
 
@@ -89,10 +83,14 @@ enum ActiveChannelViewModel {
     }
 
     enum ViewAction {
+        case sendMessage(IRCChannel, String)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
-        return nil
+        switch viewAction {
+        case .sendMessage(let channel, let message):
+            return .network(.messageSent(channel, message))
+        }
     }
     
     private static func transform(appState: AppState) -> ViewState {
@@ -100,6 +98,20 @@ enum ActiveChannelViewModel {
             currentChannel: appState.ui.currentChannel)
     }
 }
+
+extension ActiveChannelViewModel.ViewAction {
+    public var sendMessage: (IRCChannel, String)? {
+        get {
+            guard case let .sendMessage(value1, value2) = self else { return nil }
+            return (value1, value2)
+        }
+        set {
+            guard case .sendMessage = self, let (value1, value2) = newValue else { return }
+            self = .sendMessage(value1, value2)
+        }
+    }
+}
+
 //
 //struct ActiveChannelView_Previews: PreviewProvider {
 //    static var previews: some View {
