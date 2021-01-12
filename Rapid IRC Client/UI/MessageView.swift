@@ -88,7 +88,9 @@ enum MessageViewModel {
 
     struct ViewState: Equatable {
         static func == (lhs: MessageViewModel.ViewState, rhs: MessageViewModel.ViewState) -> Bool {
-            return lhs.currentChannel?.id == rhs.currentChannel?.id
+            // FIXME
+//            return lhs.currentChannel?.id == rhs.currentChannel?.id
+            return false
         }
         
         let currentChannel: IRCChannel?
