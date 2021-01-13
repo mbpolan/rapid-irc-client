@@ -8,11 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		2757C25D2545F30B002335CB /* NIO in Frameworks */ = {isa = PBXBuildFile; productRef = 2757C25C2545F30B002335CB /* NIO */; };
-		2757C2632545FD11002335CB /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 2757C2622545FD11002335CB /* Swinject */; };
 		2757C2CC254A4F78002335CB /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2CB254A4F78002335CB /* Store.swift */; };
 		2757C2D4254A5377002335CB /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D3254A5377002335CB /* MessageView.swift */; };
-		2757C2DA254A5483002335CB /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D9254A5483002335CB /* Reducer.swift */; };
-		2757C2E2254A5496002335CB /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2E1254A5496002335CB /* Actions.swift */; };
+		2757C2DA254A5483002335CB /* NetworkReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D9254A5483002335CB /* NetworkReducer.swift */; };
+		2757C2E2254A5496002335CB /* NetworkActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2E1254A5496002335CB /* NetworkActions.swift */; };
 		2757C2E7254A575D002335CB /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2E6254A575D002335CB /* Types.swift */; };
 		2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2EB254A5873002335CB /* ChannelListView.swift */; };
 		2757C2F1254A5AD5002335CB /* ActiveChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */; };
@@ -21,9 +20,12 @@
 		2757C303254D23C7002335CB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C302254D23C7002335CB /* String.swift */; };
 		2757C308254E4917002335CB /* IRCMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C307254E4917002335CB /* IRCMessage.swift */; };
 		2757C315254E527F002335CB /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C314254E527F002335CB /* Command.swift */; };
+		276209EF2585AA8A00212F36 /* NetworkMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */; };
 		2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE04256CABCC00371A28 /* UIReducer.swift */; };
 		2776AE0D256CABD600371A28 /* UIActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE0C256CABD600371A28 /* UIActions.swift */; };
-		2776AE12256CABE100371A28 /* UITypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE11256CABE100371A28 /* UITypes.swift */; };
+		27A8D1E625AA8A1200468A20 /* CombineRex in Frameworks */ = {isa = PBXBuildFile; productRef = 27A8D1E525AA8A1200468A20 /* CombineRex */; };
+		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
+		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
 		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
 		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
 		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
@@ -55,8 +57,8 @@
 /* Begin PBXFileReference section */
 		2757C2CB254A4F78002335CB /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2757C2D3254A5377002335CB /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		2757C2D9254A5483002335CB /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
-		2757C2E1254A5496002335CB /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
+		2757C2D9254A5483002335CB /* NetworkReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReducer.swift; sourceTree = "<group>"; };
+		2757C2E1254A5496002335CB /* NetworkActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkActions.swift; sourceTree = "<group>"; };
 		2757C2E6254A575D002335CB /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		2757C2EB254A5873002335CB /* ChannelListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelListView.swift; sourceTree = "<group>"; };
 		2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveChannelView.swift; sourceTree = "<group>"; };
@@ -65,9 +67,11 @@
 		2757C302254D23C7002335CB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2757C307254E4917002335CB /* IRCMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRCMessage.swift; sourceTree = "<group>"; };
 		2757C314254E527F002335CB /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMiddleware.swift; sourceTree = "<group>"; };
 		2776AE04256CABCC00371A28 /* UIReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIReducer.swift; sourceTree = "<group>"; };
 		2776AE0C256CABD600371A28 /* UIActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIActions.swift; sourceTree = "<group>"; };
-		2776AE11256CABE100371A28 /* UITypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITypes.swift; sourceTree = "<group>"; };
+		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
+		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74CA2543ABD900DA4598 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27CF74CC2543ABD900DA4598 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -91,8 +95,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27A8D1E625AA8A1200468A20 /* CombineRex in Frameworks */,
 				2757C25D2545F30B002335CB /* NIO in Frameworks */,
-				2757C2632545FD11002335CB /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,20 +121,22 @@
 			isa = PBXGroup;
 			children = (
 				2776AE03256CABAA00371A28 /* UI */,
-				2757C2D8254A5456002335CB /* Connections */,
+				2757C2D8254A5456002335CB /* Network */,
 				2757C2CB254A4F78002335CB /* Store.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
 		};
-		2757C2D8254A5456002335CB /* Connections */ = {
+		2757C2D8254A5456002335CB /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				2757C2D9254A5483002335CB /* Reducer.swift */,
-				2757C2E1254A5496002335CB /* Actions.swift */,
+				2757C2D9254A5483002335CB /* NetworkReducer.swift */,
+				2757C2E1254A5496002335CB /* NetworkActions.swift */,
 				2757C2E6254A575D002335CB /* Types.swift */,
+				276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */,
+				27A8D1FA25ABDB1000468A20 /* NetworkState.swift */,
 			);
-			path = Connections;
+			path = Network;
 			sourceTree = "<group>";
 		};
 		2757C2F6254A5DD5002335CB /* Models */ = {
@@ -157,7 +163,7 @@
 			children = (
 				2776AE04256CABCC00371A28 /* UIReducer.swift */,
 				2776AE0C256CABD600371A28 /* UIActions.swift */,
-				2776AE11256CABE100371A28 /* UITypes.swift */,
+				27A8D1F525ABDAD300468A20 /* UIState.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -272,7 +278,7 @@
 			name = "Rapid IRC Client";
 			packageProductDependencies = (
 				2757C25C2545F30B002335CB /* NIO */,
-				2757C2622545FD11002335CB /* Swinject */,
+				27A8D1E525AA8A1200468A20 /* CombineRex */,
 			);
 			productName = "Rapid IRC Client";
 			productReference = 27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */;
@@ -347,7 +353,7 @@
 			mainGroup = 27CF74BE2543ABD800DA4598;
 			packageReferences = (
 				2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */,
-				2757C2612545FD11002335CB /* XCRemoteSwiftPackageReference "Swinject" */,
+				27A8D1E425AA8A1200468A20 /* XCRemoteSwiftPackageReference "SwiftRex" */,
 			);
 			productRefGroup = 27CF74C82543ABD900DA4598 /* Products */;
 			projectDirPath = "";
@@ -392,11 +398,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */,
 				2757C2F1254A5AD5002335CB /* ActiveChannelView.swift in Sources */,
 				2757C2D4254A5377002335CB /* MessageView.swift in Sources */,
+				276209EF2585AA8A00212F36 /* NetworkMiddleware.swift in Sources */,
 				2757C2F8254A5DE0002335CB /* ServerInfo.swift in Sources */,
-				2757C2E2254A5496002335CB /* Actions.swift in Sources */,
-				2776AE12256CABE100371A28 /* UITypes.swift in Sources */,
+				2757C2E2254A5496002335CB /* NetworkActions.swift in Sources */,
 				2757C303254D23C7002335CB /* String.swift in Sources */,
 				2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */,
 				27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */,
@@ -406,7 +413,8 @@
 				27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */,
 				2757C308254E4917002335CB /* IRCMessage.swift in Sources */,
 				2757C315254E527F002335CB /* Command.swift in Sources */,
-				2757C2DA254A5483002335CB /* Reducer.swift in Sources */,
+				2757C2DA254A5483002335CB /* NetworkReducer.swift in Sources */,
+				27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */,
 				2757C2E7254A575D002335CB /* Types.swift in Sources */,
 				2776AE0D256CABD600371A28 /* UIActions.swift in Sources */,
 				27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */,
@@ -588,7 +596,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-Client";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mbpolan.rapidirc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -610,7 +618,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-Client";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mbpolan.rapidirc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -746,12 +754,12 @@
 				minimumVersion = 2.23.0;
 			};
 		};
-		2757C2612545FD11002335CB /* XCRemoteSwiftPackageReference "Swinject" */ = {
+		27A8D1E425AA8A1200468A20 /* XCRemoteSwiftPackageReference "SwiftRex" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			repositoryURL = "https://github.com/SwiftRex/SwiftRex.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.7.1;
+				minimumVersion = 0.8.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -762,10 +770,10 @@
 			package = 2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */;
 			productName = NIO;
 		};
-		2757C2622545FD11002335CB /* Swinject */ = {
+		27A8D1E525AA8A1200468A20 /* CombineRex */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2757C2612545FD11002335CB /* XCRemoteSwiftPackageReference "Swinject" */;
-			productName = Swinject;
+			package = 27A8D1E425AA8A1200468A20 /* XCRemoteSwiftPackageReference "SwiftRex" */;
+			productName = CombineRex;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -6,94 +6,145 @@
 //
 
 import SwiftUI
+import CombineRex
+import SwiftRex
 
 struct ChannelListView: View {
-
-    @EnvironmentObject var store: Store
-    @State var connection = 0 {
-        didSet {
-            print("SET \(connection)")
-        }
-    }
-
+    
+    @ObservedObject var viewModel: ObservableViewModel<ChannelListViewModel.ViewAction, ChannelListViewModel.ViewState>
+    @State private var hoveredChannel: String?
+    
     var body: some View {
         VStack {
             makeList()
         }
     }
     
-    struct Test: Identifiable {
-        var id: String {
-            return name
-        }
-        var name: String
-        var children: [Test]?
-    }
-
     private func makeList() -> some View {
-        var model = store.state.connections.connections.map { conn in
-            return ListItem(
-                id: conn.getServerChannel()!.id,
-                name: conn.name,
-                channelName: Connection.serverChannel,
-                active: true,
-                connection: conn,
-                type: .server,
-                children: conn.channels
-                    .map { chan in
-                        return ListItem(
-                            id: chan.id,
-                            name: chan.name,
-                            channelName: chan.name,
-                            active: chan.state == .joined,
-                            connection: conn,
-                            type: .channel,
-                            children: nil)
-                    })
-        }
-        
-        // workaround for when the list is initially empty. if we do not explicitly set a node with a child,
-        // the list will never show children after the fact.
-        if model.count == 0 {
-            model = [
-                ListItem(id: "", name: "", channelName: "empty", active: false, connection: nil, type: .server, children: [
-                    ListItem(id: "", name: "", channelName: "empty", active: false, connection: nil, type: .server, children: nil)
-                ])
-            ]
-        }
-        
-        return GeometryReader { geo in
-            List(model, children: \.children) { row in
-                // determine an appropriate style depending on the state of the item
-                let color =  store.state.ui.currentChannel == row.id ? Color.primary : Color.secondary
-                let fontStyle = row.active ? Font.body.bold() : Font.body.italic()
-                
-                HStack {
-                    // do not display server channels in the list directly as children
-                    if !(row.type == .channel && row.name == "_") {
-                        Button(action: {
-                            store.dispatch(action: SetChannelAction(connection: row.connection!, channel: row.id))
-                        }) {
-                            Text(row.name)
-                                .font(fontStyle)
-                                .foregroundColor(color)
-                        }.buttonStyle(BorderlessButtonStyle())
-                        
-                        Spacer()
-                        
-                        Button(action: {
+        GeometryReader { geo in
+            List {
+                ForEach(viewModel.state.list, id: \.id) { server in
+                    // header contains the server name
+                    Section(header: Text(server.name).font(.headline)) {
+                        // list each channel under this server as a group
+                        OutlineGroup(server.children ?? [], id: \.id, children: \.children) { channel in
+                            // determine an appropriate style depending on the state of the item
+                            let color =  viewModel.state.currentChannel?.id == channel.id ? Color.primary : Color.secondary
                             
-                        }) {
-                            Image(systemName: "xmark")
-                        }.buttonStyle(BorderlessButtonStyle())
+                            HStack {
+                                // button containing the channel name
+                                Button(action: {
+                                    if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                                        self.viewModel.dispatch(.setChannel(target))
+                                    }
+                                }) {
+                                    Text(channel.name == Connection.serverChannel ? "Server" : channel.name)
+                                        .foregroundColor(color)
+                                        .font(.subheadline)
+                                }.buttonStyle(BorderlessButtonStyle())
+                                
+                                Spacer()
+                                
+                                // button for closing the channel, only shown if the user hovers the containing view
+                                if self.hoveredChannel == channel.id {
+                                    Button(action: {
+                                        
+                                    }) {
+                                        Image(systemName: "xmark")
+                                    }.buttonStyle(BorderlessButtonStyle())
+                                }
+                            }.frame(maxWidth: .infinity)
+                            .onHover { hovering in
+                                // keep track of which channel the user has hovered over
+                                if hovering {
+                                    self.hoveredChannel = channel.id
+                                } else {
+                                    self.hoveredChannel = nil
+                                }
+                            }
+                        }
                     }
                 }
-            }.frame(width: geo.size.width)
+            }.listStyle(SidebarListStyle())
+            .frame(width: geo.size.width)
         }
     }
 }
 
-extension ChannelListView {
+enum ChannelListViewModel {
+    
+    static func viewModel<S: StoreType>(from store: S) -> ObservableViewModel<ViewAction, ViewState> where S.ActionType == AppAction, S.StateType == AppState {
+        store.projection(
+            action: transform(viewAction:),
+            state: transform(appState:)
+        ).asObservableViewModel(initialState: .empty)
+    }
+    
+    struct ViewState: Equatable {
+        static func == (lhs: ChannelListViewModel.ViewState, rhs: ChannelListViewModel.ViewState) -> Bool {
+            return false
+        }
+        
+        let list: [ListItem]
+        let currentChannel: IRCChannel?
+        
+        static var empty: ViewState {
+            .init(list: [], currentChannel: nil)
+        }
+    }
+    
+    enum ViewAction {
+        case setChannel(IRCChannel)
+    }
+    
+    private static func transform(viewAction: ViewAction) -> AppAction? {
+        switch viewAction {
+        case .setChannel:
+            let channel = viewAction.setChannel!
+            return .ui(.changeChannel(channel))
+        }
+    }
+    
+    private static func transform(appState: AppState) -> ViewState {
+        ViewState(
+            list: appState.network.connections.map { conn in
+                return ListItem(
+                    id: conn.getServerChannel()!.id,
+                    name: conn.name,
+                    channelName: Connection.serverChannel,
+                    active: true,
+                    connection: conn,
+                    type: .server,
+                    children: conn.channels
+                        .map { chan in
+                            return ListItem(
+                                id: chan.id,
+                                name: chan.name,
+                                channelName: chan.name,
+                                active: chan.state == .joined,
+                                connection: conn,
+                                type: .channel,
+                                children: nil)
+                        })
+            },
+            currentChannel: appState.ui.currentChannel)
+    }
+}
+
+extension ChannelListViewModel.ViewAction {
+    public var setChannel: IRCChannel? {
+        get {
+            guard case let .setChannel(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .setChannel = self, let value = newValue else { return }
+            self = .setChannel(value)
+        }
+    }
+}
+
+extension ChannelListViewModel {
     enum ListItemType {
         case server
         case channel
@@ -112,6 +163,8 @@ extension ChannelListView {
 
 struct ChannelListView_Previews: PreviewProvider {
     static var previews: some View {
-        ChannelListView()
+        let store = Store()
+        
+        ChannelListView(viewModel: ChannelListViewModel.viewModel(from: store))
     }
 }

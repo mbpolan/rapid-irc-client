@@ -10,13 +10,12 @@ import SwiftUI
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
+    
     var window: NSWindow!
-    let store = Store(reducer: rootReducer)
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView().environmentObject(store)
+        let contentView = ContentView(viewModel: ContentViewModel.viewModel(from: Store.instance))
 
         // Create the window and set the content view.
         window = NSWindow(
@@ -25,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
         window.center()
-        window.setFrameAutosaveName("Main Window")
+        window.setFrameAutosaveName("Rapid IRC Client")
         window.contentView = NSHostingView(rootView: contentView)
         window.makeKeyAndOrderFront(nil)
     }

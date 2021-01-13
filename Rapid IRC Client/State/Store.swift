@@ -5,58 +5,75 @@
 //  Created by Mike Polan on 10/28/20.
 //
 
-import Combine
+import CombineRex
 import SwiftUI
+import SwiftRex
 
+// MARK: - State
 struct AppState {
-    var connections: ConnectionsState = ConnectionsState()
-    var ui: UIState = UIState()
+    var network: NetworkState = NetworkState()
+    var ui: UIState = .empty
 }
 
-struct StateWrapper {
-    var state: AppState
-    var store: Store
+enum AppAction {
+    case network(NetworkAction)
+    case ui(UIAction)
 }
 
-protocol Action {}
-
-struct ActionWrapper {
-    var store: Store
-    var action: Action
-}
-
-typealias Reducer = (AppState, ActionWrapper) -> AppState
-
-let reducers = [
-    connectionsReducer,
-    uiReducer
-]
-
-func rootReducer(state: AppState, action: ActionWrapper) -> AppState {
-    var newState = state
-
-    for reducer in reducers {
-        newState = reducer(newState, action)
+// MARK: Actions
+extension AppAction {
+    public var network: NetworkAction? {
+        get {
+            guard case let .network(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .network = self, let newValue = newValue else { return }
+            self = .network(newValue)
+        }
     }
-
-    return newState
-}
-
-class Store: ObservableObject {
-
-    private var reducer: Reducer
-    @Published var state: AppState
-
-    init(reducer: @escaping Reducer, state: AppState = AppState()) {
-        self.reducer = reducer
-        self.state = state
-    }
-
-    func dispatch(action: Action) {
-        DispatchQueue.main.async {
-            self.state = self.reducer(self.state, ActionWrapper(store: self, action: action))
-            self.objectWillChange.send()
+    
+    public var ui: UIAction? {
+        get {
+            guard case let .ui(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .ui = self, let newValue = newValue else { return }
+            self = .ui(newValue)
         }
     }
 }
 
+// MARK: - Reducer
+let appReducer = uiReducer.lift(
+    action: \AppAction.ui,
+    state: \AppState.ui
+) <> networkReducer.lift(
+    action: \AppAction.network,
+    state: \AppState.network
+)
+
+// MARK: - Middleware
+let appMiddleware = NetworkMiddleware().lift(
+    inputAction: \AppAction.network,
+    outputAction: identity,
+    state: identity)
+
+// MARK: - Store
+class Store: ReduxStoreBase<AppAction, AppState> {
+    
+    public static let instance = Store()
+    
+    init() {
+        super.init(
+            subject: .combine(initialValue: AppState()),
+            reducer: appReducer,
+            middleware: appMiddleware)
+    }
+}
+
+// MARK: - Functional helpers
+func ignore<T>(_ t: T) -> Void { }
+func identity<T>(_ t: T) -> T { t }
+func absurd<T>(_ never: Never) -> T { }

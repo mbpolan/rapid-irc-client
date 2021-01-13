@@ -30,6 +30,7 @@ enum Command {
     
     case errorNoOrigin
     case errorNickInUse
+    case errorNeedMoreParams
 }
 
 extension Command {
@@ -73,6 +74,8 @@ extension Command {
             return .errorNoOrigin
         case "433":
             return .errorNickInUse
+        case "461":
+            return .errorNeedMoreParams
         default:
             return nil
         }
