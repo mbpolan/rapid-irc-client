@@ -12,37 +12,60 @@ import SwiftRex
 struct ChannelListView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<ChannelListViewModel.ViewAction, ChannelListViewModel.ViewState>
-
+    @State private var hoveredChannel: String?
+    
     var body: some View {
         VStack {
             makeList()
         }
     }
-
+    
     private func makeList() -> some View {
         GeometryReader { geo in
             List {
                 ForEach(viewModel.state.list, id: \.id) { server in
+                    // header contains the server name
                     Section(header: Text(server.name).font(.headline)) {
+                        // list each channel under this server as a group
                         OutlineGroup(server.children ?? [], id: \.id, children: \.children) { channel in
                             // determine an appropriate style depending on the state of the item
                             let color =  viewModel.state.currentChannel?.id == channel.id ? Color.primary : Color.secondary
                             
-                            Button(action: {
-                                if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
-                                    self.viewModel.dispatch(.setChannel(target))
+                            HStack {
+                                // button containing the channel name
+                                Button(action: {
+                                    if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                                        self.viewModel.dispatch(.setChannel(target))
+                                    }
+                                }) {
+                                    Text(channel.name == Connection.serverChannel ? "Server" : channel.name)
+                                        .foregroundColor(color)
+                                        .font(.subheadline)
+                                }.buttonStyle(BorderlessButtonStyle())
+                                
+                                Spacer()
+                                
+                                // button for closing the channel, only shown if the user hovers the containing view
+                                if self.hoveredChannel == channel.id {
+                                    Button(action: {
+                                        
+                                    }) {
+                                        Image(systemName: "xmark")
+                                    }.buttonStyle(BorderlessButtonStyle())
                                 }
-                            }) {
-                                Text(channel.name == Connection.serverChannel ? "Server" : channel.name)
-                                    .foregroundColor(color)
-                                    .font(.subheadline)
+                            }.frame(maxWidth: .infinity)
+                            .onHover { hovering in
+                                // keep track of which channel the user has hovered over
+                                if hovering {
+                                    self.hoveredChannel = channel.id
+                                } else {
+                                    self.hoveredChannel = nil
+                                }
                             }
-                            .buttonStyle(BorderlessButtonStyle())
                         }
                     }
                 }
-            }
-            .listStyle(SidebarListStyle())
+            }.listStyle(SidebarListStyle())
             .frame(width: geo.size.width)
         }
     }
@@ -56,7 +79,7 @@ enum ChannelListViewModel {
             state: transform(appState:)
         ).asObservableViewModel(initialState: .empty)
     }
-
+    
     struct ViewState: Equatable {
         static func == (lhs: ChannelListViewModel.ViewState, rhs: ChannelListViewModel.ViewState) -> Bool {
             return false
@@ -69,7 +92,7 @@ enum ChannelListViewModel {
             .init(list: [], currentChannel: nil)
         }
     }
-
+    
     enum ViewAction {
         case setChannel(IRCChannel)
     }
