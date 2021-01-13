@@ -2,7 +2,7 @@
 
 An IRC client for macOS built using SwiftUI.
 
-![]()screenshot.png)
+![](screenshot.png)
 
 ## About
 
