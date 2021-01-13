@@ -20,66 +20,30 @@ struct ChannelListView: View {
     }
 
     private func makeList() -> some View {
-        var model = viewModel.state.connections.map { conn in
-            return ListItem(
-                id: conn.getServerChannel()!.id,
-                name: conn.name,
-                channelName: Connection.serverChannel,
-                active: true,
-                connection: conn,
-                type: .server,
-                children: conn.channels
-                    .map { chan in
-                        return ListItem(
-                            id: chan.id,
-                            name: chan.name,
-                            channelName: chan.name,
-                            active: chan.state == .joined,
-                            connection: conn,
-                            type: .channel,
-                            children: nil)
-                    })
-        }
-        
-        // workaround for when the list is initially empty. if we do not explicitly set a node with a child,
-        // the list will never show children after the fact.
-        if model.count == 0 {
-            model = [
-                ListItem(id: "", name: "", channelName: "empty", active: false, connection: nil, type: .server, children: [
-                    ListItem(id: "", name: "", channelName: "empty", active: false, connection: nil, type: .server, children: nil)
-                ])
-            ]
-        }
-        
-        return GeometryReader { geo in
-            List(model, children: \.children) { row in
-                // determine an appropriate style depending on the state of the item
-                let color =  viewModel.state.currentChannel?.id == row.id ? Color.primary : Color.secondary
-                let fontStyle = row.active ? Font.body.bold() : Font.body.italic()
-                
-                HStack {
-                    // do not display server channels in the list directly as children
-                    if !(row.type == .channel && row.name == "_") {
-                        Button(action: {
-                            if let channel = row.connection!.channels.first(where: { $0.id == row.id }) {
-                                self.viewModel.dispatch(.setChannel(channel))
-                            }
-                        }) {
-                            Text(row.name)
-                                .font(fontStyle)
-                                .foregroundColor(color)
-                        }.buttonStyle(BorderlessButtonStyle())
-                        
-                        Spacer()
-                        
-                        Button(action: {
+        GeometryReader { geo in
+            List {
+                ForEach(viewModel.state.list, id: \.id) { server in
+                    Section(header: Text(server.name).font(.headline)) {
+                        OutlineGroup(server.children ?? [], id: \.id, children: \.children) { channel in
+                            // determine an appropriate style depending on the state of the item
+                            let color =  viewModel.state.currentChannel?.id == channel.id ? Color.primary : Color.secondary
                             
-                        }) {
-                            Image(systemName: "xmark")
-                        }.buttonStyle(BorderlessButtonStyle())
+                            Button(action: {
+                                if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                                    self.viewModel.dispatch(.setChannel(target))
+                                }
+                            }) {
+                                Text(channel.name == Connection.serverChannel ? "Server" : channel.name)
+                                    .foregroundColor(color)
+                                    .font(.subheadline)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                        }
                     }
                 }
-            }.frame(width: geo.size.width)
+            }
+            .listStyle(SidebarListStyle())
+            .frame(width: geo.size.width)
         }
     }
 }
@@ -98,11 +62,11 @@ enum ChannelListViewModel {
             return false
         }
         
-        let connections: [Connection]
+        let list: [ListItem]
         let currentChannel: IRCChannel?
         
         static var empty: ViewState {
-            .init(connections: [], currentChannel: nil)
+            .init(list: [], currentChannel: nil)
         }
     }
 
@@ -120,7 +84,26 @@ enum ChannelListViewModel {
     
     private static func transform(appState: AppState) -> ViewState {
         ViewState(
-            connections: appState.network.connections,
+            list: appState.network.connections.map { conn in
+                return ListItem(
+                    id: conn.getServerChannel()!.id,
+                    name: conn.name,
+                    channelName: Connection.serverChannel,
+                    active: true,
+                    connection: conn,
+                    type: .server,
+                    children: conn.channels
+                        .map { chan in
+                            return ListItem(
+                                id: chan.id,
+                                name: chan.name,
+                                channelName: chan.name,
+                                active: chan.state == .joined,
+                                connection: conn,
+                                type: .channel,
+                                children: nil)
+                        })
+            },
             currentChannel: appState.ui.currentChannel)
     }
 }
@@ -138,7 +121,7 @@ extension ChannelListViewModel.ViewAction {
     }
 }
 
-extension ChannelListView {
+extension ChannelListViewModel {
     enum ListItemType {
         case server
         case channel
