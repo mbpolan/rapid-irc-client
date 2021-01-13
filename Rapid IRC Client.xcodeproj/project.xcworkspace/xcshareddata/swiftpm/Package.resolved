@@ -2,12 +2,39 @@
   "object": {
     "pins": [
       {
+        "package": "ReactiveSwift",
+        "repositoryURL": "https://github.com/ReactiveCocoa/ReactiveSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "e03cda84105ba707de039b757e2b2de868c65a3e",
+          "version": "6.5.0"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "c8742ed97fc2f0c015a5ea5eddefb064cd7532d2",
+          "version": "6.0.0"
+        }
+      },
+      {
         "package": "swift-nio",
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
           "revision": "c3e2359c55cd8b47207ab7363b77c9c398a95294",
           "version": "2.23.0"
+        }
+      },
+      {
+        "package": "SwiftRex",
+        "repositoryURL": "https://github.com/SwiftRex/SwiftRex.git",
+        "state": {
+          "branch": null,
+          "revision": "dd28fc14902cc1c918241e6768ec89d13ee91f78",
+          "version": "0.8.2"
         }
       }
     ]
