@@ -200,17 +200,17 @@
 		27CF74BE2543ABD800DA4598 = {
 			isa = PBXGroup;
 			children = (
-				279911F825AFDC3A004D0DDC /* .sourcery.yml */,
 				279911DD25AFD9FA004D0DDC /* Podfile */,
 				279911DB25AFD9FA004D0DDC /* README.md */,
 				279911DC25AFD9FA004D0DDC /* screenshot.png */,
-				279911D425AFD9C5004D0DDC /* Templates */,
+				279911F825AFDC3A004D0DDC /* .sourcery.yml */,
+				7D09D6E6857ABEF28F3C5365 /* Frameworks */,
+				BE63C807F495570712BA82B7 /* Pods */,
+				27CF74C82543ABD900DA4598 /* Products */,
 				27CF74C92543ABD900DA4598 /* Rapid IRC Client */,
 				27CF74DF2543ABDA00DA4598 /* Rapid IRC ClientTests */,
 				27CF74EA2543ABDA00DA4598 /* Rapid IRC ClientUITests */,
-				27CF74C82543ABD900DA4598 /* Products */,
-				BE63C807F495570712BA82B7 /* Pods */,
-				7D09D6E6857ABEF28F3C5365 /* Frameworks */,
+				279911D425AFD9C5004D0DDC /* Templates */,
 			);
 			sourceTree = "<group>";
 		};

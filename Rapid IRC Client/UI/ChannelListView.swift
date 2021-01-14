@@ -21,22 +21,26 @@ struct ChannelListView: View {
     }
     
     private func makeSectionText(_ server: ChannelListViewModel.ListItem) -> some View {
-        Text(server.name)
-            .font(.headline)
+        let fontStyle: Font = server.active
+            ? .headline
+            : Font.headline.italic()
+        
+        return Text(server.name)
+            .font(fontStyle)
             .contextMenu {
                 if server.active {
-                    Button(action: {
-                        guard let connection = server.connection else { return }
-                        self.viewModel.dispatch(.reconnect(connection))
-                    }) {
-                        Text("Connect")
-                    }
-                } else {
                     Button(action: {
                         guard let connection = server.connection else { return }
                         self.viewModel.dispatch(.disconnect(connection))
                     }) {
                         Text("Disconnect")
+                    }
+                } else {
+                    Button(action: {
+                        guard let connection = server.connection else { return }
+                        self.viewModel.dispatch(.reconnect(connection))
+                    }) {
+                        Text("Connect")
                     }
                 }
             }
@@ -149,7 +153,7 @@ enum ChannelListViewModel {
                     id: conn.getServerChannel()!.id,
                     name: conn.name,
                     channelName: Connection.serverChannel,
-                    active: true,
+                    active: conn.state == .connected,
                     connection: conn,
                     type: .server,
                     children: conn.channels

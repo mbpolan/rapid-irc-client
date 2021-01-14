@@ -39,7 +39,11 @@ class ServerConnection {
                 self.channel = try bootstrap
                     .connect(host: self.server.host, port: self.server.port)
                     .wait()
-                self.connection.active = true
+                
+                self.store.dispatch(.network(
+                                        .connectionStateChanged(
+                                            self.connection,
+                                            .connected)))
             } catch let error {
                 print(error)
             }
@@ -50,8 +54,24 @@ class ServerConnection {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             do {
                 try self?.channel?.close().wait()
+                
+                // dispatch an action to signal this connection is no longer active
+                if let this = self {
+                    this.store.dispatch(.network(
+                                            .connectionStateChanged(
+                                                this.connection,
+                                                .disconnected)))
+                }
+            } catch let error {
+                print(error)
+            }
+        }
+    }
+    
+    func terminate() {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            do {
                 try self?.group.syncShutdownGracefully()
-                self?.connection.active = false
             } catch let error {
                 print(error)
             }
@@ -343,7 +363,7 @@ extension ServerConnection {
             let nick = message.parameters[0]
             
             // second parameter is the reason
-            let reason = message.parameters[1].dropLeadingColon()
+            let reason = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
             self.connection.store.dispatch(.network(
                                             .errorReceived(

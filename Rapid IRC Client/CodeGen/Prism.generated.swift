@@ -79,7 +79,7 @@ extension NetworkAction {
         self.connectionAdded != nil
     }
 
-    internal var connectionStateChanged: (Connection, Bool)? {
+    internal var connectionStateChanged: (Connection, Connection.State)? {
         get {
             guard case let .connectionStateChanged(associatedValue0, associatedValue1) = self else { return nil }
             return (associatedValue0, associatedValue1)
