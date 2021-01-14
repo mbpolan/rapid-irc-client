@@ -20,40 +20,37 @@ struct ChannelListView: View {
         }
     }
     
+    private func makeSectionText(_ server: ChannelListViewModel.ListItem) -> some View {
+        Text(server.name)
+            .font(.headline)
+            .contextMenu {
+                if server.active {
+                    Button(action: {
+                        guard let connection = server.connection else { return }
+                        self.viewModel.dispatch(.reconnect(connection))
+                    }) {
+                        Text("Connect")
+                    }
+                } else {
+                    Button(action: {
+                        guard let connection = server.connection else { return }
+                        self.viewModel.dispatch(.disconnect(connection))
+                    }) {
+                        Text("Disconnect")
+                    }
+                }
+            }
+    }
+    
     private func makeList() -> some View {
         GeometryReader { geo in
             List {
                 ForEach(viewModel.state.list, id: \.id) { server in
                     // header contains the server name
-                    Section(header: Text(server.name).font(.headline)) {
+                    Section(header: makeSectionText(server)) {
                         // list each channel under this server as a group
                         OutlineGroup(server.children ?? [], id: \.id, children: \.children) { channel in
-                            // determine an appropriate style depending on the state of the item
-                            let color =  viewModel.state.currentChannel?.id == channel.id ? Color.primary : Color.secondary
-                            
-                            HStack {
-                                // button containing the channel name
-                                Button(action: {
-                                    if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
-                                        self.viewModel.dispatch(.setChannel(target))
-                                    }
-                                }) {
-                                    Text(channel.name == Connection.serverChannel ? "Server" : channel.name)
-                                        .foregroundColor(color)
-                                        .font(.subheadline)
-                                }.buttonStyle(BorderlessButtonStyle())
-                                
-                                Spacer()
-                                
-                                // button for closing the channel, only shown if the user hovers the containing view
-                                if self.hoveredChannel == channel.id {
-                                    Button(action: {
-                                        
-                                    }) {
-                                        Image(systemName: "xmark")
-                                    }.buttonStyle(BorderlessButtonStyle())
-                                }
-                            }.frame(maxWidth: .infinity)
+                            makeChannelItem(channel)
                             .onHover { hovering in
                                 // keep track of which channel the user has hovered over
                                 if hovering {
@@ -68,6 +65,39 @@ struct ChannelListView: View {
             }.listStyle(SidebarListStyle())
             .frame(width: geo.size.width)
         }
+    }
+    
+    private func makeChannelItem(_ channel: ChannelListViewModel.ListItem) -> some View {
+        // determine an appropriate style depending on the state of the item
+        let color = viewModel.state.currentChannel?.id == channel.id ? Color.primary : Color.secondary
+        
+        let fontStyle: Font = channel.connection?.channels.first(where: { $0.id == channel.id })?.state == .joined
+            ? .subheadline
+            : Font.subheadline.italic()
+        
+        return HStack {
+            // button containing the channel name
+            Button(action: {
+                if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                    self.viewModel.dispatch(.setChannel(target))
+                }
+            }) {
+                Text(channel.name == Connection.serverChannel ? "Server" : channel.name)
+                    .foregroundColor(color)
+                    .font(fontStyle)
+            }.buttonStyle(BorderlessButtonStyle())
+            
+            Spacer()
+            
+            // button for closing the channel, only shown if the user hovers the containing view
+            if self.hoveredChannel == channel.id {
+                Button(action: {
+                    
+                }) {
+                    Image(systemName: "xmark")
+                }.buttonStyle(BorderlessButtonStyle())
+            }
+        }.frame(maxWidth: .infinity)
     }
 }
 
@@ -95,13 +125,20 @@ enum ChannelListViewModel {
     
     enum ViewAction {
         case setChannel(IRCChannel)
+        case reconnect(Connection)
+        case disconnect(Connection)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
         switch viewAction {
-        case .setChannel:
-            let channel = viewAction.setChannel!
+        case .setChannel(let channel):
             return .ui(.changeChannel(channel))
+            
+        case .reconnect(let connection):
+            return .network(.reconnect(connection))
+        
+        case .disconnect(let connection):
+            return .network(.disconnect(connection))
         }
     }
     
@@ -128,19 +165,6 @@ enum ChannelListViewModel {
                         })
             },
             currentChannel: appState.ui.currentChannel)
-    }
-}
-
-extension ChannelListViewModel.ViewAction {
-    public var setChannel: IRCChannel? {
-        get {
-            guard case let .setChannel(value) = self else { return nil }
-            return value
-        }
-        set {
-            guard case .setChannel = self, let value = newValue else { return }
-            self = .setChannel(value)
-        }
     }
 }
 

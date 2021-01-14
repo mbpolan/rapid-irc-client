@@ -1,0 +1,6 @@
+framework module SwiftRex {
+  umbrella header "SwiftRex-umbrella.h"
+
+  export *
+  module * { export * }
+}

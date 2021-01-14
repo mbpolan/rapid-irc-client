@@ -1,5 +1,5 @@
 //
-//  Reducer.swift
+//  UIReducer.swift
 //  Rapid IRC Client
 //
 //  Created by Mike Polan on 11/23/20.
@@ -20,9 +20,9 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
             connectSheetShown: state.connectSheetShown,
             currentChannel: connection.channels.first)
         
-    case .changeChannel:
+    case .changeChannel(let channel):
         return UIState(
             connectSheetShown: state.connectSheetShown,
-            currentChannel: action.changeChannel)
+            currentChannel: channel)
     }
 }

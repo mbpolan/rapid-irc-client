@@ -15,6 +15,7 @@ class ServerConnection {
     internal let store: Store
     private let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     private var handler: ClientHandler?
+    private var channel: Channel?
     
     init(server: ServerInfo, store: Store) {
         self.server = server
@@ -35,7 +36,22 @@ class ServerConnection {
         
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                try bootstrap.connect(host: self.server.host, port: self.server.port).wait()
+                self.channel = try bootstrap
+                    .connect(host: self.server.host, port: self.server.port)
+                    .wait()
+                self.connection.active = true
+            } catch let error {
+                print(error)
+            }
+        }
+    }
+    
+    func disconnect() {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            do {
+                try self?.channel?.close().wait()
+                try self?.group.syncShutdownGracefully()
+                self?.connection.active = false
             } catch let error {
                 print(error)
             }

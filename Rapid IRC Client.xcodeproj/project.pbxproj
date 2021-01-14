@@ -3,11 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2757C25D2545F30B002335CB /* NIO in Frameworks */ = {isa = PBXBuildFile; productRef = 2757C25C2545F30B002335CB /* NIO */; };
 		2757C2CC254A4F78002335CB /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2CB254A4F78002335CB /* Store.swift */; };
 		2757C2D4254A5377002335CB /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D3254A5377002335CB /* MessageView.swift */; };
 		2757C2DA254A5483002335CB /* NetworkReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D9254A5483002335CB /* NetworkReducer.swift */; };
@@ -23,7 +22,12 @@
 		276209EF2585AA8A00212F36 /* NetworkMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */; };
 		2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE04256CABCC00371A28 /* UIReducer.swift */; };
 		2776AE0D256CABD600371A28 /* UIActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE0C256CABD600371A28 /* UIActions.swift */; };
-		27A8D1E625AA8A1200468A20 /* CombineRex in Frameworks */ = {isa = PBXBuildFile; productRef = 27A8D1E525AA8A1200468A20 /* CombineRex */; };
+		279911DE25AFD9FA004D0DDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 279911DB25AFD9FA004D0DDC /* README.md */; };
+		279911DF25AFD9FA004D0DDC /* screenshot.png in Resources */ = {isa = PBXBuildFile; fileRef = 279911DC25AFD9FA004D0DDC /* screenshot.png */; };
+		279911E025AFD9FA004D0DDC /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 279911DD25AFD9FA004D0DDC /* Podfile */; };
+		279911F925AFDC3A004D0DDC /* .sourcery.yml in Resources */ = {isa = PBXBuildFile; fileRef = 279911F825AFDC3A004D0DDC /* .sourcery.yml */; };
+		279911FE25AFDC6F004D0DDC /* CodeGen in Resources */ = {isa = PBXBuildFile; fileRef = 279911FD25AFDC6F004D0DDC /* CodeGen */; };
+		2799120925AFE1CA004D0DDC /* Prism.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 2799120825AFE1CA004D0DDC /* Prism.stencil */; };
 		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
 		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
 		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
@@ -33,8 +37,10 @@
 		27CF74D52543ABDA00DA4598 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D32543ABDA00DA4598 /* Main.storyboard */; };
 		27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */; };
 		27CF74EC2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */; };
-		27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF750C2543F1BC00DA4598 /* ConnectionService.swift */; };
 		27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */; };
+		5444AE3E84D69FA33A076E6D /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A88395C4FB638885BFDEAD /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework */; };
+		5580B0C0DEE8BD3B956EBEDE /* Pods_Rapid_IRC_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACA00DB5572EFEE5F5960DBE /* Pods_Rapid_IRC_Client.framework */; };
+		B8CCD82FB4FA8510768D643D /* Pods_Rapid_IRC_ClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6821C205091C38544D451F6B /* Pods_Rapid_IRC_ClientTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +61,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		22A88395C4FB638885BFDEAD /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2757C2CB254A4F78002335CB /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2757C2D3254A5377002335CB /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		2757C2D9254A5483002335CB /* NetworkReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReducer.swift; sourceTree = "<group>"; };
@@ -70,6 +77,12 @@
 		276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMiddleware.swift; sourceTree = "<group>"; };
 		2776AE04256CABCC00371A28 /* UIReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIReducer.swift; sourceTree = "<group>"; };
 		2776AE0C256CABD600371A28 /* UIActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIActions.swift; sourceTree = "<group>"; };
+		279911DB25AFD9FA004D0DDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		279911DC25AFD9FA004D0DDC /* screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = screenshot.png; sourceTree = "<group>"; };
+		279911DD25AFD9FA004D0DDC /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		279911F825AFDC3A004D0DDC /* .sourcery.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .sourcery.yml; sourceTree = "<group>"; };
+		279911FD25AFDC6F004D0DDC /* CodeGen */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CodeGen; sourceTree = "<group>"; };
+		2799120825AFE1CA004D0DDC /* Prism.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Prism.stencil; path = Templates/Prism.stencil; sourceTree = "<group>"; };
 		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,8 +99,15 @@
 		27CF74E72543ABDA00DA4598 /* Rapid IRC ClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rapid_IRC_ClientUITests.swift; sourceTree = "<group>"; };
 		27CF74ED2543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		27CF750C2543F1BC00DA4598 /* ConnectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionService.swift; sourceTree = "<group>"; };
 		27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectDialog.swift; sourceTree = "<group>"; };
+		2B24F48610E25B8057DEC9D9 /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client-Rapid IRC ClientUITests/Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig"; sourceTree = "<group>"; };
+		630FC394CFDCFDD7AE56888B /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client-Rapid IRC ClientUITests/Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		6821C205091C38544D451F6B /* Pods_Rapid_IRC_ClientTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rapid_IRC_ClientTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6982A6D5278B9C3982D3AEC /* Pods-Rapid IRC Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.debug.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.debug.xcconfig"; sourceTree = "<group>"; };
+		ACA00DB5572EFEE5F5960DBE /* Pods_Rapid_IRC_Client.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rapid_IRC_Client.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0479A802FB53F14D67A6BEF /* Pods-Rapid IRC ClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC ClientTests.debug.xcconfig"; path = "Target Support Files/Pods-Rapid IRC ClientTests/Pods-Rapid IRC ClientTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D9B5910E59789A868251379E /* Pods-Rapid IRC ClientTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC ClientTests.release.xcconfig"; path = "Target Support Files/Pods-Rapid IRC ClientTests/Pods-Rapid IRC ClientTests.release.xcconfig"; sourceTree = "<group>"; };
+		E34FDDFCD868DB96956A06D7 /* Pods-Rapid IRC Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client.release.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27A8D1E625AA8A1200468A20 /* CombineRex in Frameworks */,
-				2757C25D2545F30B002335CB /* NIO in Frameworks */,
+				5580B0C0DEE8BD3B956EBEDE /* Pods_Rapid_IRC_Client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8CCD82FB4FA8510768D643D /* Pods_Rapid_IRC_ClientTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5444AE3E84D69FA33A076E6D /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,13 +189,28 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		279911D425AFD9C5004D0DDC /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				2799120825AFE1CA004D0DDC /* Prism.stencil */,
+			);
+			name = Templates;
+			sourceTree = "<group>";
+		};
 		27CF74BE2543ABD800DA4598 = {
 			isa = PBXGroup;
 			children = (
+				279911F825AFDC3A004D0DDC /* .sourcery.yml */,
+				279911DD25AFD9FA004D0DDC /* Podfile */,
+				279911DB25AFD9FA004D0DDC /* README.md */,
+				279911DC25AFD9FA004D0DDC /* screenshot.png */,
+				279911D425AFD9C5004D0DDC /* Templates */,
 				27CF74C92543ABD900DA4598 /* Rapid IRC Client */,
 				27CF74DF2543ABDA00DA4598 /* Rapid IRC ClientTests */,
 				27CF74EA2543ABDA00DA4598 /* Rapid IRC ClientUITests */,
 				27CF74C82543ABD900DA4598 /* Products */,
+				BE63C807F495570712BA82B7 /* Pods */,
+				7D09D6E6857ABEF28F3C5365 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -191,12 +227,12 @@
 		27CF74C92543ABD900DA4598 /* Rapid IRC Client */ = {
 			isa = PBXGroup;
 			children = (
+				279911FD25AFDC6F004D0DDC /* CodeGen */,
 				2757C301254D23B8002335CB /* Extensions */,
 				2757C2F6254A5DD5002335CB /* Models */,
 				2757C2CA254A4F68002335CB /* State */,
 				27CF751A2544BA2900DA4598 /* System */,
 				27CF75192544B9FE00DA4598 /* UI */,
-				27CF75182544B9F000DA4598 /* Services */,
 				27CF74CE2543ABDA00DA4598 /* Assets.xcassets */,
 				27CF74D32543ABDA00DA4598 /* Main.storyboard */,
 				27CF74D62543ABDA00DA4598 /* Info.plist */,
@@ -232,14 +268,6 @@
 			path = "Rapid IRC ClientUITests";
 			sourceTree = "<group>";
 		};
-		27CF75182544B9F000DA4598 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				27CF750C2543F1BC00DA4598 /* ConnectionService.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
 		27CF75192544B9FE00DA4598 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,6 +288,29 @@
 			path = System;
 			sourceTree = "<group>";
 		};
+		7D09D6E6857ABEF28F3C5365 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ACA00DB5572EFEE5F5960DBE /* Pods_Rapid_IRC_Client.framework */,
+				22A88395C4FB638885BFDEAD /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework */,
+				6821C205091C38544D451F6B /* Pods_Rapid_IRC_ClientTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BE63C807F495570712BA82B7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A6982A6D5278B9C3982D3AEC /* Pods-Rapid IRC Client.debug.xcconfig */,
+				E34FDDFCD868DB96956A06D7 /* Pods-Rapid IRC Client.release.xcconfig */,
+				630FC394CFDCFDD7AE56888B /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig */,
+				2B24F48610E25B8057DEC9D9 /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig */,
+				D0479A802FB53F14D67A6BEF /* Pods-Rapid IRC ClientTests.debug.xcconfig */,
+				D9B5910E59789A868251379E /* Pods-Rapid IRC ClientTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -267,19 +318,18 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27CF74F02543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC Client" */;
 			buildPhases = (
+				44D5490CCD15A696FC035EB4 /* [CP] Check Pods Manifest.lock */,
+				27A8D21725AFD36400468A20 /* ShellScript */,
 				27CF74C32543ABD800DA4598 /* Sources */,
 				27CF74C42543ABD800DA4598 /* Frameworks */,
 				27CF74C52543ABD800DA4598 /* Resources */,
+				AE4B6B5F3A554D9CCE31CABF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "Rapid IRC Client";
-			packageProductDependencies = (
-				2757C25C2545F30B002335CB /* NIO */,
-				27A8D1E525AA8A1200468A20 /* CombineRex */,
-			);
 			productName = "Rapid IRC Client";
 			productReference = 27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */;
 			productType = "com.apple.product-type.application";
@@ -288,6 +338,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27CF74F32543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC ClientTests" */;
 			buildPhases = (
+				0A2039E4D1A4B241B240ED8A /* [CP] Check Pods Manifest.lock */,
 				27CF74D82543ABDA00DA4598 /* Sources */,
 				27CF74D92543ABDA00DA4598 /* Frameworks */,
 				27CF74DA2543ABDA00DA4598 /* Resources */,
@@ -306,9 +357,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27CF74F62543ABDA00DA4598 /* Build configuration list for PBXNativeTarget "Rapid IRC ClientUITests" */;
 			buildPhases = (
+				F5268D07B56B75BF8B699DC9 /* [CP] Check Pods Manifest.lock */,
 				27CF74E32543ABDA00DA4598 /* Sources */,
 				27CF74E42543ABDA00DA4598 /* Frameworks */,
 				27CF74E52543ABDA00DA4598 /* Resources */,
+				B1899F87BF956FCE58E44AF1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -351,10 +404,6 @@
 				Base,
 			);
 			mainGroup = 27CF74BE2543ABD800DA4598;
-			packageReferences = (
-				2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */,
-				27A8D1E425AA8A1200468A20 /* XCRemoteSwiftPackageReference "SwiftRex" */,
-			);
 			productRefGroup = 27CF74C82543ABD900DA4598 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -371,9 +420,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				279911DF25AFD9FA004D0DDC /* screenshot.png in Resources */,
 				27CF74D52543ABDA00DA4598 /* Main.storyboard in Resources */,
+				2799120925AFE1CA004D0DDC /* Prism.stencil in Resources */,
+				279911DE25AFD9FA004D0DDC /* README.md in Resources */,
 				27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */,
+				279911E025AFD9FA004D0DDC /* Podfile in Resources */,
+				279911FE25AFDC6F004D0DDC /* CodeGen in Resources */,
 				27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */,
+				279911F925AFDC3A004D0DDC /* .sourcery.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +448,126 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0A2039E4D1A4B241B240ED8A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Rapid IRC ClientTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		27A8D21725AFD36400468A20 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PODS_ROOT/Sourcery/bin/sourcery\" --verbose --disableCache\n";
+		};
+		44D5490CCD15A696FC035EB4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Rapid IRC Client-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AE4B6B5F3A554D9CCE31CABF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client/Pods-Rapid IRC Client-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B1899F87BF956FCE58E44AF1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client-Rapid IRC ClientUITests/Pods-Rapid IRC Client-Rapid IRC ClientUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client-Rapid IRC ClientUITests/Pods-Rapid IRC Client-Rapid IRC ClientUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Rapid IRC Client-Rapid IRC ClientUITests/Pods-Rapid IRC Client-Rapid IRC ClientUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F5268D07B56B75BF8B699DC9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Rapid IRC Client-Rapid IRC ClientUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		27CF74C32543ABD800DA4598 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -406,7 +581,6 @@
 				2757C2E2254A5496002335CB /* NetworkActions.swift in Sources */,
 				2757C303254D23C7002335CB /* String.swift in Sources */,
 				2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */,
-				27CF750D2543F1BC00DA4598 /* ConnectionService.swift in Sources */,
 				2757C2CC254A4F78002335CB /* Store.swift in Sources */,
 				2757C2FD254A6A54002335CB /* ServerConnection.swift in Sources */,
 				2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */,
@@ -582,6 +756,7 @@
 		};
 		27CF74F12543ABDA00DA4598 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6982A6D5278B9C3982D3AEC /* Pods-Rapid IRC Client.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -604,6 +779,7 @@
 		};
 		27CF74F22543ABDA00DA4598 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E34FDDFCD868DB96956A06D7 /* Pods-Rapid IRC Client.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -626,6 +802,7 @@
 		};
 		27CF74F42543ABDA00DA4598 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D0479A802FB53F14D67A6BEF /* Pods-Rapid IRC ClientTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -647,6 +824,7 @@
 		};
 		27CF74F52543ABDA00DA4598 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D9B5910E59789A868251379E /* Pods-Rapid IRC ClientTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -668,6 +846,7 @@
 		};
 		27CF74F72543ABDA00DA4598 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 630FC394CFDCFDD7AE56888B /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -687,6 +866,7 @@
 		};
 		27CF74F82543ABDA00DA4598 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B24F48610E25B8057DEC9D9 /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -744,38 +924,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-nio.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.23.0;
-			};
-		};
-		27A8D1E425AA8A1200468A20 /* XCRemoteSwiftPackageReference "SwiftRex" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftRex/SwiftRex.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		2757C25C2545F30B002335CB /* NIO */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2757C25B2545F30B002335CB /* XCRemoteSwiftPackageReference "swift-nio" */;
-			productName = NIO;
-		};
-		27A8D1E525AA8A1200468A20 /* CombineRex */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27A8D1E425AA8A1200468A20 /* XCRemoteSwiftPackageReference "SwiftRex" */;
-			productName = CombineRex;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27CF74BF2543ABD800DA4598 /* Project object */;
 }

@@ -1,0 +1,6 @@
+framework module CombineRex {
+  umbrella header "CombineRex-umbrella.h"
+
+  export *
+  module * { export * }
+}

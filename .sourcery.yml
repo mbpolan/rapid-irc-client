@@ -1,0 +1,6 @@
+sources:
+  - Rapid IRC Client
+templates:
+  - Templates
+output:
+  Rapid IRC Client/CodeGen

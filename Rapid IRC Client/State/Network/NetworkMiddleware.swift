@@ -23,8 +23,7 @@ class NetworkMiddleware: Middleware {
     
     func handle(action: NetworkAction, from dispatcher: ActionSource, afterReducer: inout AfterReducer) {
         switch action {
-        case .connect:
-            let serverInfo = action.connect!
+        case .connect(let serverInfo):
             let connection = Connection(
                 name: serverInfo.host,
                 serverInfo: serverInfo,
@@ -36,6 +35,16 @@ class NetworkMiddleware: Middleware {
             
             output.dispatch(.network(.connectionAdded(connection, serverChannel)))
             output.dispatch(.ui(.connectionAdded(connection)))
+            
+        case .reconnect(let connection):
+            connection.client.connect()
+            
+            output.dispatch(.network(.connectionStateChanged(connection, true)))
+        
+        case .disconnect(let connection):
+            connection.client.disconnect()
+            
+            output.dispatch(.network(.connectionStateChanged(connection, false)))
             
         case .messageSent(let channel, let text):
             let message = text.starts(with: "/") ? text.subString(from: 1) : text

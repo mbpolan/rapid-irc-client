@@ -1,0 +1,6 @@
+framework module Pods_Rapid_IRC_ClientTests {
+  umbrella header "Pods-Rapid IRC ClientTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

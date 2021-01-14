@@ -99,19 +99,6 @@ enum ActiveChannelViewModel {
     }
 }
 
-extension ActiveChannelViewModel.ViewAction {
-    public var sendMessage: (IRCChannel, String)? {
-        get {
-            guard case let .sendMessage(value1, value2) = self else { return nil }
-            return (value1, value2)
-        }
-        set {
-            guard case .sendMessage = self, let (value1, value2) = newValue else { return }
-            self = .sendMessage(value1, value2)
-        }
-    }
-}
-
 struct ActiveChannelView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store()

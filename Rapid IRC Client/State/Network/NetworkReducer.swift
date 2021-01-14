@@ -1,5 +1,5 @@
 //
-//  Reducer.swift
+//  NetworkReducer.swift
 //  Rapid IRC Client
 //
 //  Created by Mike Polan on 10/28/20.
@@ -18,6 +18,22 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         return NetworkState(
             connections: state.connections + [connection],
             channelUuids: channelUuids)
+        
+    case .connectionStateChanged(let connection, let active):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }) {
+            // if a connection is no longer active, then all of its channels are also parted
+            if !active {
+                target.channels = target.channels.map { channel in
+                    channel.state = .parted
+                    return channel
+                }
+            }
+            
+            target.active = active
+        }
+        
+        return newState
         
     case .welcomeReceived(let connection, let identifier):
         let newState = state

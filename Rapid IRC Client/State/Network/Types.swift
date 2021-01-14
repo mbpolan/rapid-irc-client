@@ -12,6 +12,7 @@ class Connection: Identifiable {
     static let serverChannel = "_"
     
     var name: String
+    var active: Bool
     var identifier: String?
     var client: ServerConnection
     var channels: [IRCChannel] = []
@@ -19,6 +20,7 @@ class Connection: Identifiable {
     
     init(name: String, serverInfo: ServerInfo, store: Store) {
         self.name = name
+        self.active = false
         self.client = ServerConnection(server: serverInfo, store: store)
         self.client.withConnection(self)
     }
