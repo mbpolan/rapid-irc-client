@@ -136,7 +136,7 @@ enum ChannelListViewModel {
     private static func transform(viewAction: ViewAction) -> AppAction? {
         switch viewAction {
         case .setChannel(let channel):
-            return .ui(.changeChannel(channel))
+            return .ui(.changeChannel(channel.connection, channel.name))
             
         case .reconnect(let connection):
             return .network(.reconnect(connection))

@@ -154,6 +154,21 @@ extension NetworkAction {
         self.usersInChannel != nil
     }
 
+    internal var prepareJoinChannel: (Connection, String, String, String)? {
+        get {
+            guard case let .prepareJoinChannel(associatedValue0, associatedValue1, associatedValue2, associatedValue3) = self else { return nil }
+            return (associatedValue0, associatedValue1, associatedValue2, associatedValue3)
+        }
+        set {
+            guard case .prepareJoinChannel = self, let newValue = newValue else { return }
+            self = .prepareJoinChannel(newValue.0, newValue.1, newValue.2, newValue.3)
+        }
+    }
+
+    internal var isPrepareJoinChannel: Bool {
+        self.prepareJoinChannel != nil
+    }
+
     internal var joinedChannel: (Connection, String, String, String)? {
         get {
             guard case let .joinedChannel(associatedValue0, associatedValue1, associatedValue2, associatedValue3) = self else { return nil }
@@ -247,14 +262,14 @@ extension UIAction {
         self.connectionAdded != nil
     }
 
-    internal var changeChannel: IRCChannel? {
+    internal var changeChannel: (Connection, String)? {
         get {
-            guard case let .changeChannel(associatedValue0) = self else { return nil }
-            return (associatedValue0)
+            guard case let .changeChannel(associatedValue0, associatedValue1) = self else { return nil }
+            return (associatedValue0, associatedValue1)
         }
         set {
             guard case .changeChannel = self, let newValue = newValue else { return }
-            self = .changeChannel(newValue)
+            self = .changeChannel(newValue.0, newValue.1)
         }
     }
 

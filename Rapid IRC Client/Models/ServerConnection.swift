@@ -36,6 +36,11 @@ class ServerConnection {
         
         DispatchQueue.global(qos: .userInitiated).async {
             do {
+                self.store.dispatch(.network(
+                                        .connectionStateChanged(
+                                            self.connection,
+                                            .connecting)))
+                
                 self.channel = try bootstrap
                     .connect(host: self.server.host, port: self.server.port)
                     .wait()
@@ -196,7 +201,7 @@ extension ServerConnection {
             let channel = message.parameters[0].dropLeadingColon()
             
             self.connection.store.dispatch(.network(
-                                            .joinedChannel(
+                                            .prepareJoinChannel(
                                                 self.connection.connection,
                                                 channel,
                                                 message.prefix!.raw,

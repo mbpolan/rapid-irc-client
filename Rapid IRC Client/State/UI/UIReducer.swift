@@ -20,9 +20,12 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
             connectSheetShown: state.connectSheetShown,
             currentChannel: connection.channels.first)
         
-    case .changeChannel(let channel):
-        return UIState(
-            connectSheetShown: state.connectSheetShown,
-            currentChannel: channel)
+    case .changeChannel(let connection, let channelName):
+        var newState = state
+        if let channel = connection.channels.first(where: { $0.name == channelName }) {
+            newState.currentChannel = channel
+        }
+        
+        return newState
     }
 }
