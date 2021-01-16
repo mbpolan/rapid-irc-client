@@ -59,6 +59,19 @@ class NetworkMiddleware: Middleware {
             var message = text
             
             switch text.lowercased() {
+            // when joining a previously parted channel, we can automatically add the channel name to the join
+            // command to effectively "rejoin" that channel without the user explicitly stating the channel name
+            case _ where text.starts(with: "/join"):
+                let state = getState()
+                guard let currentChannel = state.ui.currentChannel else { break }
+                
+                let parts = text.components(separatedBy: " ")
+                if parts.count == 1 {
+                    message = "\(parts[0]) \(currentChannel.name)"
+                }
+                
+                break
+                
             // when parting a channel, try and detect if we need to include the name of the currently active
             // channel in the command
             case _ where text.starts(with: "/part"):
