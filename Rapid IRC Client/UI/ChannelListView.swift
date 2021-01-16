@@ -93,10 +93,13 @@ struct ChannelListView: View {
             
             Spacer()
             
-            // button for closing the channel, only shown if the user hovers the containing view
-            if self.hoveredChannel == channel.id {
+            // button for closing the channel, only shown if the user hovers the containing view and the channel is not
+            // the default server channel itself
+            if self.hoveredChannel == channel.id && channel.name != Connection.serverChannel {
                 Button(action: {
-                    
+                    if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                        self.viewModel.dispatch(.closeChannel(target))
+                    }
                 }) {
                     Image(systemName: "xmark")
                 }.buttonStyle(BorderlessButtonStyle())
@@ -129,6 +132,7 @@ enum ChannelListViewModel {
     
     enum ViewAction {
         case setChannel(IRCChannel)
+        case closeChannel(IRCChannel)
         case reconnect(Connection)
         case disconnect(Connection)
     }
@@ -137,6 +141,9 @@ enum ChannelListViewModel {
         switch viewAction {
         case .setChannel(let channel):
             return .ui(.changeChannel(channel.connection, channel.name))
+            
+        case .closeChannel(let channel):
+            return .ui(.closeChannel(channel.connection, channel.name))
             
         case .reconnect(let connection):
             return .network(.reconnect(connection))

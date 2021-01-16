@@ -33,15 +33,15 @@ struct ActiveChannelView: View {
                         submit()
                     })
                     Spacer()
-                    Button("OK") {
+                    Button("Send") {
                         submit()
                     }
                 }.layoutPriority(1)
             }.layoutPriority(2)
             
             // display a list of users on the right side
-            if let channel = viewModel.state.currentChannel, channel.name != Connection.serverChannel {
-                List(sortUsers(channel.users)) { item in
+            if let users = viewModel.state.users, viewModel.state.showUserList {
+                List(sortUsers(users)) { item in
                     Text(item.name)
                 }.layoutPriority(1)
             }
@@ -76,9 +76,14 @@ enum ActiveChannelViewModel {
 
     struct ViewState: Equatable {
         let currentChannel: IRCChannel?
+        let showUserList: Bool
+        let users: Set<User>
         
         static var empty: ViewState {
-            .init(currentChannel: nil)
+            .init(
+                currentChannel: nil,
+                showUserList: false,
+                users: [])
         }
     }
 
@@ -94,8 +99,12 @@ enum ActiveChannelViewModel {
     }
     
     private static func transform(appState: AppState) -> ViewState {
-        ViewState(
-            currentChannel: appState.ui.currentChannel)
+        let currentChannel = appState.ui.currentChannel
+        
+        return ViewState(
+            currentChannel: currentChannel,
+            showUserList: currentChannel?.name != Connection.serverChannel,
+            users: currentChannel?.users ?? Set())
     }
 }
 
@@ -129,7 +138,10 @@ struct ActiveChannelView_Previews: PreviewProvider {
                                 privilege: .fullOperator))
 
         let viewModel = ActiveChannelViewModel.viewModel(from: store)
-        viewModel.state = ActiveChannelViewModel.ViewState(currentChannel: channel)
+        viewModel.state = ActiveChannelViewModel.ViewState(
+            currentChannel: channel,
+            showUserList: true,
+            users: channel.users)
 
         return ActiveChannelView(viewModel: viewModel)
     }

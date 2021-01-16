@@ -199,6 +199,21 @@ extension NetworkAction {
         self.partedChannel != nil
     }
 
+    internal var removeChannel: (Connection, String)? {
+        get {
+            guard case let .removeChannel(associatedValue0, associatedValue1) = self else { return nil }
+            return (associatedValue0, associatedValue1)
+        }
+        set {
+            guard case .removeChannel = self, let newValue = newValue else { return }
+            self = .removeChannel(newValue.0, newValue.1)
+        }
+    }
+
+    internal var isRemoveChannel: Bool {
+        self.removeChannel != nil
+    }
+
     internal var privateMessageReceived: (Connection, String, String, String, ChannelMessage)? {
         get {
             guard case let .privateMessageReceived(associatedValue0, associatedValue1, associatedValue2, associatedValue3, associatedValue4) = self else { return nil }
@@ -275,6 +290,21 @@ extension UIAction {
 
     internal var isChangeChannel: Bool {
         self.changeChannel != nil
+    }
+
+    internal var closeChannel: (Connection, String)? {
+        get {
+            guard case let .closeChannel(associatedValue0, associatedValue1) = self else { return nil }
+            return (associatedValue0, associatedValue1)
+        }
+        set {
+            guard case .closeChannel = self, let newValue = newValue else { return }
+            self = .closeChannel(newValue.0, newValue.1)
+        }
+    }
+
+    internal var isCloseChannel: Bool {
+        self.closeChannel != nil
     }
 
 }

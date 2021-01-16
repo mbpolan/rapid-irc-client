@@ -112,6 +112,14 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
         
+    case .removeChannel(let connection, let channelName):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }) {
+            target.channels = target.channels.filter { $0.name != channelName }
+        }
+        
+        return newState
+        
     case .privateMessageReceived(let connection, let identifier, let nick, let recipient, let message):
         let newState = state
         // FIXME: recipient can also be another user

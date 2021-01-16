@@ -11,4 +11,6 @@ enum UIAction {
     case toggleConnectSheet(Bool)
     case connectionAdded(Connection)
     case changeChannel(Connection, String)
+    
+    case closeChannel(Connection, String)
 }

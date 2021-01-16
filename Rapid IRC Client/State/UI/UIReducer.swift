@@ -14,7 +14,7 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
         return UIState(
             connectSheetShown: value,
             currentChannel: state.currentChannel)
-    
+        
     case .connectionAdded(let connection):
         return UIState(
             connectSheetShown: state.connectSheetShown,
@@ -27,5 +27,8 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
         }
         
         return newState
+        
+    default:
+        return state;
     }
 }

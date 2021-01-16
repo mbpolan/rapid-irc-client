@@ -58,7 +58,12 @@ let appReducer = uiReducer.lift(
 let appMiddleware = NetworkMiddleware().lift(
     inputAction: \AppAction.network,
     outputAction: identity,
-    state: identity)
+    state: identity
+) <> UIMiddleware().lift(
+    inputAction: \AppAction.ui,
+    outputAction: identity,
+    state: identity
+)
 
 // MARK: - Store
 class Store: ReduxStoreBase<AppAction, AppState> {

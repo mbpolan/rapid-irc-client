@@ -22,6 +22,7 @@ enum NetworkAction {
     case prepareJoinChannel(Connection, String, String, String)
     case joinedChannel(Connection, String, String, String)
     case partedChannel(Connection, String, String, String, String?)
+    case removeChannel(Connection, String)
     case privateMessageReceived(Connection, String, String, String, ChannelMessage)
     
     case errorReceived(Connection, ChannelMessage)
