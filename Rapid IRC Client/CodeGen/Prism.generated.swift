@@ -154,21 +154,6 @@ extension NetworkAction {
         self.usersInChannel != nil
     }
 
-    internal var prepareJoinChannel: (Connection, String, String, String)? {
-        get {
-            guard case let .prepareJoinChannel(associatedValue0, associatedValue1, associatedValue2, associatedValue3) = self else { return nil }
-            return (associatedValue0, associatedValue1, associatedValue2, associatedValue3)
-        }
-        set {
-            guard case .prepareJoinChannel = self, let newValue = newValue else { return }
-            self = .prepareJoinChannel(newValue.0, newValue.1, newValue.2, newValue.3)
-        }
-    }
-
-    internal var isPrepareJoinChannel: Bool {
-        self.prepareJoinChannel != nil
-    }
-
     internal var joinedChannel: (Connection, String, String, String)? {
         get {
             guard case let .joinedChannel(associatedValue0, associatedValue1, associatedValue2, associatedValue3) = self else { return nil }

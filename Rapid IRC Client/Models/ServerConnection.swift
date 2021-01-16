@@ -103,9 +103,6 @@ extension ServerConnection {
         
         func channelActive(context: ChannelHandlerContext) {
             print("connected")
-            //            connection.store.dispatch(action: JoinedChannelAction(
-            //                connection: self.connection,
-            //                channel: Connection.serverChannel))
             
             let nick = connection.server.nick
             
@@ -201,11 +198,17 @@ extension ServerConnection {
             let channel = message.parameters[0].dropLeadingColon()
             
             self.connection.store.dispatch(.network(
-                                            .prepareJoinChannel(
+                                            .joinedChannel(
                                                 self.connection.connection,
                                                 channel,
                                                 message.prefix!.raw,
                                                 message.prefix!.subject)))
+            
+            // set this to be the active chanel
+            self.connection.store.dispatch(.ui(
+                                            .changeChannel(
+                                                self.connection.connection,
+                                                channel)))
         }
         
         private func handlePart(_ message: IRCMessage) {

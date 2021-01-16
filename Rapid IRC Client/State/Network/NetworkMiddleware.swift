@@ -43,17 +43,6 @@ class NetworkMiddleware: Middleware {
         case .disconnect(let connection):
             // client will dispatch an action to inform when it's disconnected
             connection.client.disconnect()
-        
-        case .prepareJoinChannel(let connection, let channelName, let identifier, let nick):
-            output.dispatch(.network(
-                                .joinedChannel(
-                                    connection,
-                                    channelName,
-                                    identifier,
-                                    nick)))
-            
-            // set this to be the active chanel
-            output.dispatch(.ui(.changeChannel(connection, channelName)))
             
         case .messageSent(let channel, let text):
             var message = text

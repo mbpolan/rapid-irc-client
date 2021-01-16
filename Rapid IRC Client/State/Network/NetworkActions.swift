@@ -19,7 +19,6 @@ enum NetworkAction {
     case messageReceived(IRCChannel, ChannelMessage)
     case channelTopic(Connection, String, String)
     case usersInChannel(Connection, String, [User])
-    case prepareJoinChannel(Connection, String, String, String)
     case joinedChannel(Connection, String, String, String)
     case partedChannel(Connection, String, String, String, String?)
     case removeChannel(Connection, String)
