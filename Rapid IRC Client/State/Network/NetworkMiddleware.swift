@@ -56,7 +56,40 @@ class NetworkMiddleware: Middleware {
             output.dispatch(.ui(.changeChannel(connection, channelName)))
             
         case .messageSent(let channel, let text):
-            let message = text.starts(with: "/") ? text.subString(from: 1) : text
+            var message = text
+            
+            switch text.lowercased() {
+            // when parting a channel, try and detect if we need to include the name of the currently active
+            // channel in the command
+            case _ where text.starts(with: "/part"):
+                let state = getState()
+                guard let currentChannel = state.ui.currentChannel else { break }
+                
+                var parts = text.components(separatedBy: " ")
+                if parts.count == 1 {
+                    // no channel name given; append the current channel to the end of the command
+                    parts.append(currentChannel.name)
+                } else if parts.count > 1 {
+                    // multiple parameters given; is the first parameter the name of a channel we know?
+                    let knownChannels = parts[1].components(separatedBy: ",").filter { chan in
+                        return state.network.channelUuids.values.contains(where: { $0.name == chan })
+                    }
+                    
+                    // if none of the channels are known, insert the current channel name as the first parameter
+                    if knownChannels.isEmpty {
+                        parts.insert(currentChannel.name, at: 1)
+                    }
+                }
+                
+                // rebuild the original command with our modifications
+                message = parts.joined(separator: " ")
+                
+            default:
+                break
+            }
+            
+            // strip the leading slash if the message contains a command
+            message = message.starts(with: "/") ? message.subString(from: 1) : message
             channel.connection.client.sendMessage(message)
         
         default:
