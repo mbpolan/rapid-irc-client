@@ -28,6 +28,7 @@ enum Command {
     case serverMotd
     case endMotd
     
+    case errorGeneral
     case errorNoOrigin
     case errorNickInUse
     case errorNeedMoreParams
@@ -77,6 +78,11 @@ extension Command {
         case "461":
             return .errorNeedMoreParams
         default:
+            // is this an error message that we don't specifically handle?
+            if let numeric = Int(code), numeric >= 400, numeric <= 599 {
+                return .errorGeneral
+            }
+            
             return nil
         }
     }

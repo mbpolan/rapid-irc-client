@@ -101,7 +101,7 @@ class NetworkMiddleware: Middleware {
                                             text: text,
                                             variant: .privateMessage))))
                 
-                message = "/privmsg \(currentChannel.name) \(text)"
+                message = "/privmsg \(currentChannel.name) :\(text)"
                 
             default:
                 break

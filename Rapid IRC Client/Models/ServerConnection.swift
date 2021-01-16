@@ -164,6 +164,8 @@ extension ServerConnection {
                 .endMotd:
                 handleServerMessage(ircMessage)
                 
+            case .errorGeneral:
+                handleGeneralError(ircMessage)
             case .errorNickInUse:
                 handleNickInUseError(ircMessage)
             case .errorNeedMoreParams:
@@ -197,6 +199,7 @@ extension ServerConnection {
             // first parameter is the channel
             let channel = message.parameters[0].dropLeadingColon()
             
+            // register this channel in our connection
             self.connection.store.dispatch(.network(
                                             .joinedChannel(
                                                 self.connection.connection,
@@ -358,6 +361,18 @@ extension ServerConnection {
                                                     text: text,
                                                     variant: .other))))
             }
+        }
+        
+        private func handleGeneralError(_ message: IRCMessage) {
+            // concatenage all parameters into a single message
+            let reason = message.parameters[0...].joined(separator: " ").dropLeadingColon()
+            
+            self.connection.store.dispatch(.network(
+                                            .errorReceived(
+                                                self.connection.connection,
+                                                ChannelMessage(
+                                                    text: reason,
+                                                    variant: .error))))
         }
         
         private func handleNickInUseError(_ message: IRCMessage) {
