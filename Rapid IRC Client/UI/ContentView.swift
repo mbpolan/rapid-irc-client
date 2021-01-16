@@ -18,13 +18,26 @@ struct ContentView: View {
     private let onConnectToServer = NotificationCenter.default.publisher(for: .connectToServer)
 
     var body: some View {
+        let sheetBinding: Binding<Bool> = Binding(
+            get: {
+                return viewModel.state.connectSheetShown
+            },
+            set: { value in
+                if value {
+                    viewModel.dispatch(.showConnectSheet)
+                } else {
+                    viewModel.dispatch(.closeConnectSheet)
+                }
+            }
+        )
+        
         HSplitView {
             ChannelListView(viewModel: ChannelListViewModel.viewModel(from: Store.instance))
                 .layoutPriority(1)
             ActiveChannelView(viewModel: ActiveChannelViewModel.viewModel(from: Store.instance))
                 .layoutPriority(2)
-        }.sheet(isPresented: self.$viewModel.state.connectSheetShown, content: {
-            ConnectDialog(shown: self.$viewModel.state.connectSheetShown, onClose: handleConnectToServer)
+        }.sheet(isPresented: sheetBinding, content: {
+            ConnectDialog(shown: sheetBinding, onClose: handleConnectToServer)
         }).onReceive(onConnectToServer) { event in
             self.viewModel.dispatch(.showConnectSheet)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)

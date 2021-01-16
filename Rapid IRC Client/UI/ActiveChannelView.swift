@@ -40,8 +40,8 @@ struct ActiveChannelView: View {
             }.layoutPriority(2)
             
             // display a list of users on the right side
-            if let users = viewModel.state.users, viewModel.state.showUserList {
-                List(sortUsers(users)) { item in
+            if viewModel.state.showUserList {
+                List(sortUsers(viewModel.state.users)) { item in
                     Text(item.name)
                 }.layoutPriority(1)
             }
@@ -103,7 +103,7 @@ enum ActiveChannelViewModel {
         
         return ViewState(
             currentChannel: currentChannel,
-            showUserList: currentChannel?.name != Connection.serverChannel,
+            showUserList: currentChannel != nil && currentChannel?.name != Connection.serverChannel,
             users: currentChannel?.users ?? Set())
     }
 }

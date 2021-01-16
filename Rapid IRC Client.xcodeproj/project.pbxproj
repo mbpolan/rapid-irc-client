@@ -31,11 +31,10 @@
 		2799121125B2A735004D0DDC /* UIMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799121025B2A735004D0DDC /* UIMiddleware.swift */; };
 		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
 		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
-		27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* AppDelegate.swift */; };
+		27CF74CB2543ABD900DA4598 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* Main.swift */; };
 		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
 		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
 		27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D12543ABDA00DA4598 /* Preview Assets.xcassets */; };
-		27CF74D52543ABDA00DA4598 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D32543ABDA00DA4598 /* Main.storyboard */; };
 		27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */; };
 		27CF74EC2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */; };
 		27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */; };
@@ -88,11 +87,10 @@
 		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		27CF74CA2543ABD900DA4598 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		27CF74CA2543ABD900DA4598 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		27CF74CC2543ABD900DA4598 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		27CF74CE2543ABDA00DA4598 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27CF74D12543ABDA00DA4598 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		27CF74D42543ABDA00DA4598 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		27CF74D62543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27CF74D72543ABDA00DA4598 /* Rapid_IRC_Client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Rapid_IRC_Client.entitlements; sourceTree = "<group>"; };
 		27CF74DC2543ABDA00DA4598 /* Rapid IRC ClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -237,7 +235,6 @@
 				27CF751A2544BA2900DA4598 /* System */,
 				27CF75192544B9FE00DA4598 /* UI */,
 				27CF74CE2543ABDA00DA4598 /* Assets.xcassets */,
-				27CF74D32543ABDA00DA4598 /* Main.storyboard */,
 				27CF74D62543ABDA00DA4598 /* Info.plist */,
 				27CF74D72543ABDA00DA4598 /* Rapid_IRC_Client.entitlements */,
 				27CF74D02543ABDA00DA4598 /* Preview Content */,
@@ -286,7 +283,7 @@
 		27CF751A2544BA2900DA4598 /* System */ = {
 			isa = PBXGroup;
 			children = (
-				27CF74CA2543ABD900DA4598 /* AppDelegate.swift */,
+				27CF74CA2543ABD900DA4598 /* Main.swift */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -424,7 +421,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				279911DF25AFD9FA004D0DDC /* screenshot.png in Resources */,
-				27CF74D52543ABDA00DA4598 /* Main.storyboard in Resources */,
 				2799120925AFE1CA004D0DDC /* Prism.stencil in Resources */,
 				279911DE25AFD9FA004D0DDC /* README.md in Resources */,
 				27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */,
@@ -596,7 +592,7 @@
 				2757C2E7254A575D002335CB /* Types.swift in Sources */,
 				2776AE0D256CABD600371A28 /* UIActions.swift in Sources */,
 				27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */,
-				27CF74CB2543ABD900DA4598 /* AppDelegate.swift in Sources */,
+				27CF74CB2543ABD900DA4598 /* Main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,17 +626,6 @@
 			targetProxy = 27CF74E82543ABDA00DA4598 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		27CF74D32543ABDA00DA4598 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				27CF74D42543ABDA00DA4598 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		27CF74EE2543ABDA00DA4598 /* Debug */ = {
