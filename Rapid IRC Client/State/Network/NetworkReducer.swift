@@ -38,7 +38,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
     case .welcomeReceived(let connection, let identifier):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }) {
-            target.identifier = identifier
+            target.identifier = IRCMessage.Prefix.parse(identifier)
         }
         
         return state
@@ -91,14 +91,19 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
             
             // append the parting reason, if one was given
             if reason != nil {
+                var message = "\(identifier) has left \(channelName)"
+                if let reasonText = reason {
+                    message = "\(message) (\(reasonText))"
+                }
+                
                 channel.messages.append(ChannelMessage(
-                                            text: "\(identifier) has left \(channelName)",
+                                            text: message,
                                             variant: .userParted))
             }
             
             // does this message refer to us? if so, part the channel from our perspective.
             // if another user has left, remove them from the user list.
-            if identifier == target.identifier {
+            if identifier == target.identifier?.raw {
                 target.leaveChannel(channel: channelName)
             } else if let targetUser = channel.users.first(where: { $0.name == nick }) {
                 channel.users.remove(targetUser)

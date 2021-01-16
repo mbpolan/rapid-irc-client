@@ -13,7 +13,7 @@ class Connection: Identifiable {
     
     var name: String
     var state: State
-    var identifier: String?
+    var identifier: IRCMessage.Prefix?
     var client: ServerConnection
     var channels: [IRCChannel] = []
     var pendingChannels: [String] = []

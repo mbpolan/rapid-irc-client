@@ -225,7 +225,7 @@ extension ServerConnection {
             let channel = message.parameters[0]
             
             // second parameter is an optional message
-            let reason = message.parameters.count > 1 ? message.parameters[1] : nil
+            let reason = message.parameters.count > 1 ? message.parameters[1].dropLeadingColon() : nil
             
             self.connection.store.dispatch(.network(
                                             .partedChannel(

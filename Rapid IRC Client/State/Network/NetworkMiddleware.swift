@@ -84,6 +84,23 @@ class NetworkMiddleware: Middleware {
                 // rebuild the original command with our modifications
                 message = parts.joined(separator: " ")
                 
+            // not a command; could be a normal chat message sent in a channel. in this case, convert the plain text
+            // message into a /privmsg command
+            case _ where !text.starts(with: "/"):
+                let state = getState()
+                guard let currentChannel = state.ui.currentChannel,
+                      let identifier = currentChannel.connection.identifier else { break }
+                
+                output.dispatch(.network(
+                                    .messageReceived(
+                                        currentChannel,
+                                        ChannelMessage(
+                                            sender: identifier.subject,
+                                            text: text,
+                                            variant: .privateMessage))))
+                
+                message = "/privmsg \(currentChannel.name) \(text)"
+                
             default:
                 break
             }
