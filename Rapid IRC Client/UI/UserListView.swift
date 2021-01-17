@@ -12,18 +12,54 @@ import SwiftUI
 struct UserListView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<UserListViewModel.ViewAction, UserListViewModel.ViewState>
+    @State var hoveredNick: String?
     
     var body: some View {
         List {
             ForEach(viewModel.state.groups, id: \.category) { group in
                 Section(header: Text(group.category.info.label).font(.headline)) {
                     OutlineGroup(group.users, id: \.nick, children: \.children) { user in
-                        Text(user.nick)
-                            .font(.subheadline)
+                        makeUserItem(user)
                     }
                 }
             }
         }.listStyle(InsetListStyle())
+    }
+    
+    func makeUserItem(_ user: UserListViewModel.UserEntry) -> some View {
+        let binding = Binding<Bool>(
+            get: { hoveredNick == user.nick },
+            set: { hoveredNick = $0 ? hoveredNick : nil}
+        )
+        
+        return Text(user.nick)
+            .font(.subheadline)
+            .onHover { hovered in
+                self.hoveredNick = hovered ? user.nick : nil
+            }
+            .popover(isPresented: binding, arrowEdge: .trailing) {
+                let popoverGrid = [
+                    GridItem(.fixed(100), spacing: 5),
+                    GridItem(.fixed(50), spacing: 5),
+                ]
+                
+                let cells = [
+                    "Nick",
+                    user.nick,
+                    "Privilege",
+                    user.privilege
+                ]
+                
+                LazyVGrid(
+                    columns: popoverGrid,
+                    alignment: .center,
+                    spacing: 5,
+                    pinnedViews: []) {
+                    ForEach(cells, id: \.self) { cell in
+                        Text(cell)
+                    }
+                }.padding()
+            }
     }
 }
 
@@ -35,7 +71,7 @@ struct UserListViewModel {
             state: transform(appState:)
         ).asObservableViewModel(initialState: .empty)
     }
-
+    
     struct ViewState: Equatable {
         let groups: [UserGroup]
         
@@ -43,7 +79,7 @@ struct UserListViewModel {
             .init(groups: [])
         }
     }
-
+    
     enum ViewAction {
         
     }
@@ -79,7 +115,7 @@ struct UserListViewModel {
                         user: user,
                         children: [])
                 }.sorted { $0.nick < $1.nick })
-            }.sorted { $0.category.info.order < $1.category.info.order })
+        }.sorted { $0.category.info.order < $1.category.info.order })
     }
 }
 
@@ -101,6 +137,23 @@ extension UserListViewModel {
         
         static func ==(lhs: UserEntry, rhs: UserEntry) -> Bool {
             return lhs.nick == rhs.nick
+        }
+        
+        var privilege: String {
+            switch user.privilege {
+            case .owner:
+                return "Owner"
+            case .admin:
+                return "Administrator"
+            case .fullOperator:
+                return "Operator"
+            case .halfOperator:
+                return "Half Operator"
+            case .voiced:
+                return "Voice"
+            case .none:
+                return "None"
+            }
         }
     }
 }

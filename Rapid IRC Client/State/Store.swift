@@ -59,7 +59,7 @@ let appMiddleware = NetworkMiddleware().lift(
     inputAction: \AppAction.network,
     outputAction: identity,
     state: identity
-) <> UIMiddleware().lift(
+) <> UIMiddleware() .lift(
     inputAction: \AppAction.ui,
     outputAction: identity,
     state: identity
