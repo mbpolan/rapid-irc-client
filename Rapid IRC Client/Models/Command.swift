@@ -21,6 +21,12 @@ enum Command {
     case listUserMe
     case localUsers
     case globalUsers
+    case userIsAway
+    case whoIsUser
+    case whoIsServer
+    case whoIsIdle
+    case endOfWhoIs
+    case endOfWhoIsChannels
     case topic
     case nameReply
     case endOfNames
@@ -59,6 +65,18 @@ extension Command {
             return .localUsers
         case "266":
             return .globalUsers
+        case "301":
+            return .userIsAway
+        case "311":
+            return .whoIsUser
+        case "312":
+            return .whoIsServer
+        case "317":
+            return .whoIsIdle
+        case "318":
+            return .endOfWhoIs
+        case "319":
+            return .endOfWhoIsChannels
         case "332":
             return .topic
         case "353":

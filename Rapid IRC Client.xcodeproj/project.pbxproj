@@ -29,6 +29,7 @@
 		279911FE25AFDC6F004D0DDC /* CodeGen in Resources */ = {isa = PBXBuildFile; fileRef = 279911FD25AFDC6F004D0DDC /* CodeGen */; };
 		2799120925AFE1CA004D0DDC /* Prism.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 2799120825AFE1CA004D0DDC /* Prism.stencil */; };
 		2799121125B2A735004D0DDC /* UIMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799121025B2A735004D0DDC /* UIMiddleware.swift */; };
+		2799121C25B4B5DE004D0DDC /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799121B25B4B5DE004D0DDC /* UserListView.swift */; };
 		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
 		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
 		27CF74CB2543ABD900DA4598 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* Main.swift */; };
@@ -84,6 +85,7 @@
 		279911FD25AFDC6F004D0DDC /* CodeGen */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CodeGen; sourceTree = "<group>"; };
 		2799120825AFE1CA004D0DDC /* Prism.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Prism.stencil; path = Templates/Prism.stencil; sourceTree = "<group>"; };
 		2799121025B2A735004D0DDC /* UIMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIMiddleware.swift; sourceTree = "<group>"; };
+		2799121B25B4B5DE004D0DDC /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
 		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -276,6 +278,7 @@
 				2757C2D3254A5377002335CB /* MessageView.swift */,
 				2757C2EB254A5873002335CB /* ChannelListView.swift */,
 				2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */,
+				2799121B25B4B5DE004D0DDC /* UserListView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -579,6 +582,7 @@
 				2757C2F8254A5DE0002335CB /* ServerInfo.swift in Sources */,
 				2757C2E2254A5496002335CB /* NetworkActions.swift in Sources */,
 				2757C303254D23C7002335CB /* String.swift in Sources */,
+				2799121C25B4B5DE004D0DDC /* UserListView.swift in Sources */,
 				2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */,
 				2757C2CC254A4F78002335CB /* Store.swift in Sources */,
 				2757C2FD254A6A54002335CB /* ServerConnection.swift in Sources */,

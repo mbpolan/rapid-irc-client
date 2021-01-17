@@ -39,11 +39,10 @@ struct ActiveChannelView: View {
                 }.layoutPriority(1)
             }.layoutPriority(2)
             
-            // display a list of users on the right side
+            // display a list of users on the right side, unless we are currently in the server channel
             if viewModel.state.showUserList {
-                List(sortUsers(viewModel.state.users)) { item in
-                    Text(item.name)
-                }.layoutPriority(1)
+                UserListView(viewModel: UserListViewModel.viewModel(from: Store.instance))
+                    .layoutPriority(1)
             }
         }
     }
@@ -58,7 +57,7 @@ struct ActiveChannelView: View {
     }
     
     private func submit() {
-        if let channel = viewModel.state.currentChannel {
+        if let channel = viewModel.state.currentChannel, !input.isEmpty {
             viewModel.dispatch(.sendMessage(channel, input))
             input = ""
         }

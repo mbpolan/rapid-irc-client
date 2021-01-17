@@ -83,18 +83,22 @@ class NetworkMiddleware: Middleware {
                                             connection: target,
                                             channelName: channelName)))
                 }
-                
-                // add a message indicating we joined
+            } else {
                 output.dispatch(.network(
-                                    .messageReceived(
+                                    .userJoinedChannel(
                                         connection: target,
                                         channelName: channelName,
-                                        message: ChannelMessage(
-                                            text: "\(identifier.raw) has joined \(channelName)",
-                                            variant: .userJoined))))
-            } else {
-                
+                                        user: User(from: identifier))))
             }
+            
+            // add a message indicating a user joined
+            output.dispatch(.network(
+                                .messageReceived(
+                                    connection: target,
+                                    channelName: channelName,
+                                    message: ChannelMessage(
+                                        text: "\(identifier.raw) has joined \(channelName)",
+                                        variant: .userJoined))))
             
         case .partedChannel(let connection, let channelName, let identifier, let nick, let reason):
             let state = getState()

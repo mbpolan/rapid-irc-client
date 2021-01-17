@@ -229,6 +229,21 @@ extension NetworkAction {
         self.channelStateChanged != nil
     }
 
+    internal var userJoinedChannel: (connection: Connection, channelName: String, user: User)? {
+        get {
+            guard case let .userJoinedChannel(connection, channelName, user) = self else { return nil }
+            return (connection, channelName, user)
+        }
+        set {
+            guard case .userJoinedChannel = self, let newValue = newValue else { return }
+            self = .userJoinedChannel(connection: newValue.0, channelName: newValue.1, user: newValue.2)
+        }
+    }
+
+    internal var isUserJoinedChannel: Bool {
+        self.userJoinedChannel != nil
+    }
+
     internal var clientJoinedChannel: (connection: Connection, channelName: String)? {
         get {
             guard case let .clientJoinedChannel(connection, channelName) = self else { return nil }

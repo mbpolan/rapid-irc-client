@@ -117,6 +117,17 @@ class User: Identifiable, Hashable {
         self.name = name
         self.privilege = privilege
     }
+    
+    init(from identifier: IRCMessage.Prefix) {
+        self.name = identifier.subject
+        
+        let subject = identifier.subject
+        if let privilege = ChannelPrivilege.init(rawValue: subject.first!) {
+            self.privilege = privilege
+        } else {
+            self.privilege = .none
+        }
+    }
 }
 
 extension User {
