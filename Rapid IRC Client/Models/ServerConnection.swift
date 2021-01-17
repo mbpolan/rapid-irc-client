@@ -38,8 +38,8 @@ class ServerConnection {
             do {
                 self.store.dispatch(.network(
                                         .connectionStateChanged(
-                                            self.connection,
-                                            .connecting)))
+                                            connection: self.connection,
+                                            connectionState: .connecting)))
                 
                 self.channel = try bootstrap
                     .connect(host: self.server.host, port: self.server.port)
@@ -47,8 +47,8 @@ class ServerConnection {
                 
                 self.store.dispatch(.network(
                                         .connectionStateChanged(
-                                            self.connection,
-                                            .connected)))
+                                            connection: self.connection,
+                                            connectionState: .connected)))
             } catch let error {
                 print(error)
             }
@@ -64,8 +64,8 @@ class ServerConnection {
                 if let this = self {
                     this.store.dispatch(.network(
                                             .connectionStateChanged(
-                                                this.connection,
-                                                .disconnected)))
+                                                connection: this.connection,
+                                                connectionState: .disconnected)))
                 }
             } catch let error {
                 print(error)
@@ -185,7 +185,7 @@ extension ServerConnection {
         
         private func handleJoin(_ message: IRCMessage) {
             // expect a valid prefix
-            if message.prefix == nil {
+            guard let prefix = message.prefix else {
                 print("ERROR: no prefix in JOIN message: \(message)")
                 return
             }
@@ -202,16 +202,9 @@ extension ServerConnection {
             // register this channel in our connection
             self.connection.store.dispatch(.network(
                                             .joinedChannel(
-                                                self.connection.connection,
-                                                channel,
-                                                message.prefix!.raw,
-                                                message.prefix!.subject)))
-            
-            // set this to be the active chanel
-            self.connection.store.dispatch(.ui(
-                                            .changeChannel(
-                                                self.connection.connection,
-                                                channel)))
+                                                connection: self.connection.connection,
+                                                channelName: channel,
+                                                identifier: prefix)))            
         }
         
         private func handlePart(_ message: IRCMessage) {
@@ -230,8 +223,8 @@ extension ServerConnection {
             // first parameter is the channel
             let channel = message.parameters[0]
             
-            // second parameter is an optional message
-            let reason = message.parameters.count > 1 ? message.parameters[1].dropLeadingColon() : nil
+            // remaining parameters are an optional message
+            let reason = message.parameters.count > 1 ? message.parameters[1...].joined(separator: " ").dropLeadingColon() : nil
             
             self.connection.store.dispatch(.network(
                                             .partedChannel(
@@ -263,11 +256,11 @@ extension ServerConnection {
             
             self.connection.store.dispatch(.network(
                                             .privateMessageReceived(
-                                                self.connection.connection,
-                                                message.prefix!.raw,
-                                                message.prefix!.subject,
-                                                recipient,
-                                                ChannelMessage(
+                                                connection: self.connection.connection,
+                                                identifier: message.prefix!.raw,
+                                                nick: message.prefix!.subject,
+                                                recipient: recipient,
+                                                message: ChannelMessage(
                                                     sender: message.prefix!.subject,
                                                     text: text,
                                                     variant: .privateMessage))))
@@ -287,25 +280,26 @@ extension ServerConnection {
             let channel = message.parameters[1]
             
             // remaining parameters are a list of usernames
-            let users = message.parameters[2...].map { nick -> User in
-                // drop leading colons
-                var nickname = nick.first == ":" ? String(nick.dropFirst()) : nick
-                
-                // does this user have elevated privileges in this channel? if so, parse the prefix and remove it
-                // from the nick itself
-                let privilege = User.ChannelPrivilege(rawValue: nickname.first!)
-                if privilege != nil {
-                    nickname = String(nickname.dropFirst())
-                }
-                
-                return User(name: nickname, privilege: privilege)
-            }
+            let users = message.parameters[2...].map { $0.dropLeadingColon() }
+            //            let users = message.parameters[2...].map { nick -> User in
+            //                // drop leading colons
+            //                var nickname = nick.first == ":" ? String(nick.dropFirst()) : nick
+            //
+            //                // does this user have elevated privileges in this channel? if so, parse the prefix and remove it
+            //                // from the nick itself
+            //                let privilege = User.ChannelPrivilege(rawValue: nickname.first!)
+            //                if privilege != nil {
+            //                    nickname = String(nickname.dropFirst())
+            //                }
+            //
+            //                return User(name: nickname, privilege: privilege)
+            //            }
             
             self.connection.store.dispatch(.network(
-                                            .usersInChannel(
-                                                self.connection.connection,
-                                                channel,
-                                                users)))
+                                            .usernamesReceived(
+                                                connection: self.connection.connection,
+                                                channelName: channel,
+                                                usernames: users)))
         }
         
         private func handleTopic(_ message: IRCMessage) {
@@ -323,9 +317,9 @@ extension ServerConnection {
             
             self.connection.store.dispatch(.network(
                                             .channelTopic(
-                                                self.connection.connection,
-                                                channel,
-                                                topic)))
+                                                connection: self.connection.connection,
+                                                channelName: channel,
+                                                topic: topic)))
         }
         
         private func handleServerWelcome(_ message: IRCMessage) {
@@ -340,8 +334,8 @@ extension ServerConnection {
             
             self.connection.store.dispatch(.network(
                                             .welcomeReceived(
-                                                self.connection.connection,
-                                                identifier)))
+                                                connection: self.connection.connection,
+                                                identifier: identifier)))
         }
         
         private func handleServerMessage(_ message: IRCMessage) {
@@ -353,14 +347,13 @@ extension ServerConnection {
                 text = text.subString(from: 1)
             }
             
-            if let channel = connection.connection?.channels.first(where: { $0.name == Connection.serverChannel }) {
-                connection.store.dispatch(.network(
-                                            .messageReceived(
-                                                channel,
-                                                ChannelMessage(
-                                                    text: text,
-                                                    variant: .other))))
-            }
+            connection.store.dispatch(.network(
+                                        .messageReceived(
+                                            connection: self.connection.connection,
+                                            channelName: Connection.serverChannel,
+                                            message: ChannelMessage(
+                                                text: text,
+                                                variant: .other))))
         }
         
         private func handleGeneralError(_ message: IRCMessage) {
@@ -369,8 +362,8 @@ extension ServerConnection {
             
             self.connection.store.dispatch(.network(
                                             .errorReceived(
-                                                self.connection.connection,
-                                                ChannelMessage(
+                                                connection: self.connection.connection,
+                                                message: ChannelMessage(
                                                     text: reason,
                                                     variant: .error))))
         }
@@ -390,8 +383,8 @@ extension ServerConnection {
             
             self.connection.store.dispatch(.network(
                                             .errorReceived(
-                                                self.connection.connection,
-                                                ChannelMessage(
+                                                connection: self.connection.connection,
+                                                message: ChannelMessage(
                                                     text: "\(nick) \(reason)",
                                                     variant: .error))))
         }
@@ -414,8 +407,8 @@ extension ServerConnection {
             
             self.connection.store.dispatch(.network(
                                             .errorReceived(
-                                                self.connection.connection,
-                                                ChannelMessage(
+                                                connection: self.connection.connection,
+                                                message: ChannelMessage(
                                                     text: "\(nick) \(command) \(reason)",
                                                     variant: .error))))
         }

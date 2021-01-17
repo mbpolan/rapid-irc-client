@@ -94,7 +94,10 @@ enum ActiveChannelViewModel {
     private static func transform(viewAction: ViewAction) -> AppAction? {
         switch viewAction {
         case .sendMessage(let channel, let message):
-            return .network(.messageSent(channel, message))
+            return .network(
+                .messageSent(
+                    channel: channel,
+                    rawMessage: message))
         }
     }
     

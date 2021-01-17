@@ -8,9 +8,9 @@
 // MARK: - Actions
 // sourcery: Prism
 enum UIAction {
-    case toggleConnectSheet(Bool)
-    case connectionAdded(Connection)
-    case changeChannel(Connection, String)
+    case toggleConnectSheet(shown: Bool)
+    case connectionAdded(connection: Connection)
+    case changeChannel(connection: Connection, channelName: String)
     
-    case closeChannel(Connection, String)
+    case closeChannel(connection: Connection, channelName: String)
 }

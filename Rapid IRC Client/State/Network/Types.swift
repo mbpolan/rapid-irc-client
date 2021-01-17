@@ -25,43 +25,8 @@ class Connection: Identifiable {
         self.client.withConnection(self)
     }
     
-    func addChannel(name: String) -> IRCChannel {
-        // avoid adding a channel with the same name. if it does exist, set it as joined.
-        var channel = channels.first { $0.name == name }
-        if channel == nil {
-            channel = IRCChannel(connection: self, name: name, state: .joined)
-            channels.append(channel!)
-        } else if channel!.state != .joined {
-            channel!.state = .joined
-        }
-        
-        return channel!
-    }
-    
     func getServerChannel() -> IRCChannel? {
         return channels.first { $0.name == Connection.serverChannel }
-    }
-    
-    func leaveChannel(channel: String) {
-        let channel = channels.first { $0.name == channel }
-        if channel != nil {
-            channel!.state = .parted
-            channel!.users.removeAll()
-        }
-    }
-    
-    func addServerMessage(_ message: ChannelMessage) {
-        addMessage(channel: Connection.serverChannel, message: message)
-    }
-    
-    func addMessage(channel: String, message: ChannelMessage) {
-        var ircChannel = channels.first { $0.name == channel }
-        if (ircChannel == nil) {
-            ircChannel = IRCChannel(connection: self, name: channel, state: .joined)
-            channels.append(ircChannel!)
-        }
-        
-        ircChannel!.messages.append(message)
     }
 }
 
@@ -97,6 +62,7 @@ class IRCChannel: Identifiable, Equatable {
     var topic: String?
     var name: String
     var state: State
+    var notifications: [Notification] = []
     var access: AccessType?
     var messages: [ChannelMessage] = []
     var users: Set<User> = []
@@ -116,6 +82,10 @@ extension IRCChannel {
     enum State {
         case joined
         case parted
+    }
+    
+    enum Notification {
+        case newMessages
     }
     
     enum AccessType: String {

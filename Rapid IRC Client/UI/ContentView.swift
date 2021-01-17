@@ -14,9 +14,9 @@ import SwiftRex
 struct ContentView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<ContentViewModel.ViewAction, ContentViewModel.ViewState>
-
+    
     private let onConnectToServer = NotificationCenter.default.publisher(for: .connectToServer)
-
+    
     var body: some View {
         let sheetBinding: Binding<Bool> = Binding(
             get: {
@@ -42,7 +42,7 @@ struct ContentView: View {
             self.viewModel.dispatch(.showConnectSheet)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
+    
     private func handleConnectToServer(result: ConnectDialog.Result) {
         guard let server = result.server, result.accepted else {
             self.viewModel.dispatch(.closeConnectSheet)
@@ -61,7 +61,7 @@ enum ContentViewModel {
             state: transform(appState:)
         ).asObservableViewModel(initialState: .empty)
     }
-
+    
     struct ViewState: Equatable {
         var connectSheetShown: Bool
         
@@ -69,7 +69,7 @@ enum ContentViewModel {
             .init(connectSheetShown: false)
         }
     }
-
+    
     enum ViewAction {
         case showConnectSheet
         case connectToServer(server: ServerInfo)
@@ -79,11 +79,15 @@ enum ContentViewModel {
     private static func transform(viewAction: ViewAction) -> AppAction? {
         switch viewAction {
         case .showConnectSheet:
-            return .ui(.toggleConnectSheet(true))
+            return .ui(
+                .toggleConnectSheet(
+                    shown: true))
         case .connectToServer(let server):
-            return .network(.connect(server))
+            return .network(.connect(serverInfo: server))
         case .closeConnectSheet:
-            return .ui(.toggleConnectSheet(false))
+            return .ui(
+                .toggleConnectSheet(
+                    shown: false))
         }
     }
     

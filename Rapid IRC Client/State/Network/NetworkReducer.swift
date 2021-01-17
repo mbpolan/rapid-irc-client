@@ -43,9 +43,13 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return state
         
-    case .messageReceived(let channel, let message):
+    case .messageReceived(let connection, let channelName, let message):
         let newState = state
-        newState.channelUuids[channel.id]?.messages.append(message)
+        if let target = newState.connections.first(where: { $0 === connection }),
+           let channel = target.channels.first(where: { $0.name == channelName }) {
+            channel.messages.append(message)
+        }
+        
         return newState
         
     case .channelTopic(let connection, let channelName, let topic):
@@ -57,57 +61,54 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
         
-    case .usersInChannel(let connection, let channelName, let users):
+    case .updateChannelUsers(let connection, let channelName, let users):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
-           let channel = target.channels.first(where: { $0.name == channelName }) {
+           var channel = target.channels.first(where: { $0.name == channelName }) {
             channel.users = Set(users)
         }
         
         return newState
         
-    case .joinedChannel(let connection, let channelName, let identifier, let nick):
+    case .channelStateChanged(let connection, let channelName, let channelState):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           var channel = target.channels.first(where: { $0.name == channelName}) {
+            channel.state = channelState
+        }
+        
+        return newState
+    
+    case .clientJoinedChannel(let connection, let channelName):
         var newState = state
         if let target = newState.connections.first(where: { $0 === connection }) {
-            let channel = target.addChannel(name: channelName)
+            let channel = IRCChannel(
+                connection: connection,
+                name: channelName,
+                state: .joined)
+            
+            connection.channels.append(channel)
             newState.channelUuids[channel.id] = channel
-            
-            
-            channel.messages.append(ChannelMessage(
-                                        text: "\(identifier) has joined \(channelName)",
-                                        variant: .userJoined))
-            
-            channel.users.insert(User(
-                                    name: nick,
-                                    privilege: nil))
         }
         
         return newState
         
-    case .partedChannel(let connection, let channelName, let identifier, let nick, let reason):
-        var newState = state
+    case .clientLeftChannel(let connection, let channelName):
+        let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
            let channel = target.channels.first(where: { $0.name == channelName }) {
             
-            // append the parting reason, if one was given
-            if reason != nil {
-                var message = "\(identifier) has left \(channelName)"
-                if let reasonText = reason {
-                    message = "\(message) (\(reasonText))"
-                }
-                
-                channel.messages.append(ChannelMessage(
-                                            text: message,
-                                            variant: .userParted))
-            }
-            
-            // does this message refer to us? if so, part the channel from our perspective.
-            // if another user has left, remove them from the user list.
-            if identifier == target.identifier?.raw {
-                target.leaveChannel(channel: channelName)
-            } else if let targetUser = channel.users.first(where: { $0.name == nick }) {
-                channel.users.remove(targetUser)
-            }
+            channel.state = .parted
+            channel.users.removeAll()
+        }
+        
+        return newState
+    
+    case .userLeftChannel(let connection, let channelName, let user):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           let channel = target.channels.first(where: { $0.name == channelName }) {
+            channel.users.remove(user)
         }
         
         return newState

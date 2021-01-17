@@ -55,14 +55,14 @@ struct ChannelListView: View {
                         // list each channel under this server as a group
                         OutlineGroup(server.children ?? [], id: \.id, children: \.children) { channel in
                             makeChannelItem(channel)
-                            .onHover { hovering in
-                                // keep track of which channel the user has hovered over
-                                if hovering {
-                                    self.hoveredChannel = channel.id
-                                } else {
-                                    self.hoveredChannel = nil
+                                .onHover { hovering in
+                                    // keep track of which channel the user has hovered over
+                                    if hovering {
+                                        self.hoveredChannel = channel.id
+                                    } else {
+                                        self.hoveredChannel = nil
+                                    }
                                 }
-                            }
                         }
                     }
                 }
@@ -80,6 +80,13 @@ struct ChannelListView: View {
             : Font.subheadline.italic()
         
         return HStack {
+            if channel.newMessages {
+                Image(systemName: "exclamationmark.bubble.fill")
+                    .foregroundColor(.red)
+            } else {
+                Image(systemName: "bubble.left")
+            }
+            
             // button containing the channel name
             Button(action: {
                 if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
@@ -140,16 +147,22 @@ enum ChannelListViewModel {
     private static func transform(viewAction: ViewAction) -> AppAction? {
         switch viewAction {
         case .setChannel(let channel):
-            return .ui(.changeChannel(channel.connection, channel.name))
+            return .ui(
+                .changeChannel(
+                    connection: channel.connection,
+                    channelName: channel.name))
             
         case .closeChannel(let channel):
-            return .ui(.closeChannel(channel.connection, channel.name))
+            return .ui(
+                .closeChannel(
+                    connection: channel.connection,
+                    channelName: channel.name))
             
         case .reconnect(let connection):
-            return .network(.reconnect(connection))
-        
+            return .network(.reconnect(connection: connection))
+            
         case .disconnect(let connection):
-            return .network(.disconnect(connection))
+            return .network(.disconnect(connection: connection))
         }
     }
     
@@ -160,6 +173,7 @@ enum ChannelListViewModel {
                     id: conn.getServerChannel()!.id,
                     name: conn.name,
                     channelName: Connection.serverChannel,
+                    newMessages: false,
                     active: conn.state == .connected,
                     connection: conn,
                     type: .server,
@@ -169,6 +183,7 @@ enum ChannelListViewModel {
                                 id: chan.id,
                                 name: chan.name,
                                 channelName: chan.name,
+                                newMessages: chan.notifications.contains(.newMessages),
                                 active: chan.state == .joined,
                                 connection: conn,
                                 type: .channel,
@@ -189,6 +204,7 @@ extension ChannelListViewModel {
         var id: String
         var name: String
         var channelName: String
+        var newMessages: Bool
         var active: Bool
         var connection: Connection?
         var type: ListItemType

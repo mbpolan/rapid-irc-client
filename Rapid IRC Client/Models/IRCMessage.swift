@@ -68,7 +68,7 @@ struct IRCMessage {
 }
 
 extension IRCMessage {
-    struct Prefix {
+    struct Prefix: Equatable {
         
         // the raw prefix, without the leading colon
         var raw: String
@@ -81,6 +81,10 @@ extension IRCMessage {
         
         // optioanl hostname from the !user@host segment
         var host: String?
+        
+        static func == (lhs: IRCMessage.Prefix, rhs: IRCMessage.Prefix) -> Bool {
+            return lhs.raw == rhs.raw
+        }
         
         static func parse(_ raw: String) -> Prefix? {
             let subject: String
@@ -109,5 +113,7 @@ extension IRCMessage {
                 user: user,
                 host: host)
         }
+        
+        
     }
 }

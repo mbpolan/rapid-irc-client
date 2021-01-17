@@ -29,7 +29,10 @@ class UIMiddleware: Middleware {
             
             // are we closing the channel that is currently open? if so, open the default server channel instead
             if channelName == state.ui.currentChannel?.name {
-                output.dispatch(.ui(.changeChannel(connection, Connection.serverChannel)))
+                output.dispatch(.ui(
+                                    .changeChannel(
+                                        connection: connection,
+                                        channelName: Connection.serverChannel)))
             }
             
             // ensure we part the channel server-side
@@ -40,7 +43,6 @@ class UIMiddleware: Middleware {
                                 .removeChannel(
                                     connection,
                                     channelName)))
-            break
             
         default:
             break
