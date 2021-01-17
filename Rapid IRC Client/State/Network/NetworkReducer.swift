@@ -121,23 +121,12 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
         
-    case .privateMessageReceived(let connection, let identifier, let nick, let recipient, let message):
-        let newState = state
-        // FIXME: recipient can also be another user
-        if let target = newState.connections.first(where: { $0 === connection }),
-           let channel = target.channels.first(where: { $0.name == recipient }) {
-            
-            channel.messages.append(message)
-        }
-        
-        return state
-        
-    case .errorReceived(let connection, let message):
+    case .addChannelNotification(let connection, let channelName, let notification):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
-           let channel = target.channels.first(where: { $0.name == Connection.serverChannel }) {
+           let channel = target.channels.first(where: { $0.name == channelName }) {
             
-            channel.messages.append(message)
+            channel.notifications.insert(notification)
         }
         
         return newState

@@ -228,11 +228,11 @@ extension ServerConnection {
             
             self.connection.store.dispatch(.network(
                                             .partedChannel(
-                                                self.connection.connection,
-                                                channel,
-                                                message.prefix!.raw,
-                                                message.prefix!.subject,
-                                                reason)))
+                                                connection: self.connection.connection,
+                                                channelName: channel,
+                                                identifier: message.prefix!.raw,
+                                                nick: message.prefix!.subject,
+                                                reason: reason)))
         }
         
         private func handlePrivateMessage(_ message: IRCMessage) {

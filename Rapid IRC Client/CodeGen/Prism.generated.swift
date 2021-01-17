@@ -64,6 +64,21 @@ extension NetworkAction {
         self.messageSent != nil
     }
 
+    internal var addChannelNotification: (connection: Connection, channelName: String, notification: IRCChannel.Notification)? {
+        get {
+            guard case let .addChannelNotification(connection, channelName, notification) = self else { return nil }
+            return (connection, channelName, notification)
+        }
+        set {
+            guard case .addChannelNotification = self, let newValue = newValue else { return }
+            self = .addChannelNotification(connection: newValue.0, channelName: newValue.1, notification: newValue.2)
+        }
+    }
+
+    internal var isAddChannelNotification: Bool {
+        self.addChannelNotification != nil
+    }
+
     internal var connectionAdded: (connection: Connection, serverChannel: IRCChannel)? {
         get {
             guard case let .connectionAdded(connection, serverChannel) = self else { return nil }
@@ -184,14 +199,14 @@ extension NetworkAction {
         self.joinedChannel != nil
     }
 
-    internal var partedChannel: (Connection, String, String, String, String?)? {
+    internal var partedChannel: (connection: Connection, channelName: String, identifier: String, nick: String, reason: String?)? {
         get {
-            guard case let .partedChannel(associatedValue0, associatedValue1, associatedValue2, associatedValue3, associatedValue4) = self else { return nil }
-            return (associatedValue0, associatedValue1, associatedValue2, associatedValue3, associatedValue4)
+            guard case let .partedChannel(connection, channelName, identifier, nick, reason) = self else { return nil }
+            return (connection, channelName, identifier, nick, reason)
         }
         set {
             guard case .partedChannel = self, let newValue = newValue else { return }
-            self = .partedChannel(newValue.0, newValue.1, newValue.2, newValue.3, newValue.4)
+            self = .partedChannel(connection: newValue.0, channelName: newValue.1, identifier: newValue.2, nick: newValue.3, reason: newValue.4)
         }
     }
 
@@ -259,14 +274,14 @@ extension NetworkAction {
         self.userLeftChannel != nil
     }
 
-    internal var removeChannel: (Connection, String)? {
+    internal var removeChannel: (connection: Connection, channelName: String)? {
         get {
-            guard case let .removeChannel(associatedValue0, associatedValue1) = self else { return nil }
-            return (associatedValue0, associatedValue1)
+            guard case let .removeChannel(connection, channelName) = self else { return nil }
+            return (connection, channelName)
         }
         set {
             guard case .removeChannel = self, let newValue = newValue else { return }
-            self = .removeChannel(newValue.0, newValue.1)
+            self = .removeChannel(connection: newValue.0, channelName: newValue.1)
         }
     }
 

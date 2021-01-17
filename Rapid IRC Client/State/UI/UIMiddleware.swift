@@ -41,8 +41,8 @@ class UIMiddleware: Middleware {
             // remove the channel from network management entirely
             output.dispatch(.network(
                                 .removeChannel(
-                                    connection,
-                                    channelName)))
+                                    connection: connection,
+                                    channelName: channelName)))
             
         default:
             break

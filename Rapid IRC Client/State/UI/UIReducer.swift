@@ -23,12 +23,16 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
     case .changeChannel(let connection, let channelName):
         var newState = state
         if let channel = connection.channels.first(where: { $0.name == channelName }) {
+            // clear any outstanding notifications
+            channel.notifications = []
+            
+            // set this as our current channel
             newState.currentChannel = channel
         }
         
         return newState
         
     default:
-        return state;
+        return state
     }
 }

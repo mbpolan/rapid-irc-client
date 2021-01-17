@@ -62,7 +62,7 @@ class IRCChannel: Identifiable, Equatable {
     var topic: String?
     var name: String
     var state: State
-    var notifications: [Notification] = []
+    var notifications: Set<Notification> = Set()
     var access: AccessType?
     var messages: [ChannelMessage] = []
     var users: Set<User> = []
@@ -84,8 +84,9 @@ extension IRCChannel {
         case parted
     }
     
-    enum Notification {
-        case newMessages
+    enum Notification: Int {
+        case mention = 0
+        case newMessages = 1
     }
     
     enum AccessType: String {

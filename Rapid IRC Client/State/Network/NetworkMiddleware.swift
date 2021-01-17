@@ -220,9 +220,63 @@ class NetworkMiddleware: Middleware {
             message = message.starts(with: "/") ? message.subString(from: 1) : message
             channel.connection.client.sendMessage(message)
             
+        case .privateMessageReceived(let connection, _, _, let recipient, let message):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            // is the recipient a channel? if so, add the message to the channel
+            if let channel = target.channels.first(where: { $0.name == recipient }) {
+                dispatchChannelMessage(
+                    connection: connection,
+                    channel: channel,
+                    message: message)
+            }
+            
+        case .errorReceived(let connection, let message):
+            let state = getState()
+            
+            if let target = state.network.connections.first(where: { $0 === connection }),
+               let channel = target.channels.first(where: { $0.name == Connection.serverChannel}) {
+                
+                dispatchChannelMessage(
+                    connection: connection,
+                    channel: channel,
+                    message: message)
+            }
+            
         default:
             break
         }
     }
     
+    private func dispatchChannelMessage(connection: Connection, channel: IRCChannel, message: ChannelMessage) {
+        let state = getState()
+        
+        output.dispatch(.network(
+                            .messageReceived(
+                                connection: connection,
+                                channelName: channel.name,
+                                message: message)))
+        
+        // if this channel is not currently active, mark this message as new
+        if channel != state.ui.currentChannel {
+            // did we get mentioned? see if our nick appears anywhere in the message
+            if let nick = connection.identifier?.subject,
+               message.text.range(of: "\\s?(\(nick))\\s?", options: .regularExpression, range: nil, locale: nil) != nil {
+                
+                output.dispatch(.network(
+                                    .addChannelNotification(
+                                        connection: connection,
+                                        channelName: channel.name,
+                                        notification: .mention)))
+                
+            } else {
+                output.dispatch(.network(
+                                    .addChannelNotification(
+                                        connection: connection,
+                                        channelName: channel.name,
+                                        notification: .newMessages)))
+            }
+        }
+    }
 }

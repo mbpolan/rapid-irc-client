@@ -80,9 +80,11 @@ struct ChannelListView: View {
             : Font.subheadline.italic()
         
         return HStack {
-            if channel.newMessages {
+            if channel.mentioned {
                 Image(systemName: "exclamationmark.bubble.fill")
                     .foregroundColor(.red)
+            } else if channel.newMessages {
+                Image(systemName: "bubble.left.fill")
             } else {
                 Image(systemName: "bubble.left")
             }
@@ -173,6 +175,7 @@ enum ChannelListViewModel {
                     id: conn.getServerChannel()!.id,
                     name: conn.name,
                     channelName: Connection.serverChannel,
+                    mentioned: false,
                     newMessages: false,
                     active: conn.state == .connected,
                     connection: conn,
@@ -183,6 +186,7 @@ enum ChannelListViewModel {
                                 id: chan.id,
                                 name: chan.name,
                                 channelName: chan.name,
+                                mentioned: chan.notifications.contains(.mention),
                                 newMessages: chan.notifications.contains(.newMessages),
                                 active: chan.state == .joined,
                                 connection: conn,
@@ -204,6 +208,7 @@ extension ChannelListViewModel {
         var id: String
         var name: String
         var channelName: String
+        var mentioned: Bool
         var newMessages: Bool
         var active: Bool
         var connection: Connection?
