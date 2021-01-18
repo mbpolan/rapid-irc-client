@@ -132,7 +132,7 @@ extension ServerConnection {
         }
         
         private func processMessage(_ message: String) {
-            let ircMessage = IRCMessage.parse(message)
+            let ircMessage = IRCMessage(from: message)
             
             switch ircMessage.command {
             case .join:

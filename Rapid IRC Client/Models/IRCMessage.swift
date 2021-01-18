@@ -14,14 +14,17 @@ struct IRCMessage {
     var command: Command?
     var target: String?
     var parameters: [String] = []
+    var timestamp: Date
     
-    static func parse(_ message: String) -> IRCMessage {
+    init(from message: String) {
         print("INCOMING: \(message)")
         var parts = message.split(separator: " ")
         
         // no-op
         if parts.isEmpty {
-            return IRCMessage(raw: message)
+            self.raw = message
+            self.timestamp = Date()
+            return
         }
         
         // prefix is optional, but if it exists, it's always lead by a colon
@@ -46,24 +49,12 @@ struct IRCMessage {
             target = parameters.removeFirst()
         }
         
-        return IRCMessage(
-            raw: message,
-            prefix: prefix,
-            command: command,
-            target: target,
-            parameters: parameters)
-    }
-    
-    private init(raw: String) {
-        self.raw = raw
-        self.parameters = []
-    }
-    
-    private init(raw: String, prefix: Prefix?, command: Command?, target: String?, parameters: [String]?) {
-        self.raw = raw
+        self.raw = message
         self.prefix = prefix
         self.command = command
-        self.parameters = parameters ?? []
+        self.target = target
+        self.parameters = parameters
+        self.timestamp = Date()
     }
 }
 

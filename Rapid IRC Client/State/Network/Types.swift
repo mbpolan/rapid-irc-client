@@ -40,6 +40,7 @@ extension Connection {
 
 struct ChannelMessage {
     
+    var timestamp: Date = Date()
     var sender: String?
     var text: String
     var variant: Variant
