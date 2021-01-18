@@ -13,6 +13,8 @@ struct ActiveChannelView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<ActiveChannelViewModel.ViewAction, ActiveChannelViewModel.ViewState>
     @State private var input: String = ""
+    @State private var history: [String] = []
+    @State private var historyIndex = -1
     
     var body: some View {
         HSplitView {
@@ -28,15 +30,23 @@ struct ActiveChannelView: View {
                 MessageView(viewModel: MessageViewModel.viewModel(from: Store.instance))
                     .layoutPriority(2)
                 
-                HStack {
-                    TextField("", text: $input, onCommit: {
-                        submit()
-                    })
+                Divider()
+                
+                HStack(alignment: .center) {
+                    CommandTextField(
+                        text: $input,
+                        onPreviousHistory: setPreviousHistory,
+                        onNextHistory: setNextHistory,
+                        onCommit: submit)
+                    
                     Spacer()
-                    Button("Send") {
-                        submit()
+                    
+                    Button(action: submit) {
+                        Image(systemName: "paperplane.fill")
                     }
-                }.layoutPriority(1)
+                }
+                .padding(3)
+                .layoutPriority(1)
             }.layoutPriority(2)
             
             // display a list of users on the right side, unless we are currently in the server channel
@@ -56,9 +66,37 @@ struct ActiveChannelView: View {
         })
     }
     
+    private func setPreviousHistory() {
+        // if there is text in our previous history, push it to the text field
+        if historyIndex < history.count - 1 {
+            let previous = historyIndex + 1
+            
+            historyIndex += 1
+            input = history[previous]
+        }
+    }
+    
+    private func setNextHistory() {
+        if historyIndex > 0 {
+            // if there is text in our recent history, push it to the text field
+            let next = historyIndex - 1
+            
+            historyIndex -= 1
+            input = history[next]
+        } else {
+            // the user has reached the beginning of history; reset the text field and history index
+            input = ""
+            historyIndex = -1
+        }
+    }
+    
     private func submit() {
         if let channel = viewModel.state.currentChannel, !input.isEmpty {
             viewModel.dispatch(.sendMessage(channel, input))
+            
+            // push the current text to our history and reset the history index
+            history.insert(input, at: 0)
+            historyIndex = -1
             input = ""
         }
     }
@@ -72,7 +110,7 @@ enum ActiveChannelViewModel {
             state: transform(appState:)
         ).asObservableViewModel(initialState: .empty)
     }
-
+    
     struct ViewState: Equatable {
         let currentChannel: IRCChannel?
         let showUserList: Bool
@@ -85,7 +123,7 @@ enum ActiveChannelViewModel {
                 users: [])
         }
     }
-
+    
     enum ViewAction {
         case sendMessage(IRCChannel, String)
     }
@@ -113,7 +151,7 @@ enum ActiveChannelViewModel {
 struct ActiveChannelView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store()
-
+        
         let channel = IRCChannel(
             connection: Connection(
                 name: "mike",
@@ -126,27 +164,27 @@ struct ActiveChannelView_Previews: PreviewProvider {
                 store: store),
             name: "mike",
             state: .joined)
-
+        
         channel.topic = "some topic message for this channel"
-
+        
         channel.users.insert(User(
                                 name: "mike",
                                 privilege: nil))
-
+        
         channel.users.insert(User(
                                 name: "piotr",
                                 privilege: .voiced))
-
+        
         channel.users.insert(User(
                                 name: "jase",
                                 privilege: .fullOperator))
-
+        
         let viewModel = ActiveChannelViewModel.viewModel(from: store)
         viewModel.state = ActiveChannelViewModel.ViewState(
             currentChannel: channel,
             showUserList: true,
             users: channel.users)
-
+        
         return ActiveChannelView(viewModel: viewModel)
     }
 }
