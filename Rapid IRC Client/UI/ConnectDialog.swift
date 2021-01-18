@@ -15,6 +15,7 @@ struct ConnectDialog: View {
 
     @State private var nick = UserDefaults.standard.string(forKey: AppSettings.preferredNick.rawValue) ?? ""
     @State private var realName = UserDefaults.standard.string(forKey: AppSettings.realName.rawValue) ?? ""
+    @State private var username = UserDefaults.standard.string(forKey: AppSettings.username.rawValue) ?? ""
     @State private var server = "localhost"
     @State private var port = "6667"
 
@@ -45,12 +46,16 @@ struct ConnectDialog: View {
                 Button("Connect") {
                     self.shown = false
                     
+                    // default to the system username if not provided
+                    let effectiveUsername = username.isEmptyOrWhitespace ? NSUserName() : username
+                    
                     onClose(Result(
                         accepted: true,
                         server: ServerInfo(
-                            nick: nick,
-                            realName: realName,
-                            host: server,
+                            nick: nick.trimmingCharacters(in: .whitespaces),
+                            realName: realName.trimmingCharacters(in: .whitespaces),
+                            username: effectiveUsername.trimmingCharacters(in: .whitespaces),
+                            host: server.trimmingCharacters(in: .whitespaces),
                             port: Int(port) ?? -1)))
                 }
                 

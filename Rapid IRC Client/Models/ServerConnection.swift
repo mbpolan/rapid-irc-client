@@ -105,9 +105,11 @@ extension ServerConnection {
             print("connected")
             
             let nick = connection.server.nick
+            let realName = connection.server.realName
+            let username = connection.server.username
             
             send("NICK \(nick)", context: context)
-            send("USER guest 0 * :\(nick) \(nick)", context: context)
+            send("USER \(username) 0 * :\(realName)", context: context)
         }
         
         func channelRead(context: ChannelHandlerContext, data: NIOAny) {

@@ -17,6 +17,6 @@ struct UIState {
         .init(
             connectSheetShown: false,
             currentChannel: nil,
-            showTimestampsInChat: true)
+            showTimestampsInChat: UserDefaults.standard.bool(forKey: AppSettings.timestampsInChat.rawValue))
     }
 }

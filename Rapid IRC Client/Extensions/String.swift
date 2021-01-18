@@ -29,6 +29,10 @@ extension String {
         
         return self
     }
+    
+    var isEmptyOrWhitespace: Bool {
+        return isEmpty || trimmingCharacters(in: .whitespaces).isEmpty
+    }
 
     var isNumber: Bool {
         return !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil

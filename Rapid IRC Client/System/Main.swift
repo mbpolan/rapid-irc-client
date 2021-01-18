@@ -49,6 +49,7 @@ enum AppSettings: String {
     case timestampsInChat = "timestampsInChat"
     case realName = "realName"
     case preferredNick = "preferredNick1"
+    case username = "username"
 }
 
 extension Notification.Name {

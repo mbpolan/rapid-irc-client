@@ -126,6 +126,7 @@ struct MessageView_Previews: PreviewProvider {
                 serverInfo: ServerInfo(
                     nick: "mike",
                     realName: "Rapid User",
+                    username: "user",
                     host: "localhost",
                     port: 6667),
                 store: store),

@@ -9,9 +9,10 @@ import SwiftUI
 
 struct GeneralSettingsView: View {
     
-    @AppStorage(AppSettings.timestampsInChat.rawValue) private var storedShowTimestamps: Bool = true
-    @AppStorage(AppSettings.realName.rawValue) private var storedRealName: String = ""
-    @AppStorage(AppSettings.preferredNick.rawValue) private var storedPreferredNick1: String = ""
+    @AppStorage(AppSettings.timestampsInChat.rawValue) private var showTimestamps: Bool = true
+    @AppStorage(AppSettings.realName.rawValue) private var realName: String = ""
+    @AppStorage(AppSettings.preferredNick.rawValue) private var preferredNick1: String = ""
+    @AppStorage(AppSettings.username.rawValue) private var username: String = ""
     
     private let profileColumns: [GridItem] = [
         GridItem(.flexible(maximum: 100)),
@@ -19,10 +20,10 @@ struct GeneralSettingsView: View {
     ]
     
     var body: some View {
-        let showTimestamps = Binding<Bool>(
-            get: { storedShowTimestamps },
+        let showTimestampsBinding = Binding<Bool>(
+            get: { showTimestamps },
             set: { shown in
-                storedShowTimestamps = shown
+                showTimestamps = shown
                 Store.instance.dispatch(.ui(.toggleChatTimestamps(shown: shown)))
             })
         
@@ -32,15 +33,18 @@ struct GeneralSettingsView: View {
                     columns: profileColumns,
                     alignment: .leading) {
                     Text("Real Name")
-                    TextField("", text: $storedRealName)
+                    TextField("", text: $realName)
                     
                     Text("Preferred Nick")
-                    TextField("", text: $storedPreferredNick1)
+                    TextField("", text: $preferredNick1)
+                    
+                    Text("Username")
+                    TextField("(autodetect)", text: $username)
                 }
             }
             
             Section(header: Text("Chat").font(.headline)) {
-                Toggle("Show timestamps in chat", isOn: showTimestamps)
+                Toggle("Show timestamps in chat", isOn: showTimestampsBinding)
             }
         }
         .padding(20)

@@ -15,12 +15,12 @@ struct AppState {
     var ui: UIState = .empty
 }
 
+// MARK: - Actions
 enum AppAction {
     case network(NetworkAction)
     case ui(UIAction)
 }
 
-// MARK: Actions
 extension AppAction {
     public var network: NetworkAction? {
         get {
