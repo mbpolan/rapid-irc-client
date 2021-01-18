@@ -11,14 +11,19 @@ import SwiftRex
 let uiReducer = Reducer<UIAction, UIState> { action, state in
     switch action {
     case .toggleConnectSheet(let value):
-        return UIState(
-            connectSheetShown: value,
-            currentChannel: state.currentChannel)
+        var newState = state
+        newState.connectSheetShown = value
+        return newState
+        
+    case .toggleChatTimestamps(let value):
+        var newState = state
+        newState.showTimestampsInChat = value
+        return newState
         
     case .connectionAdded(let connection):
-        return UIState(
-            connectSheetShown: state.connectSheetShown,
-            currentChannel: connection.channels.first)
+        var newState = state
+        newState.currentChannel = connection.channels.first
+        return newState
         
     case .changeChannel(let connection, let channelName):
         var newState = state

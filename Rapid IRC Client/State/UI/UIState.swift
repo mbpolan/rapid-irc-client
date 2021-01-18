@@ -11,10 +11,12 @@ import Foundation
 struct UIState {
     var connectSheetShown: Bool
     var currentChannel: IRCChannel?
+    var showTimestampsInChat: Bool
     
     static var empty: UIState {
         .init(
             connectSheetShown: false,
-            currentChannel: nil)
+            currentChannel: nil,
+            showTimestampsInChat: true)
     }
 }

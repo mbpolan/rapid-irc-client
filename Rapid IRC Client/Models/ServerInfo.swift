@@ -7,6 +7,7 @@
 
 struct ServerInfo: Equatable {
     var nick: String
+    var realName: String
     var host: String
     var port: Int
 }

@@ -10,11 +10,23 @@ import SwiftUI
 @main
 struct Main: App {
     
+    init() {
+        UserDefaults.standard.register(defaults: [
+            AppSettings.timestampsInChat.rawValue: true,
+            AppSettings.preferredNick.rawValue: "guest",
+            AppSettings.realName.rawValue: "Rapid User"
+        ])
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView(viewModel: ContentViewModel.viewModel(from: Store.instance))
         }.commands {
             AppCommands()
+        }
+        
+        Settings {
+            SettingsView()
         }
     }
 }
@@ -27,10 +39,16 @@ struct AppCommands: Commands {
             Button(action: {
                 NotificationCenter.default.post(name: .connectToServer, object: nil)
             }) {
-                Text("Connect")
-            }.keyboardShortcut("C", modifiers: [.option])
+                Text("Quick Connect")
+            }.keyboardShortcut("C", modifiers: [.control, .shift])
         }
     }
+}
+
+enum AppSettings: String {
+    case timestampsInChat = "timestampsInChat"
+    case realName = "realName"
+    case preferredNick = "preferredNick1"
 }
 
 extension Notification.Name {

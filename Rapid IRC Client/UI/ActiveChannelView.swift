@@ -119,6 +119,7 @@ struct ActiveChannelView_Previews: PreviewProvider {
                 name: "mike",
                 serverInfo: ServerInfo(
                     nick: "mike",
+                    realName: "Rapid User",
                     host: "localhost",
                     port: 6667),
                 store: store),

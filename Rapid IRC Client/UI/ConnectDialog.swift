@@ -13,42 +13,54 @@ struct ConnectDialog: View {
     @Binding var shown: Bool
     var onClose: (Result) -> Void
 
-    @State private var nick = "mike"
+    @State private var nick = UserDefaults.standard.string(forKey: AppSettings.preferredNick.rawValue) ?? ""
+    @State private var realName = UserDefaults.standard.string(forKey: AppSettings.realName.rawValue) ?? ""
     @State private var server = "localhost"
     @State private var port = "6667"
 
     var body: some View {
         VStack {
-            HStack {
+            LazyVGrid(
+                columns: [
+                    GridItem(.flexible(maximum: 100)),
+                    GridItem(.flexible()),
+                ]) {
+                
                 Text("Nick")
                 TextField("", text: $nick)
-            }
-            HStack {
+                
+                Text("Real Name")
+                TextField("", text: $realName)
+                
                 Text("Server")
                 TextField("", text: $server)
-            }
-            HStack {
+                
                 Text("Port")
                 TextField("", text: $port)
             }
+            
             HStack {
                 Spacer()
-                Button("OK") {
-                    print("OK")
+                
+                Button("Connect") {
                     self.shown = false
+                    
                     onClose(Result(
                         accepted: true,
                         server: ServerInfo(
                             nick: nick,
+                            realName: realName,
                             host: server,
                             port: Int(port) ?? -1)))
                 }
+                
                 Button("Cancel") {
                     self.shown = false
                     onClose(Result(accepted: false))
                 }
             }
-        }.padding()
+        }
+        .padding()
     }
 }
 
@@ -59,16 +71,14 @@ extension ConnectDialog {
     }
 }
 
-//struct ConnectDialog_Previews: PreviewProvider {
-//    static var previews: some View {
-//
-//        var result = ConnectDialog.Result(
-//            shown: false,
-//            server: ServerInfo(
-//                nick: "",
-//                host: "",
-//                port: -1))
-//
-//        return ConnectDialog(result: $result)
-//    }
-//}
+struct ConnectDialog_Previews: PreviewProvider {
+    static var previews: some View {
+        let shown = Binding<Bool>(
+            get: { true },
+            set: { _ in })
+        
+        ConnectDialog(
+            shown: shown,
+            onClose: { _ in })
+    }
+}

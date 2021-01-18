@@ -25,9 +25,11 @@ struct MessageView: View {
                 LazyVStack(alignment: .leading) {
                     ForEach(viewModel.state.currentChannel?.messages ?? [], id: \.timestamp) { message in
                         HStack(alignment: .firstTextBaseline, spacing: 3) {
-                            Text("[\(dateFormatter.string(from: message.timestamp))] ")
-                                .foregroundColor(.secondary)
-                                .frame(alignment: .leading)
+                            if viewModel.state.showTimestamps {
+                                Text("[\(dateFormatter.string(from: message.timestamp))] ")
+                                    .foregroundColor(.secondary)
+                                    .frame(alignment: .leading)
+                            }
                             
                             makeMessage(message)
                                 .frame(alignment: .leading)
@@ -89,11 +91,13 @@ enum MessageViewModel {
         
         let currentChannel: IRCChannel?
         let lastId: Date
+        let showTimestamps: Bool
         
         static var empty: ViewState {
             .init(
-                    currentChannel: nil,
-                lastId: Date())
+                currentChannel: nil,
+                lastId: Date(),
+                showTimestamps: true)
         }
     }
     
@@ -107,7 +111,8 @@ enum MessageViewModel {
     private static func transform(appState: AppState) -> ViewState {
         ViewState(
             currentChannel: appState.ui.currentChannel,
-            lastId: appState.ui.currentChannel?.messages.last?.timestamp ?? Date())
+            lastId: appState.ui.currentChannel?.messages.last?.timestamp ?? Date(),
+            showTimestamps: appState.ui.showTimestampsInChat)
     }
 }
 
@@ -120,6 +125,7 @@ struct MessageView_Previews: PreviewProvider {
                 name: "mike",
                 serverInfo: ServerInfo(
                     nick: "mike",
+                    realName: "Rapid User",
                     host: "localhost",
                     port: 6667),
                 store: store),
@@ -133,9 +139,10 @@ struct MessageView_Previews: PreviewProvider {
             ChannelMessage(text: "piotr has left #mike", variant: .userParted),
         ])
         
-        let viewModel = MessageViewModel.viewModel(from: store)
-        viewModel.state = MessageViewModel.ViewState(currentChannel: channel, lastId: Date())
-        
-        return MessageView(viewModel: viewModel)
+        return MessageView(viewModel: .mock(
+                            state: .init(
+                                currentChannel: channel,
+                                lastId: Date(),
+                                showTimestamps: true)))
     }
 }

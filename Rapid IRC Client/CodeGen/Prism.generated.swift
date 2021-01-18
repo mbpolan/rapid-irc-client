@@ -352,6 +352,21 @@ extension UIAction {
         self.toggleConnectSheet != nil
     }
 
+    internal var toggleChatTimestamps: Bool? {
+        get {
+            guard case let .toggleChatTimestamps(shown) = self else { return nil }
+            return (shown)
+        }
+        set {
+            guard case .toggleChatTimestamps = self, let newValue = newValue else { return }
+            self = .toggleChatTimestamps(shown: newValue)
+        }
+    }
+
+    internal var isToggleChatTimestamps: Bool {
+        self.toggleChatTimestamps != nil
+    }
+
     internal var connectionAdded: Connection? {
         get {
             guard case let .connectionAdded(connection) = self else { return nil }
