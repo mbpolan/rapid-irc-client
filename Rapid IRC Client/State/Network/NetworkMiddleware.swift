@@ -156,6 +156,38 @@ class NetworkMiddleware: Middleware {
                                     channelName: channelName,
                                     users: users)))
             
+        case .channelTopicReceived(let connection, let channelName, let topic):
+            // update the topic on the channel
+            output.dispatch(.network(
+                                .updateChannelTopic(
+                                    connection: connection,
+                                    channelName: channelName,
+                                    topic: topic)))
+            
+            // add a message to the channel
+            dispatchChannelMessage(
+                connection: connection,
+                channelName: channelName,
+                message: ChannelMessage(
+                    text: "Channel topic is: \(topic)",
+                    variant: .channelTopicEvent))
+            
+        case .channelTopicChanged(let connection, let channelName, let identifier, let topic):
+            // update the topic on the channel
+            output.dispatch(.network(
+                                .updateChannelTopic(
+                                    connection: connection,
+                                    channelName: channelName,
+                                    topic: topic)))
+            
+            // add a message to the channel
+            dispatchChannelMessage(
+                connection: connection,
+                channelName: channelName,
+                message: ChannelMessage(
+                    text: "\(identifier.subject) sets channel topic to: \(topic)",
+                    variant: .channelTopicEvent))
+            
         case .messageSent(let channel, let text):
             var message = text
             
@@ -198,12 +230,38 @@ class NetworkMiddleware: Middleware {
                 // rebuild the original command with our modifications
                 message = parts.joined(separator: " ")
                 
+            // when setting a channel topic, set the channel name if we are currently in a channel
+            case _ where text.starts(with: "/topic"):
+                let state = getState()
+                var parts = text.components(separatedBy: " ")
+                
+                // first parameter should be a channel. this may not be the case if the user is currently in a
+                // channel, and issues a "/topic my topic" command, for example. in this situation, we need to
+                // insert the channel name to form a valid command.
+                if (parts.count == 1 || IRCChannel.ChannelType.parseString(string: parts[1]) == nil),
+                   let currentChannel = state.ui.currentChannel {
+                    parts.insert(currentChannel.name, at: 1)
+                }
+                
+                // if there is a second parameter (the new channel topic), make sure to prefix it with a leading colon
+                if parts.count > 2 && parts[2].first != ":" {
+                    parts[2] = ":\(parts[2])"
+                }
+                
+                message = parts.joined(separator: " ")
+                
             // not a command; could be a normal chat message sent in a channel. in this case, convert the plain text
             // message into a /privmsg command
             case _ where !text.starts(with: "/"):
                 let state = getState()
+                
                 guard let currentChannel = state.ui.currentChannel,
                       let identifier = currentChannel.connection.identifier else { break }
+                
+                // don't sent messages on the server channel though
+                if currentChannel.name == Connection.serverChannel {
+                    break
+                }
                 
                 output.dispatch(.network(
                                     .messageReceived(
@@ -232,19 +290,17 @@ class NetworkMiddleware: Middleware {
             if let channel = target.channels.first(where: { $0.name == recipient }) {
                 dispatchChannelMessage(
                     connection: connection,
-                    channel: channel,
+                    channelName: channel.name,
                     message: message)
             }
             
         case .errorReceived(let connection, let message):
             let state = getState()
             
-            if let target = state.network.connections.first(where: { $0 === connection }),
-               let channel = target.channels.first(where: { $0.name == Connection.serverChannel}) {
-                
+            if let target = state.network.connections.first(where: { $0 === connection }) {
                 dispatchChannelMessage(
-                    connection: connection,
-                    channel: channel,
+                    connection: target,
+                    channelName: Connection.serverChannel,
                     message: message)
             }
             
@@ -253,14 +309,16 @@ class NetworkMiddleware: Middleware {
         }
     }
     
-    private func dispatchChannelMessage(connection: Connection, channel: IRCChannel, message: ChannelMessage) {
+    private func dispatchChannelMessage(connection: Connection, channelName: String, message: ChannelMessage) {
         let state = getState()
         
         output.dispatch(.network(
                             .messageReceived(
                                 connection: connection,
-                                channelName: channel.name,
+                                channelName: channelName,
                                 message: message)))
+        
+        guard let channel = connection.channels.first(where: { $0.name == channelName }) else { return }
         
         // if this channel is not currently active, mark this message as new
         if channel != state.ui.currentChannel {

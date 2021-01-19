@@ -147,8 +147,10 @@ extension ServerConnection {
                 handlePrivateMessage(ircMessage)
             case .nameReply:
                 handleNameReply(ircMessage)
-            case .topic:
-                handleTopic(ircMessage)
+            case .topicReply:
+                handleTopicReply(ircMessage)
+            case .topicChanged:
+                handleTopicChanged(ircMessage)
             case .welcome:
                 handleServerWelcome(ircMessage)
             case.created,
@@ -283,19 +285,6 @@ extension ServerConnection {
             
             // remaining parameters are a list of usernames
             let users = message.parameters[2...].map { $0.dropLeadingColon() }
-            //            let users = message.parameters[2...].map { nick -> User in
-            //                // drop leading colons
-            //                var nickname = nick.first == ":" ? String(nick.dropFirst()) : nick
-            //
-            //                // does this user have elevated privileges in this channel? if so, parse the prefix and remove it
-            //                // from the nick itself
-            //                let privilege = User.ChannelPrivilege(rawValue: nickname.first!)
-            //                if privilege != nil {
-            //                    nickname = String(nickname.dropFirst())
-            //                }
-            //
-            //                return User(name: nickname, privilege: privilege)
-            //            }
             
             self.connection.store.dispatch(.network(
                                             .usernamesReceived(
@@ -304,7 +293,32 @@ extension ServerConnection {
                                                 usernames: users)))
         }
         
-        private func handleTopic(_ message: IRCMessage) {
+        private func handleTopicReply(_ message: IRCMessage) {// expect least two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in TOPIC reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel
+            let channel = message.parameters[0]
+            
+            // remaining parameter is the topic text
+            let topic = message.parameters[1...].joined(separator: " ").dropLeadingColon()
+            
+            self.connection.store.dispatch(.network(
+                                            .channelTopicReceived(
+                                                connection: self.connection.connection,
+                                                channelName: channel,
+                                                topic: topic)))
+        }
+        
+        private func handleTopicChanged(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in TOPIC reply: \(message)")
+                return
+            }
+            
             // expect least two parameters
             if message.parameters.count < 2 {
                 print("ERROR: not enough params in TOPIC reply: \(message)")
@@ -318,9 +332,10 @@ extension ServerConnection {
             let topic = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
             self.connection.store.dispatch(.network(
-                                            .channelTopic(
+                                            .channelTopicChanged(
                                                 connection: self.connection.connection,
                                                 channelName: channel,
+                                                identifier: message.prefix!,
                                                 topic: topic)))
         }
         

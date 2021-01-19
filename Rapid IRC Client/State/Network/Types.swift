@@ -51,6 +51,7 @@ extension ChannelMessage {
         case privateMessage
         case userJoined
         case userParted
+        case channelTopicEvent
         case error
         case other
     }
@@ -62,6 +63,7 @@ class IRCChannel: Identifiable, Equatable {
     var connection: Connection
     var topic: String?
     var name: String
+    var type: ChannelType?
     var state: State
     var notifications: Set<Notification> = Set()
     var access: AccessType?
@@ -75,6 +77,7 @@ class IRCChannel: Identifiable, Equatable {
     init(connection: Connection, name: String, state: State) {
         self.connection = connection
         self.name = name
+        self.type = ChannelType.parseString(string: name)
         self.state = state
     }
 }
@@ -88,6 +91,20 @@ extension IRCChannel {
     enum Notification: Int {
         case mention = 0
         case newMessages = 1
+    }
+    
+    enum ChannelType: Character {
+        case local = "&"
+        case network = "#"
+        case safe = "!"
+        case unmoderated = "+"
+        case soft = "."
+        case global = "~"
+        
+        static func parseString(string: String) -> ChannelType? {
+            guard let first = string.first else { return nil }
+            return ChannelType.init(rawValue: first)
+        }
     }
     
     enum AccessType: String {

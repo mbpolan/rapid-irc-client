@@ -27,7 +27,8 @@ enum Command {
     case whoIsIdle
     case endOfWhoIs
     case endOfWhoIsChannels
-    case topic
+    case topicReply
+    case topicChanged
     case nameReply
     case endOfNames
     case motd
@@ -78,7 +79,7 @@ extension Command {
         case "319":
             return .endOfWhoIsChannels
         case "332":
-            return .topic
+            return .topicReply
         case "353":
             return .nameReply
         case "366":
@@ -115,6 +116,8 @@ extension Command {
             return .ping
         case "privmsg":
             return .privateMessage
+        case "topic":
+            return .topicChanged
         default:
             return nil
         }

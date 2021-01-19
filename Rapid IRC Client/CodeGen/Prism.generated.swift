@@ -139,19 +139,49 @@ extension NetworkAction {
         self.messageReceived != nil
     }
 
-    internal var channelTopic: (connection: Connection, channelName: String, topic: String)? {
+    internal var channelTopicReceived: (connection: Connection, channelName: String, topic: String)? {
         get {
-            guard case let .channelTopic(connection, channelName, topic) = self else { return nil }
+            guard case let .channelTopicReceived(connection, channelName, topic) = self else { return nil }
             return (connection, channelName, topic)
         }
         set {
-            guard case .channelTopic = self, let newValue = newValue else { return }
-            self = .channelTopic(connection: newValue.0, channelName: newValue.1, topic: newValue.2)
+            guard case .channelTopicReceived = self, let newValue = newValue else { return }
+            self = .channelTopicReceived(connection: newValue.0, channelName: newValue.1, topic: newValue.2)
         }
     }
 
-    internal var isChannelTopic: Bool {
-        self.channelTopic != nil
+    internal var isChannelTopicReceived: Bool {
+        self.channelTopicReceived != nil
+    }
+
+    internal var channelTopicChanged: (connection: Connection, channelName: String, identifier: IRCMessage.Prefix, topic: String)? {
+        get {
+            guard case let .channelTopicChanged(connection, channelName, identifier, topic) = self else { return nil }
+            return (connection, channelName, identifier, topic)
+        }
+        set {
+            guard case .channelTopicChanged = self, let newValue = newValue else { return }
+            self = .channelTopicChanged(connection: newValue.0, channelName: newValue.1, identifier: newValue.2, topic: newValue.3)
+        }
+    }
+
+    internal var isChannelTopicChanged: Bool {
+        self.channelTopicChanged != nil
+    }
+
+    internal var updateChannelTopic: (connection: Connection, channelName: String, topic: String)? {
+        get {
+            guard case let .updateChannelTopic(connection, channelName, topic) = self else { return nil }
+            return (connection, channelName, topic)
+        }
+        set {
+            guard case .updateChannelTopic = self, let newValue = newValue else { return }
+            self = .updateChannelTopic(connection: newValue.0, channelName: newValue.1, topic: newValue.2)
+        }
+    }
+
+    internal var isUpdateChannelTopic: Bool {
+        self.updateChannelTopic != nil
     }
 
     internal var usernamesReceived: (connection: Connection, channelName: String, usernames: [String])? {

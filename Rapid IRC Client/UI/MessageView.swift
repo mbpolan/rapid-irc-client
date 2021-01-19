@@ -65,6 +65,9 @@ struct MessageView: View {
         case .error:
             text = Text(content)
                 .foregroundColor(.red)
+        case .channelTopicEvent:
+            text = Text(content)
+                .foregroundColor(.blue)
         case .other:
             text = Text(content)
         }

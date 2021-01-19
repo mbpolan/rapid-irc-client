@@ -20,8 +20,8 @@ struct ActiveChannelView: View {
         HSplitView {
             // display messages and channel activity on the left side
             VStack {
-                if let topic = viewModel.state.currentChannel?.topic {
-                    Text(topic)
+                if let channelTopic = viewModel.state.topic {
+                    Text(channelTopic)
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                         .border(SeparatorShapeStyle(), width: 1)
                         .layoutPriority(1)
@@ -112,12 +112,14 @@ enum ActiveChannelViewModel {
     }
     
     struct ViewState: Equatable {
+        let topic: String?
         let currentChannel: IRCChannel?
         let showUserList: Bool
         let users: Set<User>
         
         static var empty: ViewState {
             .init(
+                topic: nil,
                 currentChannel: nil,
                 showUserList: false,
                 users: [])
@@ -142,6 +144,7 @@ enum ActiveChannelViewModel {
         let currentChannel = appState.ui.currentChannel
         
         return ViewState(
+            topic: currentChannel?.topic,
             currentChannel: currentChannel,
             showUserList: currentChannel != nil && currentChannel?.name != Connection.serverChannel,
             users: currentChannel?.users ?? Set())
@@ -181,6 +184,7 @@ struct ActiveChannelView_Previews: PreviewProvider {
         
         let viewModel = ActiveChannelViewModel.viewModel(from: store)
         viewModel.state = ActiveChannelViewModel.ViewState(
+            topic: "some topic",
             currentChannel: channel,
             showUserList: true,
             users: channel.users)

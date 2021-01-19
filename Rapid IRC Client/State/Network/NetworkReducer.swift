@@ -52,7 +52,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
         
-    case .channelTopic(let connection, let channelName, let topic):
+    case .updateChannelTopic(let connection, let channelName, let topic):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
            let channel = target.channels.first(where: { $0.name == channelName }) {
