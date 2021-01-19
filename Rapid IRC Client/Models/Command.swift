@@ -34,6 +34,7 @@ enum Command {
     case motd
     case serverMotd
     case endMotd
+    case quit
     
     case errorGeneral
     case errorNoOrigin
@@ -118,6 +119,8 @@ extension Command {
             return .privateMessage
         case "topic":
             return .topicChanged
+        case "quit":
+            return .quit
         default:
             return nil
         }

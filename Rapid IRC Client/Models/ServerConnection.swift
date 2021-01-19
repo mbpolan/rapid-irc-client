@@ -153,6 +153,8 @@ extension ServerConnection {
                 handleTopicChanged(ircMessage)
             case .welcome:
                 handleServerWelcome(ircMessage)
+            case .quit:
+                handleQuit(ircMessage)
             case.created,
                 .yourHost,
                 .myInfo,
@@ -353,6 +355,22 @@ extension ServerConnection {
                                             .welcomeReceived(
                                                 connection: self.connection.connection,
                                                 identifier: identifier)))
+        }
+        
+        private func handleQuit(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in QUIT command: \(message)")
+            }
+            
+            // only parameter is the quit message, if one exists
+            let reason = message.parameters.joined(separator: " ").dropLeadingColon()
+            
+            self.connection.store.dispatch(.network(
+                                            .userQuit(
+                                                connection: self.connection.connection,
+                                                identifier: message.prefix!,
+                                                reason: reason)))
         }
         
         private func handleServerMessage(_ message: IRCMessage) {

@@ -59,7 +59,8 @@ struct MessageView: View {
         case .userJoined:
             text = Text(content)
                 .foregroundColor(.green)
-        case .userParted:
+        case .userParted,
+             .userQuit:
             text = Text(content)
                 .foregroundColor(.yellow)
         case .error:

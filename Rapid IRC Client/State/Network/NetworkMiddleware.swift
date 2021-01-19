@@ -190,6 +190,7 @@ class NetworkMiddleware: Middleware {
             
         case .messageSent(let channel, let text):
             var message = text
+            var deferred: (() -> Void)?
             
             switch text.lowercased() {
             // when joining a previously parted channel, we can automatically add the channel name to the join
@@ -250,6 +251,22 @@ class NetworkMiddleware: Middleware {
                 
                 message = parts.joined(separator: " ")
                 
+            // quit commands result in all channels being parted and a quit message sent to the server
+            case _ where text.starts(with: "/quit"):
+                var parts = text.components(separatedBy: " ")
+                
+                // if a message is given, prefix it with a colon
+                if parts.count > 1 {
+                    parts[1] = ":\(parts[1])"
+                }
+                
+                message = parts.joined(separator: " ")
+                
+                // defer the disconnect until after we sent the quit command
+                deferred = { [weak self] in
+                    self?.output.dispatch(.network(.disconnect(connection: channel.connection)))
+                }
+                
             // not a command; could be a normal chat message sent in a channel. in this case, convert the plain text
             // message into a /privmsg command
             case _ where !text.starts(with: "/"):
@@ -282,6 +299,11 @@ class NetworkMiddleware: Middleware {
             message = message.starts(with: "/") ? message.subString(from: 1) : message
             channel.connection.client.sendMessage(message)
             
+            // execute any deferred actions now
+            if let finalizer = deferred {
+                finalizer()
+            }
+            
         case .privateMessageReceived(let connection, _, _, let recipient, let message):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
@@ -302,6 +324,35 @@ class NetworkMiddleware: Middleware {
                     connection: target,
                     channelName: Connection.serverChannel,
                     message: message)
+            }
+            
+        case .userQuit(let connection, let identifier, let reason):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            var message = "\(identifier.subject) (\(identifier.user!)@\(identifier.host!)) has disconnected"
+            if !reason.isEmpty {
+                message = "\(message) (\(reason))"
+            }
+            
+            // find all channels where this user is present
+            target.channels.forEach { channel in
+                if let user = channel.users.first(where: { $0.name == identifier.subject }) {
+                    // remove the user from the channel
+                    output.dispatch(.network(
+                                        .userLeftChannel(
+                                            conn: target,
+                                            channelName: channel.name,
+                                            user: user)))
+                    
+                    // dispatch a message indicating the user left the network
+                    dispatchChannelMessage(
+                        connection: target,
+                        channelName: channel.name,
+                        message: ChannelMessage(
+                            text: message,
+                            variant: .userQuit))
+                }
             }
             
         default:

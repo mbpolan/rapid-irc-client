@@ -51,6 +51,7 @@ extension ChannelMessage {
         case privateMessage
         case userJoined
         case userParted
+        case userQuit
         case channelTopicEvent
         case error
         case other
