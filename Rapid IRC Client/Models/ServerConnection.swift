@@ -144,6 +144,8 @@ extension ServerConnection {
                 handlePart(ircMessage)
             case .ping:
                 handlePing(ircMessage)
+            case .pong:
+                handlePong(ircMessage)
             case .privateMessage:
                 handlePrivateMessage(ircMessage)
             case .nameReply:
@@ -156,8 +158,9 @@ extension ServerConnection {
                 handleServerWelcome(ircMessage)
             case .quit:
                 handleQuit(ircMessage)
+            case .yourHost:
+                handleHost(ircMessage)
             case.created,
-                .yourHost,
                 .myInfo,
                 .iSupport,
                 .statsLine,
@@ -188,6 +191,25 @@ extension ServerConnection {
             if server != nil {
                 send("PONG \(server!)")
             }
+        }
+        
+        private func handlePong(_ message: IRCMessage) {
+            // expect one parameter
+            if message.parameters.count < 1 {
+                print("ERROR: no channel in PONG message: \(message)")
+                return
+            }
+            
+            // first parameter is the origin
+            let server = message.parameters[1].dropLeadingColon()
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: Connection.serverChannel,
+                                                message: ChannelMessage(
+                                                    text: "PONG \(server)",
+                                                    variant: .other))))
         }
         
         private func handleJoin(_ message: IRCMessage) {
@@ -372,6 +394,22 @@ extension ServerConnection {
                                                 connection: self.connection.connection,
                                                 identifier: message.prefix!,
                                                 reason: reason)))
+        }
+        
+        private func handleHost(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in QUIT command: \(message)")
+            }
+            
+            // note the hostname for the server
+            self.connection.store.dispatch(.network(
+                                            .hostnameReceived(
+                                                connection: self.connection.connection,
+                                                hostname: message.prefix!.subject)))
+            
+            // propagate this message to the user as well
+            handleServerMessage(message)
         }
         
         private func handleServerMessage(_ message: IRCMessage) {

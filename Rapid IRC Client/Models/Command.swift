@@ -9,6 +9,7 @@ enum Command {
     case join
     case part
     case ping
+    case pong
     case privateMessage
     case notice
     case welcome
@@ -116,6 +117,8 @@ extension Command {
             return .part
         case "ping":
             return .ping
+        case "pong":
+            return .pong
         case "privmsg":
             return .privateMessage
         case "topic":

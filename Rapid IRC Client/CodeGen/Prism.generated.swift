@@ -124,6 +124,21 @@ extension NetworkAction {
         self.welcomeReceived != nil
     }
 
+    internal var hostnameReceived: (connection: Connection, hostname: String)? {
+        get {
+            guard case let .hostnameReceived(connection, hostname) = self else { return nil }
+            return (connection, hostname)
+        }
+        set {
+            guard case .hostnameReceived = self, let newValue = newValue else { return }
+            self = .hostnameReceived(connection: newValue.0, hostname: newValue.1)
+        }
+    }
+
+    internal var isHostnameReceived: Bool {
+        self.hostnameReceived != nil
+    }
+
     internal var messageReceived: (connection: Connection, channelName: String, message: ChannelMessage)? {
         get {
             guard case let .messageReceived(connection, channelName, message) = self else { return nil }

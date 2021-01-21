@@ -18,6 +18,7 @@ enum NetworkAction {
     case connectionAdded(connection: Connection, serverChannel: IRCChannel)
     case connectionStateChanged(connection: Connection, connectionState: Connection.State)
     case welcomeReceived(connection: Connection, identifier: String)
+    case hostnameReceived(connection: Connection, hostname: String)
     case messageReceived(connection: Connection, channelName: String, message: ChannelMessage)
     case channelTopicReceived(connection: Connection, channelName: String, topic: String)
     case channelTopicChanged(connection: Connection, channelName: String, identifier: IRCMessage.Prefix, topic: String)

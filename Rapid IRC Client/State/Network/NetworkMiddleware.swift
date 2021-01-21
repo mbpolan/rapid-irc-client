@@ -213,6 +213,21 @@ class NetworkMiddleware: Middleware {
             var deferred: (() -> Void)?
             
             switch text.lowercased() {
+            // add the origin name to a ping commnd
+            case _ where text.starts(with: "/ping"):
+                let state = getState()
+                guard let currentChannel = state.ui.currentChannel else { break }
+                
+                let parts = text.components(separatedBy: " ")
+                if parts.count == 1,
+                   let hostname = currentChannel.connection.hostname {
+                    message = "\(parts[0]) :\(hostname)"
+                } else {
+                    message = "\(parts[0]) :\(parts[1...].joined(separator: " "))"
+                }
+                
+                break
+            
             // when joining a previously parted channel, we can automatically add the channel name to the join
             // command to effectively "rejoin" that channel without the user explicitly stating the channel name
             case _ where text.starts(with: "/join"):

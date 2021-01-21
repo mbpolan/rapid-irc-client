@@ -12,6 +12,7 @@ class Connection: Identifiable {
     static let serverChannel = "_"
     
     var name: String
+    var hostname: String?
     var state: State
     var identifier: IRCMessage.Prefix?
     var client: ServerConnection

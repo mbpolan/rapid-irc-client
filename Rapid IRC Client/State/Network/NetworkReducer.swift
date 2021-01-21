@@ -43,6 +43,14 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return state
         
+    case .hostnameReceived(let connection, let hostname):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }) {
+            target.hostname = hostname
+        }
+        
+        return state
+        
     case .messageReceived(let connection, let channelName, let message):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
