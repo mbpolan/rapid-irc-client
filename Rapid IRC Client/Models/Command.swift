@@ -10,6 +10,7 @@ enum Command {
     case part
     case ping
     case privateMessage
+    case notice
     case welcome
     case yourHost
     case created

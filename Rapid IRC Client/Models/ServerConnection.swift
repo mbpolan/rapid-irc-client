@@ -26,7 +26,7 @@ class ServerConnection {
         self.connection = connection
     }
     
-    func connect() {
+    func connect(status: @escaping(Result<Connection.State, Error>) -> Void) {
         let bootstrap = ClientBootstrap.init(group: group)
             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .channelInitializer { channel in
@@ -36,39 +36,26 @@ class ServerConnection {
         
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                self.store.dispatch(.network(
-                                        .connectionStateChanged(
-                                            connection: self.connection,
-                                            connectionState: .connecting)))
+                status(.success(.connecting))
                 
                 self.channel = try bootstrap
                     .connect(host: self.server.host, port: self.server.port)
                     .wait()
                 
-                self.store.dispatch(.network(
-                                        .connectionStateChanged(
-                                            connection: self.connection,
-                                            connectionState: .connected)))
+                status(.success(.connected))
             } catch let error {
-                print(error)
+                status(.failure(error))
             }
         }
     }
     
-    func disconnect() {
+    func disconnect(status: @escaping(Result<Connection.State, Error>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             do {
                 try self?.channel?.close().wait()
-                
-                // dispatch an action to signal this connection is no longer active
-                if let this = self {
-                    this.store.dispatch(.network(
-                                            .connectionStateChanged(
-                                                connection: this.connection,
-                                                connectionState: .disconnected)))
-                }
+                status(.success(.disconnected))
             } catch let error {
-                print(error)
+                status(.failure(error))
             }
         }
     }
@@ -96,6 +83,8 @@ extension ServerConnection {
         private let connection: ServerConnection
         private let channel: Channel
         
+        private var bufferedMessage: String?
+        
         init(_ connection: ServerConnection, _ channel: Channel) {
             self.connection = connection
             self.channel = channel
@@ -117,10 +106,22 @@ extension ServerConnection {
             let bytes = buffer.readableBytes
             
             if let received = buffer.readString(length: bytes) {
-                let lines = received.split(separator: "\r\n")
+                // prepend any buffered data we received to the start of this message
+                let data = (bufferedMessage ?? "") + received
+                
+                // split messages by crlf. if the data does not end in a crlf, that means we received a
+                // partial message. in that case, buffer the remaining message until we receive more data
+                // from the server.
+                var lines = data.components(separatedBy: "\r\n")
+                if let last = lines.last,
+                    !last.hasSuffix("\r\n") {
+                    
+                    lines = lines.dropLast()
+                    bufferedMessage = last
+                }
                 
                 lines.forEach { line in
-                    processMessage(String(line))
+                    processMessage(line)
                 }
             }
         }

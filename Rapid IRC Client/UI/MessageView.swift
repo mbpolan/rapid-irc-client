@@ -69,7 +69,7 @@ struct MessageView: View {
         case .channelTopicEvent:
             text = Text(content)
                 .foregroundColor(.blue)
-        case .other:
+        case .client, .other:
             text = Text(content)
         }
         

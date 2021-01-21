@@ -54,6 +54,7 @@ extension ChannelMessage {
         case userQuit
         case channelTopicEvent
         case error
+        case client
         case other
     }
 }

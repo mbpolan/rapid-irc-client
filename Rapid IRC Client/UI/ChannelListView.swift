@@ -80,14 +80,7 @@ struct ChannelListView: View {
             : Font.subheadline.italic()
         
         return HStack {
-            if channel.mentioned {
-                Image(systemName: "exclamationmark.bubble.fill")
-                    .foregroundColor(.red)
-            } else if channel.newMessages {
-                Image(systemName: "bubble.left.fill")
-            } else {
-                Image(systemName: "bubble.left")
-            }
+            makeChannelIcon(channel)
             
             // button containing the channel name
             Button(action: {
@@ -114,6 +107,32 @@ struct ChannelListView: View {
                 }.buttonStyle(BorderlessButtonStyle())
             }
         }.frame(maxWidth: .infinity)
+    }
+    
+    private func makeChannelIcon(_ channel: ChannelListViewModel.ListItem) -> some View {
+        var image: AnyView
+        
+        if channel.name == Connection.serverChannel {
+            if channel.mentioned {
+                image = AnyView(Image(systemName: "bolt.horizontal.circle.fill")
+                    .foregroundColor(.red))
+            } else if channel.newMessages {
+                image = AnyView(Image(systemName: "bolt.horizontal.circle.fill"))
+            } else {
+                image = AnyView(Image(systemName: "bolt.horizontal.circle"))
+            }
+        } else {
+            if channel.mentioned {
+                image = AnyView(Image(systemName: "exclamationmark.bubble.fill")
+                    .foregroundColor(.red))
+            } else if channel.newMessages {
+                image = AnyView(Image(systemName: "bubble.left.fill"))
+            } else {
+                image = AnyView(Image(systemName: "bubble.left"))
+            }
+        }
+        
+        return image
     }
 }
 

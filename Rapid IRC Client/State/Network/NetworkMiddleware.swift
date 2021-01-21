@@ -37,24 +37,44 @@ class NetworkMiddleware: Middleware {
             // FIXME: should be a reducer action
             connection.channels.append(serverChannel)
             
-            connection.client.connect()
-            
             output.dispatch(.network(
                                 .connectionAdded(
                                     connection: connection,
                                     serverChannel: serverChannel)))
             
+            
             output.dispatch(.ui(
                                 .connectionAdded(
                                     connection: connection)))
             
+            connection.client.connect() { result in
+                self.handleConnectionStatus(connection: connection, result: result)
+            }
+            
         case .reconnect(let connection):
-            // client will dispatch an action to inform when it's connected
-            connection.client.connect()
+            connection.client.connect() { result in
+                self.handleConnectionStatus(connection: connection, result: result)
+            }
             
         case .disconnect(let connection):
-            // client will dispatch an action to inform when it's disconnected
-            connection.client.disconnect()
+            connection.client.disconnect() { _ in
+                let serverInfo = connection.client.server
+                
+                // put a message into the server channel indicating we're disconnected
+                self.output.dispatch(.network(
+                                        .messageReceived(
+                                            connection: connection,
+                                            channelName: Connection.serverChannel,
+                                            message: ChannelMessage(
+                                                text: "Disconnected from \(serverInfo.host):\(serverInfo.port)",
+                                                variant: .client))))
+                
+                // dispatch the connection is no longer active
+                self.output.dispatch(.network(
+                                    .connectionStateChanged(
+                                        connection: connection,
+                                        connectionState: .disconnected)))
+            }
             
         case .joinedChannel(let connection, let channelName, let identifier):
             let state = getState()
@@ -357,6 +377,48 @@ class NetworkMiddleware: Middleware {
             
         default:
             break
+        }
+    }
+    
+    private func handleConnectionStatus(connection: Connection, result: Result<Connection.State, Error>) {
+        let serverInfo = connection.client.server
+        
+        switch result {
+        case .success(let state):
+            switch state {
+            case .connecting:
+                self.output.dispatch(.network(
+                                        .messageReceived(
+                                            connection: connection,
+                                            channelName: Connection.serverChannel,
+                                            message: ChannelMessage(
+                                                text: "Connecting to \(serverInfo.host):\(serverInfo.port)...",
+                                                variant: .client))))
+            default:
+                break
+            }
+            
+            // propagate the connection state change down the pipeline
+            self.output.dispatch(.network(
+                                    .connectionStateChanged(
+                                        connection: connection,
+                                        connectionState: state)))
+            
+        case .failure(let error):
+            self.output.dispatch(.network(
+                                    .messageReceived(
+                                        connection: connection,
+                                        channelName: Connection.serverChannel,
+                                        message: ChannelMessage(
+                                            text: "Failed to connect to \(serverInfo.host):\(serverInfo.port): \(error.localizedDescription)",
+                                            variant: .error))))
+            
+            // reset the status to disconnected since we could not establish a valid connection
+            output.dispatch(.network(
+                                .connectionStateChanged(
+                                    connection: connection,
+                                    connectionState: .disconnected)))
+            
         }
     }
     
