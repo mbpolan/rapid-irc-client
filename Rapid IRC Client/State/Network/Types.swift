@@ -50,6 +50,7 @@ struct ChannelMessage {
 extension ChannelMessage {
     enum Variant {
         case privateMessage
+        case notice
         case userJoined
         case userParted
         case userQuit

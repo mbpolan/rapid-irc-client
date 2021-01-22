@@ -121,6 +121,8 @@ extension Command {
             return .pong
         case "privmsg":
             return .privateMessage
+        case "notice":
+            return .notice
         case "topic":
             return .topicChanged
         case "quit":

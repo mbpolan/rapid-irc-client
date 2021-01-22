@@ -72,9 +72,9 @@ class NetworkMiddleware: Middleware {
                 
                 // dispatch the connection is no longer active
                 self.output.dispatch(.network(
-                                    .connectionStateChanged(
-                                        connection: connection,
-                                        connectionState: .disconnected)))
+                                        .connectionStateChanged(
+                                            connection: connection,
+                                            connectionState: .disconnected)))
             }
             
         case .joinedChannel(let connection, let channelName, let identifier):
@@ -229,7 +229,7 @@ class NetworkMiddleware: Middleware {
                 }
                 
                 break
-            
+                
             // when joining a previously parted channel, we can automatically add the channel name to the join
             // command to effectively "rejoin" that channel without the user explicitly stating the channel name
             case _ where text.starts(with: "/join"):
@@ -355,9 +355,14 @@ class NetworkMiddleware: Middleware {
                     channelName: channel.name,
                     message: message)
                 
-            } else if recipient == target.identifier?.subject {
-                // is this our first message from this user?
-                if !target.channels.contains(where: { $0.name == identifier.subject }) {
+            } else if recipient == target.identifier?.subject || recipient == "*" {
+                var targetChannelName = identifier.subject
+                
+                // is the message from the server itself?
+                if identifier.subject == target.hostname {
+                    targetChannelName = Connection.serverChannel
+                } else if !target.channels.contains(where: { $0.name == identifier.subject }) {
+                    // this our first message from this user; add a channel for the private message
                     output.dispatch(.network(
                                         .clientJoinedChannel(
                                             connection: target,
@@ -366,7 +371,7 @@ class NetworkMiddleware: Middleware {
                 }
                 
                 dispatchChannelMessage(connection: target,
-                                       channelName: identifier.subject,
+                                       channelName: targetChannelName,
                                        message: message)
             }
             

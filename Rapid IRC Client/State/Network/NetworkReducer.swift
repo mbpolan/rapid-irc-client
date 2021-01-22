@@ -99,6 +99,11 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
     case .clientJoinedChannel(let connection, let channelName, let descriptor):
         var newState = state
         if let target = newState.connections.first(where: { $0 === connection }) {
+            if target.channels.contains(where: { $0.name == channelName }) {
+                print("WARN: already have channel with name \(channelName)")
+                return state
+            }
+            
             let channel = IRCChannel(
                 connection: connection,
                 name: channelName,

@@ -56,6 +56,14 @@ struct MessageView: View {
             } else {
                 text = Text(content)
             }
+        case .notice:
+            if let sender = message.sender {
+                text = Text("<\(sender)>") + Text(" \(content)")
+                    .foregroundColor(.orange)
+            } else {
+                text = Text(content)
+                    .foregroundColor(.orange)
+            }
         case .userJoined:
             text = Text(content)
                 .foregroundColor(.green)

@@ -147,7 +147,9 @@ extension ServerConnection {
             case .pong:
                 handlePong(ircMessage)
             case .privateMessage:
-                handlePrivateMessage(ircMessage)
+                handlePrivateMessage(ircMessage, variant: .privateMessage)
+            case .notice:
+                handlePrivateMessage(ircMessage, variant: .notice)
             case .nameReply:
                 handleNameReply(ircMessage)
             case .topicReply:
@@ -264,23 +266,23 @@ extension ServerConnection {
                                                 reason: reason)))
         }
         
-        private func handlePrivateMessage(_ message: IRCMessage) {
+        private func handlePrivateMessage(_ message: IRCMessage, variant: ChannelMessage.Variant) {
             // expect a valid prefix
             if message.prefix == nil {
-                print("ERROR: no prefix in PART message: \(message)")
+                print("ERROR: no prefix in PRIVMSG/NOTICE message: \(message)")
                 return
             }
             
             // expect at least one parameter
             if message.parameters.count < 1 {
-                print("ERROR: no channel in PART message: \(message)")
+                print("ERROR: no channel in PRIVMSG/NOTICE message: \(message)")
                 return
             }
             
             // first parameter is the intended channel or user
             let recipient = message.parameters[0]
             
-            // remaining parameters aree the message content
+            // remaining parameters are the message content
             let text = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
             self.connection.store.dispatch(.network(
@@ -291,7 +293,7 @@ extension ServerConnection {
                                                 message: ChannelMessage(
                                                     sender: message.prefix!.subject,
                                                     text: text,
-                                                    variant: .privateMessage))))
+                                                    variant: variant))))
         }
         
         private func handleNameReply(_ message: IRCMessage) {
