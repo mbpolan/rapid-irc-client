@@ -88,7 +88,7 @@ struct ChannelListView: View {
                     self.viewModel.dispatch(.setChannel(target))
                 }
             }) {
-                Text(channel.name == Connection.serverChannel ? "Server" : channel.name)
+                Text(channel.type == .server ? "Server" : channel.name)
                     .foregroundColor(color)
                     .font(fontStyle)
             }.buttonStyle(BorderlessButtonStyle())
@@ -97,7 +97,7 @@ struct ChannelListView: View {
             
             // button for closing the channel, only shown if the user hovers the containing view and the channel is not
             // the default server channel itself
-            if self.hoveredChannel == channel.id && channel.name != Connection.serverChannel {
+            if self.hoveredChannel == channel.id && channel.type != .server {
                 Button(action: {
                     if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
                         self.viewModel.dispatch(.closeChannel(target))
@@ -112,23 +112,33 @@ struct ChannelListView: View {
     private func makeChannelIcon(_ channel: ChannelListViewModel.ListItem) -> some View {
         var image: AnyView
         
-        if channel.name == Connection.serverChannel {
+        switch channel.type {
+        case .root:
+            image = AnyView(EmptyView())
+        case .server:
             if channel.mentioned {
                 image = AnyView(Image(systemName: "bolt.horizontal.circle.fill")
-                    .foregroundColor(.red))
+                                    .foregroundColor(.red))
             } else if channel.newMessages {
                 image = AnyView(Image(systemName: "bolt.horizontal.circle.fill"))
             } else {
                 image = AnyView(Image(systemName: "bolt.horizontal.circle"))
             }
-        } else {
+        case .channel:
             if channel.mentioned {
-                image = AnyView(Image(systemName: "exclamationmark.bubble.fill")
-                    .foregroundColor(.red))
+                image = AnyView(Image(systemName: "bubble.left.and.bubble.right.fill")
+                                    .foregroundColor(.red))
             } else if channel.newMessages {
-                image = AnyView(Image(systemName: "bubble.left.fill"))
+                image = AnyView(Image(systemName: "bubble.left.and.bubble.right.fill"))
             } else {
-                image = AnyView(Image(systemName: "bubble.left"))
+                image = AnyView(Image(systemName: "bubble.left.and.bubble.right"))
+            }
+        case .privateMessage:
+            if channel.newMessages {
+                image = AnyView(Image(systemName: "person.fill")
+                                    .foregroundColor(.red))
+            } else {
+                image = AnyView(Image(systemName: "person"))
             }
         }
         
@@ -177,7 +187,8 @@ enum ChannelListViewModel {
             return .ui(
                 .closeChannel(
                     connection: channel.connection,
-                    channelName: channel.name))
+                    channelName: channel.name,
+                    descriptor: channel.descriptor))
             
         case .reconnect(let connection):
             return .network(.reconnect(connection: connection))
@@ -198,7 +209,7 @@ enum ChannelListViewModel {
                     newMessages: false,
                     active: conn.state == .connected,
                     connection: conn,
-                    type: .server,
+                    type: .root,
                     children: conn.channels
                         .map { chan in
                             return ListItem(
@@ -209,7 +220,11 @@ enum ChannelListViewModel {
                                 newMessages: chan.notifications.contains(.newMessages),
                                 active: chan.state == .joined,
                                 connection: conn,
-                                type: .channel,
+                                type: chan.descriptor == .multiUser
+                                    ? .channel
+                                    : chan.descriptor == .user
+                                    ? .privateMessage
+                                    : .server,
                                 children: nil)
                         })
             },
@@ -219,8 +234,10 @@ enum ChannelListViewModel {
 
 extension ChannelListViewModel {
     enum ListItemType {
+        case root
         case server
         case channel
+        case privateMessage
     }
     
     struct ListItem: Identifiable {

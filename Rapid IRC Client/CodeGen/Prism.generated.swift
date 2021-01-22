@@ -289,14 +289,14 @@ extension NetworkAction {
         self.userJoinedChannel != nil
     }
 
-    internal var clientJoinedChannel: (connection: Connection, channelName: String)? {
+    internal var clientJoinedChannel: (connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)? {
         get {
-            guard case let .clientJoinedChannel(connection, channelName) = self else { return nil }
-            return (connection, channelName)
+            guard case let .clientJoinedChannel(connection, channelName, descriptor) = self else { return nil }
+            return (connection, channelName, descriptor)
         }
         set {
             guard case .clientJoinedChannel = self, let newValue = newValue else { return }
-            self = .clientJoinedChannel(connection: newValue.0, channelName: newValue.1)
+            self = .clientJoinedChannel(connection: newValue.0, channelName: newValue.1, descriptor: newValue.2)
         }
     }
 
@@ -349,14 +349,14 @@ extension NetworkAction {
         self.removeChannel != nil
     }
 
-    internal var privateMessageReceived: (connection: Connection, identifier: String, nick: String, recipient: String, message: ChannelMessage)? {
+    internal var privateMessageReceived: (connection: Connection, identifier: IRCMessage.Prefix, recipient: String, message: ChannelMessage)? {
         get {
-            guard case let .privateMessageReceived(connection, identifier, nick, recipient, message) = self else { return nil }
-            return (connection, identifier, nick, recipient, message)
+            guard case let .privateMessageReceived(connection, identifier, recipient, message) = self else { return nil }
+            return (connection, identifier, recipient, message)
         }
         set {
             guard case .privateMessageReceived = self, let newValue = newValue else { return }
-            self = .privateMessageReceived(connection: newValue.0, identifier: newValue.1, nick: newValue.2, recipient: newValue.3, message: newValue.4)
+            self = .privateMessageReceived(connection: newValue.0, identifier: newValue.1, recipient: newValue.2, message: newValue.3)
         }
     }
 
@@ -457,14 +457,14 @@ extension UIAction {
         self.changeChannel != nil
     }
 
-    internal var closeChannel: (connection: Connection, channelName: String)? {
+    internal var closeChannel: (connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)? {
         get {
-            guard case let .closeChannel(connection, channelName) = self else { return nil }
-            return (connection, channelName)
+            guard case let .closeChannel(connection, channelName, descriptor) = self else { return nil }
+            return (connection, channelName, descriptor)
         }
         set {
             guard case .closeChannel = self, let newValue = newValue else { return }
-            self = .closeChannel(connection: newValue.0, channelName: newValue.1)
+            self = .closeChannel(connection: newValue.0, channelName: newValue.1, descriptor: newValue.2)
         }
     }
 

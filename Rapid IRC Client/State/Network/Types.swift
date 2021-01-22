@@ -27,7 +27,7 @@ class Connection: Identifiable {
     }
     
     func getServerChannel() -> IRCChannel? {
-        return channels.first { $0.name == Connection.serverChannel }
+        return channels.first { $0.descriptor == .server }
     }
 }
 
@@ -66,6 +66,7 @@ class IRCChannel: Identifiable, Equatable {
     var connection: Connection
     var topic: String?
     var name: String
+    var descriptor: Descriptor
     var type: ChannelType?
     var state: State
     var notifications: Set<Notification> = Set()
@@ -77,9 +78,10 @@ class IRCChannel: Identifiable, Equatable {
         return lhs.id == rhs.id
     }
     
-    init(connection: Connection, name: String, state: State) {
+    init(connection: Connection, name: String, descriptor: Descriptor, state: State) {
         self.connection = connection
         self.name = name
+        self.descriptor = descriptor
         self.type = ChannelType.parseString(string: name)
         self.state = state
     }
@@ -94,6 +96,12 @@ extension IRCChannel {
     enum Notification: Int {
         case mention = 0
         case newMessages = 1
+    }
+    
+    enum Descriptor {
+        case server
+        case multiUser
+        case user
     }
     
     enum ChannelType: Character {

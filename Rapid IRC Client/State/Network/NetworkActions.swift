@@ -29,11 +29,11 @@ enum NetworkAction {
     case partedChannel(connection: Connection, channelName: String, identifier: String, nick: String, reason: String?)
     case channelStateChanged(connection: Connection, channelName: String, channelState: IRCChannel.State)
     case userJoinedChannel(connection: Connection, channelName: String, user: User)
-    case clientJoinedChannel(connection: Connection, channelName: String)
+    case clientJoinedChannel(connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)
     case clientLeftChannel(connection: Connection, channelName: String)
     case userLeftChannel(conn: Connection, channelName: String, user: User)
     case removeChannel(connection: Connection, channelName: String)
-    case privateMessageReceived(connection: Connection, identifier: String, nick: String, recipient: String, message: ChannelMessage)
+    case privateMessageReceived(connection: Connection, identifier: IRCMessage.Prefix, recipient: String, message: ChannelMessage)
     case userQuit(connection: Connection, identifier: IRCMessage.Prefix, reason: String)
     
     case errorReceived(connection: Connection, message: ChannelMessage)

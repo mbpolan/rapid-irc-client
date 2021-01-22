@@ -135,6 +135,7 @@ struct MessageView_Previews: PreviewProvider {
                     port: 6667),
                 store: store),
             name: "mike",
+            descriptor: .multiUser,
             state: .joined)
         
         channel.messages.append(contentsOf: [

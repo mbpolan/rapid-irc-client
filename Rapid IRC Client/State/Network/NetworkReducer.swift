@@ -96,12 +96,13 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
     
-    case .clientJoinedChannel(let connection, let channelName):
+    case .clientJoinedChannel(let connection, let channelName, let descriptor):
         var newState = state
         if let target = newState.connections.first(where: { $0 === connection }) {
             let channel = IRCChannel(
                 connection: connection,
                 name: channelName,
+                descriptor: descriptor,
                 state: .joined)
             
             connection.channels.append(channel)

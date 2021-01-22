@@ -24,7 +24,7 @@ class UIMiddleware: Middleware {
     
     func handle(action: UIAction, from dispatcher: ActionSource, afterReducer: inout AfterReducer) {
         switch action {
-        case .closeChannel(let connection, let channelName):
+        case .closeChannel(let connection, let channelName, let descriptor):
             let state = getState()
             
             // are we closing the channel that is currently open? if so, open the default server channel instead
@@ -35,8 +35,10 @@ class UIMiddleware: Middleware {
                                         channelName: Connection.serverChannel)))
             }
             
-            // ensure we part the channel server-side
-            connection.client.sendMessage("part \(channelName)")
+            // if this is a multiuser channel, ensure we part the channel server-side
+            if descriptor == .multiUser {
+                connection.client.sendMessage("part \(channelName)")
+            }
             
             // remove the channel from network management entirely
             output.dispatch(.network(

@@ -146,7 +146,7 @@ enum ActiveChannelViewModel {
         return ViewState(
             topic: currentChannel?.topic,
             currentChannel: currentChannel,
-            showUserList: currentChannel != nil && currentChannel?.name != Connection.serverChannel,
+            showUserList: currentChannel?.descriptor == .multiUser,
             users: currentChannel?.users ?? Set())
     }
 }
@@ -166,6 +166,7 @@ struct ActiveChannelView_Previews: PreviewProvider {
                     port: 6667),
                 store: store),
             name: "mike",
+            descriptor: .multiUser,
             state: .joined)
         
         channel.topic = "some topic message for this channel"

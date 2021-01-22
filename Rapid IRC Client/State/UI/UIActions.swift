@@ -13,5 +13,5 @@ enum UIAction {
     case connectionAdded(connection: Connection)
     case changeChannel(connection: Connection, channelName: String)
     
-    case closeChannel(connection: Connection, channelName: String)
+    case closeChannel(connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)
 }

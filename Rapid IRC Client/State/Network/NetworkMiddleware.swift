@@ -32,6 +32,7 @@ class NetworkMiddleware: Middleware {
             let serverChannel = IRCChannel(
                 connection: connection,
                 name: Connection.serverChannel,
+                descriptor: .server,
                 state: .joined)
             
             // FIXME: should be a reducer action
@@ -96,7 +97,8 @@ class NetworkMiddleware: Middleware {
                     output.dispatch(.network(
                                         .clientJoinedChannel(
                                             connection: target,
-                                            channelName: channelName)))
+                                            channelName: channelName,
+                                            descriptor: .multiUser)))
                     
                     output.dispatch(.ui(
                                         .changeChannel(
@@ -311,7 +313,7 @@ class NetworkMiddleware: Middleware {
                       let identifier = currentChannel.connection.identifier else { break }
                 
                 // don't sent messages on the server channel though
-                if currentChannel.name == Connection.serverChannel {
+                if currentChannel.descriptor == .server {
                     break
                 }
                 
@@ -339,16 +341,33 @@ class NetworkMiddleware: Middleware {
                 finalizer()
             }
             
-        case .privateMessageReceived(let connection, _, _, let recipient, let message):
+        case .privateMessageReceived(let connection, let identifier, let recipient, let message):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
             
             // is the recipient a channel? if so, add the message to the channel
-            if let channel = target.channels.first(where: { $0.name == recipient }) {
+            // otherwise, if this is a private message, add the message to the private message channel instead
+            if IRCChannel.ChannelType(rawValue: recipient.first!) != nil,
+               let channel = target.channels.first(where: { $0.name == recipient }) {
+                
                 dispatchChannelMessage(
                     connection: connection,
                     channelName: channel.name,
                     message: message)
+                
+            } else if recipient == target.identifier?.subject {
+                // is this our first message from this user?
+                if !target.channels.contains(where: { $0.name == identifier.subject }) {
+                    output.dispatch(.network(
+                                        .clientJoinedChannel(
+                                            connection: target,
+                                            channelName: identifier.subject,
+                                            descriptor: .user)))
+                }
+                
+                dispatchChannelMessage(connection: target,
+                                       channelName: identifier.subject,
+                                       message: message)
             }
             
         case .errorReceived(let connection, let message):
@@ -446,7 +465,7 @@ class NetworkMiddleware: Middleware {
                                 channelName: channelName,
                                 message: message)))
         
-        guard let channel = connection.channels.first(where: { $0.name == channelName }) else { return }
+        let channel = connection.channels.first(where: { $0.name == channelName })
         
         // if this channel is not currently active, mark this message as new
         if channel != state.ui.currentChannel {
@@ -457,14 +476,14 @@ class NetworkMiddleware: Middleware {
                 output.dispatch(.network(
                                     .addChannelNotification(
                                         connection: connection,
-                                        channelName: channel.name,
+                                        channelName: channelName,
                                         notification: .mention)))
                 
             } else {
                 output.dispatch(.network(
                                     .addChannelNotification(
                                         connection: connection,
-                                        channelName: channel.name,
+                                        channelName: channelName,
                                         notification: .newMessages)))
             }
         }

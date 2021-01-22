@@ -286,8 +286,7 @@ extension ServerConnection {
             self.connection.store.dispatch(.network(
                                             .privateMessageReceived(
                                                 connection: self.connection.connection,
-                                                identifier: message.prefix!.raw,
-                                                nick: message.prefix!.subject,
+                                                identifier: message.prefix!,
                                                 recipient: recipient,
                                                 message: ChannelMessage(
                                                     sender: message.prefix!.subject,
