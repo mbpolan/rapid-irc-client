@@ -105,9 +105,9 @@ extension ServerConnection {
             var buffer = unwrapInboundIn(data)
             let bytes = buffer.readableBytes
             
-            if let received = buffer.readString(length: bytes) {
+            if let received = buffer.readBytes(length: bytes) {
                 // prepend any buffered data we received to the start of this message
-                let data = (bufferedMessage ?? "") + received
+                let data = (bufferedMessage ?? "") + String(bytes: received, encoding: .utf8)!
                 
                 // split messages by crlf. if the data does not end in a crlf, that means we received a
                 // partial message. in that case, buffer the remaining message until we receive more data
@@ -285,15 +285,27 @@ extension ServerConnection {
             // remaining parameters are the message content
             let text = message.parameters[1...].joined(separator: " ").dropLeadingColon()
             
-            self.connection.store.dispatch(.network(
-                                            .privateMessageReceived(
-                                                connection: self.connection.connection,
-                                                identifier: message.prefix!,
-                                                recipient: recipient,
-                                                message: ChannelMessage(
-                                                    sender: message.prefix!.subject,
-                                                    text: text,
-                                                    variant: variant))))
+            // a ctcp message is prefixed by ascii character 0x01; handle these separately
+            // otherwise, this is just a standard private message or notice by irc protocol standards
+            if text.first?.asciiValue == 0x01 {
+                // trim the leading (and possibly) trailing control characters
+                var ctcpText = text.dropFirst()
+                if ctcpText.last?.asciiValue == 0x01 {
+                    ctcpText = ctcpText.dropLast()
+                }
+                
+                handleCTCPMessage(message, ctcpText: String(ctcpText))
+            } else {
+                self.connection.store.dispatch(.network(
+                                                .privateMessageReceived(
+                                                    connection: self.connection.connection,
+                                                    identifier: message.prefix!,
+                                                    recipient: recipient,
+                                                    message: ChannelMessage(
+                                                        sender: message.prefix!.subject,
+                                                        text: text,
+                                                        variant: variant))))
+            }
         }
         
         private func handleNameReply(_ message: IRCMessage) {
@@ -429,6 +441,32 @@ extension ServerConnection {
                                             message: ChannelMessage(
                                                 text: text,
                                                 variant: .other))))
+        }
+        
+        private func handleCTCPMessage(_ message: IRCMessage, ctcpText: String) {
+            guard let commandName = ctcpText.components(separatedBy: " ").first else { return }
+            
+            switch CTCPCommand.fromString(name: commandName) {
+            case .version:
+                handleCTCPVersion(message, ctcpText: ctcpText)
+            default:
+                break
+            }
+        }
+        
+        private func handleCTCPVersion(_ message: IRCMessage, ctcpText: String) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in CTCP VERSION command: \(message)")
+            }
+            
+            // format the client name with version
+            var response = "Rapid IRC Client"
+            if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                response = "\(response) \(version)"
+            }
+            
+            send("NOTICE \(message.prefix!.subject) :\u{01}\(response)\u{01}")
         }
         
         private func handleGeneralError(_ message: IRCMessage) {
