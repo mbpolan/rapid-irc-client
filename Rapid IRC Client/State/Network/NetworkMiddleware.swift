@@ -287,6 +287,27 @@ class NetworkMiddleware: Middleware {
                 }
                 
                 message = parts.joined(separator: " ")
+            
+            // ctcp action command
+            case _ where text.starts(with: "/me"):
+                let state = getState()
+                
+                guard let currentChannel = state.ui.currentChannel,
+                      let identifier = currentChannel.connection.identifier else { break }
+                
+                let action = text.components(separatedBy: " ").dropFirst().joined(separator: " ")
+                
+                // echo this message back to us
+                output.dispatch(.network(
+                                    .messageReceived(
+                                        connection: currentChannel.connection,
+                                        channelName: currentChannel.name,
+                                        message: ChannelMessage(
+                                            sender: identifier.subject,
+                                            text: action,
+                                            variant: .action))))
+                
+                message = "/privmsg \(currentChannel.name) :\u{01}ACTION \(action)\u{01}"
                 
             // quit commands result in all channels being parted and a quit message sent to the server
             case _ where text.starts(with: "/quit"):

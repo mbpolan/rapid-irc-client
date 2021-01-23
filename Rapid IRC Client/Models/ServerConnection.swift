@@ -294,7 +294,7 @@ extension ServerConnection {
                     ctcpText = ctcpText.dropLast()
                 }
                 
-                handleCTCPMessage(message, ctcpText: String(ctcpText))
+                handleCTCPMessage(message, recipient: recipient, ctcpText: String(ctcpText))
             } else {
                 self.connection.store.dispatch(.network(
                                                 .privateMessageReceived(
@@ -443,18 +443,41 @@ extension ServerConnection {
                                                 variant: .other))))
         }
         
-        private func handleCTCPMessage(_ message: IRCMessage, ctcpText: String) {
-            guard let commandName = ctcpText.components(separatedBy: " ").first else { return }
+        private func handleCTCPMessage(_ message: IRCMessage, recipient: String, ctcpText: String) {
+            let ctcpComponents = ctcpText.components(separatedBy: " ")
+            guard let commandName = ctcpComponents.first else { return }
+            let ctcpParameters = Array(ctcpComponents.dropFirst())
             
             switch CTCPCommand.fromString(name: commandName) {
+            case .action:
+                handleCTCPAction(message, recipient: recipient, ctcpParameters: ctcpParameters)
             case .version:
-                handleCTCPVersion(message, ctcpText: ctcpText)
+                handleCTCPVersion(message, recipient: recipient, ctcpParameters: ctcpParameters)
             default:
                 break
             }
         }
         
-        private func handleCTCPVersion(_ message: IRCMessage, ctcpText: String) {
+        private func handleCTCPAction(_ message: IRCMessage, recipient: String, ctcpParameters: [String]) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in CTCP ACTION command: \(message)")
+            }
+            
+            // all parameters are an action message, and are optional
+            let text = ctcpParameters.joined(separator: " ")
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: recipient,
+                                                message: ChannelMessage(
+                                                    sender: message.prefix!.subject,
+                                                    text: text,
+                                                    variant: .action))))
+        }
+        
+        private func handleCTCPVersion(_ message: IRCMessage, recipient: String, ctcpParameters: [String]) {
             // expect a valid prefix
             if message.prefix == nil {
                 print("ERROR: no prefix in CTCP VERSION command: \(message)")

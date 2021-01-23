@@ -50,6 +50,15 @@ struct MessageView: View {
         let content = message.text
         
         switch message.variant {
+        case .action:
+            if let sender = message.sender {
+                text = Text("\(sender) \(content)")
+                    .italic()
+            } else {
+                // really not a valid situation, but be cautious regardless
+                text = Text("??? \(content)")
+                    .italic()
+            }
         case .privateMessage:
             if let sender = message.sender {
                 text = Text("<\(sender)>") + Text(" \(content)")

@@ -6,6 +6,7 @@
 //
 
 enum CTCPCommand {
+    case action
     case version
 }
 
@@ -13,6 +14,8 @@ extension CTCPCommand {
     
     static func fromString(name: String) -> CTCPCommand? {
         switch name.lowercased() {
+        case "action":
+            return .action
         case "version":
             return .version
         default:
