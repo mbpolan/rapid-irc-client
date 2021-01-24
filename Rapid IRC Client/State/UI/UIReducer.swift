@@ -20,6 +20,11 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
         newState.showTimestampsInChat = value
         return newState
         
+    case .toggleJoinPartEvents(let value):
+        var newState = state
+        newState.showJoinAndPartEvents = value
+        return newState
+        
     case .connectionAdded(let connection):
         var newState = state
         newState.currentChannel = connection.channels.first

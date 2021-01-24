@@ -12,11 +12,13 @@ struct UIState {
     var connectSheetShown: Bool
     var currentChannel: IRCChannel?
     var showTimestampsInChat: Bool
+    var showJoinAndPartEvents: Bool
     
     static var empty: UIState {
         .init(
             connectSheetShown: false,
             currentChannel: nil,
-            showTimestampsInChat: UserDefaults.standard.bool(forKey: AppSettings.timestampsInChat.rawValue))
+            showTimestampsInChat: UserDefaults.standard.bool(forKey: AppSettings.timestampsInChat.rawValue),
+            showJoinAndPartEvents: UserDefaults.standard.bool(forKey: AppSettings.showJoinAndPartEvents.rawValue))
     }
 }

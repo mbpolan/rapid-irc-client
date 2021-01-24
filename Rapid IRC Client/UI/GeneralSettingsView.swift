@@ -10,6 +10,7 @@ import SwiftUI
 struct GeneralSettingsView: View {
     
     @AppStorage(AppSettings.timestampsInChat.rawValue) private var showTimestamps: Bool = true
+    @AppStorage(AppSettings.showJoinAndPartEvents.rawValue) private var showJoinAndPartEvents: Bool = true
     @AppStorage(AppSettings.realName.rawValue) private var realName: String = ""
     @AppStorage(AppSettings.preferredNick.rawValue) private var preferredNick1: String = ""
     @AppStorage(AppSettings.username.rawValue) private var username: String = ""
@@ -25,6 +26,13 @@ struct GeneralSettingsView: View {
             set: { shown in
                 showTimestamps = shown
                 Store.instance.dispatch(.ui(.toggleChatTimestamps(shown: shown)))
+            })
+        
+        let showJoinAndPartEventsBinding = Binding<Bool>(
+            get: { showJoinAndPartEvents },
+            set: { shown in
+                showJoinAndPartEvents = shown
+                Store.instance.dispatch(.ui(.toggleJoinPartEvents(shown: shown)))
             })
         
         Form {
@@ -45,6 +53,7 @@ struct GeneralSettingsView: View {
             
             Section(header: Text("Chat").font(.headline)) {
                 Toggle("Show timestamps in chat", isOn: showTimestampsBinding)
+                Toggle("Show users joining and leaving", isOn: showJoinAndPartEventsBinding)
             }
         }
         .padding(20)

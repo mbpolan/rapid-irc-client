@@ -129,8 +129,14 @@ enum MessageViewModel {
     }
     
     private static func transform(appState: AppState) -> ViewState {
-        ViewState(
-            messages: appState.ui.currentChannel?.messages ?? [],
+        var messages = appState.ui.currentChannel?.messages ?? []
+        
+        if !appState.ui.showJoinAndPartEvents {
+            messages = messages.filter { $0.variant != .userJoined && $0.variant != .userParted && $0.variant != .userQuit }
+        }
+        
+        return ViewState(
+            messages: messages,
             lastId: appState.ui.currentChannel?.messages.last?.timestamp ?? Date(),
             showTimestamps: appState.ui.showTimestampsInChat)
     }

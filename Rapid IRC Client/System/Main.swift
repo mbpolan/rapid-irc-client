@@ -47,6 +47,7 @@ struct AppCommands: Commands {
 
 enum AppSettings: String {
     case timestampsInChat = "timestampsInChat"
+    case showJoinAndPartEvents = "showJoinAndPartEvents"
     case realName = "realName"
     case preferredNick = "preferredNick1"
     case username = "username"

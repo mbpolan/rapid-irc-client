@@ -10,6 +10,7 @@
 enum UIAction {
     case toggleConnectSheet(shown: Bool)
     case toggleChatTimestamps(shown: Bool)
+    case toggleJoinPartEvents(shown: Bool)
     case connectionAdded(connection: Connection)
     case changeChannel(connection: Connection, channelName: String)
     

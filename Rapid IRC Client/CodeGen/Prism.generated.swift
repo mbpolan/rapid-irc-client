@@ -502,6 +502,21 @@ extension UIAction {
         self.toggleChatTimestamps != nil
     }
 
+    internal var toggleJoinPartEvents: Bool? {
+        get {
+            guard case let .toggleJoinPartEvents(shown) = self else { return nil }
+            return (shown)
+        }
+        set {
+            guard case .toggleJoinPartEvents = self, let newValue = newValue else { return }
+            self = .toggleJoinPartEvents(shown: newValue)
+        }
+    }
+
+    internal var isToggleJoinPartEvents: Bool {
+        self.toggleJoinPartEvents != nil
+    }
+
     internal var connectionAdded: Connection? {
         get {
             guard case let .connectionAdded(connection) = self else { return nil }
