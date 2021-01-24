@@ -23,7 +23,7 @@ struct MessageView: View {
         ScrollView {
             ScrollViewReader { scroll in
                 LazyVStack(alignment: .leading) {
-                    ForEach(viewModel.state.currentChannel?.messages ?? [], id: \.timestamp) { message in
+                    ForEach(viewModel.state.messages, id: \.timestamp) { message in
                         HStack(alignment: .firstTextBaseline, spacing: 3) {
                             if viewModel.state.showTimestamps {
                                 Text("[\(dateFormatter.string(from: message.timestamp))] ")
@@ -38,8 +38,7 @@ struct MessageView: View {
                 }
                 .font(.system(size: 14, design: .monospaced))
                 .onChange(of: viewModel.state) { _ in
-                    guard let lastTimestamp = viewModel.state.currentChannel?.messages.last?.timestamp else { return }
-                    scroll.scrollTo(lastTimestamp)
+                    scroll.scrollTo(viewModel.state.lastId, anchor: .bottom)
                 }
             }
         }
@@ -105,18 +104,18 @@ enum MessageViewModel {
     
     struct ViewState: Equatable {
         static func == (lhs: MessageViewModel.ViewState, rhs: MessageViewModel.ViewState) -> Bool {
-            // FIXME
-            //            return lhs.currentChannel?.id == rhs.currentChannel?.id
-            return false
+            // do a "shallow" comparison to avoid comparing each and every message
+            return lhs.messages.count == rhs.messages.count &&
+                lhs.lastId == rhs.lastId
         }
         
-        let currentChannel: IRCChannel?
+        let messages: [ChannelMessage]
         let lastId: Date
         let showTimestamps: Bool
         
         static var empty: ViewState {
             .init(
-                currentChannel: nil,
+                messages: [],
                 lastId: Date(),
                 showTimestamps: true)
         }
@@ -131,7 +130,7 @@ enum MessageViewModel {
     
     private static func transform(appState: AppState) -> ViewState {
         ViewState(
-            currentChannel: appState.ui.currentChannel,
+            messages: appState.ui.currentChannel?.messages ?? [],
             lastId: appState.ui.currentChannel?.messages.last?.timestamp ?? Date(),
             showTimestamps: appState.ui.showTimestampsInChat)
     }
@@ -164,7 +163,7 @@ struct MessageView_Previews: PreviewProvider {
         
         return MessageView(viewModel: .mock(
                             state: .init(
-                                currentChannel: channel,
+                                messages: channel.messages,
                                 lastId: Date(),
                                 showTimestamps: true)))
     }

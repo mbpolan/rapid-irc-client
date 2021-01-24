@@ -114,7 +114,7 @@ extension ServerConnection {
                 // from the server.
                 var lines = data.components(separatedBy: "\r\n")
                 if let last = lines.last,
-                    !last.hasSuffix("\r\n") {
+                   !last.hasSuffix("\r\n") {
                     
                     lines = lines.dropLast()
                     bufferedMessage = last
@@ -152,6 +152,8 @@ extension ServerConnection {
                 handlePrivateMessage(ircMessage, variant: .notice)
             case .nameReply:
                 handleNameReply(ircMessage)
+            case .endOfNames:
+                handleEndOfNamesReply(ircMessage)
             case .topicReply:
                 handleTopicReply(ircMessage)
             case .topicChanged:
@@ -162,12 +164,15 @@ extension ServerConnection {
                 handleQuit(ircMessage)
             case .yourHost:
                 handleHost(ircMessage)
+            case .listOpsOnline,
+                 .listUnknownConnections,
+                    .listUserChannels:
+                handleServerStatistic(ircMessage)
             case.created,
                 .myInfo,
                 .iSupport,
                 .statsLine,
                 .listUsers,
-                .listUserChannels,
                 .listUserMe,
                 .localUsers,
                 .globalUsers,
@@ -331,6 +336,22 @@ extension ServerConnection {
                                                 usernames: users)))
         }
         
+        private func handleEndOfNamesReply(_ message: IRCMessage) {
+            // at least one parameter is expected
+            if message.parameters.count < 1 {
+                print("ERROR: not enough params in ENDOFNAMES reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel name
+            let channelName = message.parameters[0]
+            
+            self.connection.store.dispatch(.network(
+                                            .allUsernamesReceived(
+                                                connection: self.connection.connection,
+                                                channelName: channelName)))
+        }
+        
         private func handleTopicReply(_ message: IRCMessage) {// expect least two parameters
             if message.parameters.count < 2 {
                 print("ERROR: not enough params in TOPIC reply: \(message)")
@@ -423,6 +444,28 @@ extension ServerConnection {
             
             // propagate this message to the user as well
             handleServerMessage(message)
+        }
+        
+        private func handleServerStatistic(_ message: IRCMessage) {
+            // expect two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in statistic reply: \(message)")
+                return
+            }
+            
+            // first parameter is a numeric
+            let number = message.parameters[0]
+            
+            // remaining parameters are the message
+            let text = message.parameters[1...].joined(separator: " ").dropLeadingColon()
+            
+            connection.store.dispatch(.network(
+                                        .messageReceived(
+                                            connection: self.connection.connection,
+                                            channelName: Connection.serverChannel,
+                                            message: ChannelMessage(
+                                                text: "\(number) \(text)",
+                                                variant: .other))))
         }
         
         private func handleServerMessage(_ message: IRCMessage) {

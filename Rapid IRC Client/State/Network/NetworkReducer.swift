@@ -69,11 +69,29 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
         
-    case .updateChannelUsers(let connection, let channelName, let users):
+    case .applyIncomingChannelUsers(let connection, let channelName):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
            var channel = target.channels.first(where: { $0.name == channelName }) {
-            channel.users = Set(users)
+            channel.users = channel.incomingUsers
+        }
+        
+        return newState
+        
+    case .addIncomingChannelUsers(let connection, let channelName, let users):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           var channel = target.channels.first(where: { $0.name == channelName }) {
+            channel.incomingUsers.formUnion(users)
+        }
+        
+        return newState
+        
+    case .clearIncomingChannelUsers(let connection, let channelName):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           var channel = target.channels.first(where: { $0.name == channelName }) {
+            channel.incomingUsers = Set()
         }
         
         return newState

@@ -84,7 +84,7 @@ class NetworkMiddleware: Middleware {
             
             // does this join message refer to us? if so, add a new channel and set it to be active
             // otherwise, this message refers to another user joining a channel we are listening on already
-            if identifier == target.identifier {
+            if identifier.subject == target.identifier?.subject {
                 // if we already have this channel registered, set its status to joined
                 // otherwise, add a new channel and set it as our active channel
                 if target.channels.contains(where: { $0.name == channelName }) {
@@ -172,11 +172,28 @@ class NetworkMiddleware: Middleware {
                 return User(name: nick, privilege: .none)
             }
             
+            // dispatch an action that contains this new list of incoming users
             output.dispatch(.network(
-                                .updateChannelUsers(
+                                .addIncomingChannelUsers(
                                     connection: target,
                                     channelName: channelName,
-                                    users: users)))
+                                    users: Set(users))))
+        
+        case .allUsernamesReceived(let connection, let channelName):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            // the list of incoming users becomes the complete list of users
+            output.dispatch(.network(
+                                .applyIncomingChannelUsers(
+                                    connection: target,
+                                    channelName: channelName)))
+            
+            // the list of incoming users is cleared out
+            output.dispatch(.network(
+                                .clearIncomingChannelUsers(
+                                    connection: target,
+                                    channelName: channelName)))
             
         case .channelTopicReceived(let connection, let channelName, let topic):
             // update the topic on the channel

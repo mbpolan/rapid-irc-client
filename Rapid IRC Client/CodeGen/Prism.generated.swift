@@ -214,19 +214,64 @@ extension NetworkAction {
         self.usernamesReceived != nil
     }
 
-    internal var updateChannelUsers: (connection: Connection, channelName: String, users: [User])? {
+    internal var allUsernamesReceived: (connection: Connection, channelName: String)? {
         get {
-            guard case let .updateChannelUsers(connection, channelName, users) = self else { return nil }
-            return (connection, channelName, users)
+            guard case let .allUsernamesReceived(connection, channelName) = self else { return nil }
+            return (connection, channelName)
         }
         set {
-            guard case .updateChannelUsers = self, let newValue = newValue else { return }
-            self = .updateChannelUsers(connection: newValue.0, channelName: newValue.1, users: newValue.2)
+            guard case .allUsernamesReceived = self, let newValue = newValue else { return }
+            self = .allUsernamesReceived(connection: newValue.0, channelName: newValue.1)
         }
     }
 
-    internal var isUpdateChannelUsers: Bool {
-        self.updateChannelUsers != nil
+    internal var isAllUsernamesReceived: Bool {
+        self.allUsernamesReceived != nil
+    }
+
+    internal var applyIncomingChannelUsers: (connection: Connection, channelName: String)? {
+        get {
+            guard case let .applyIncomingChannelUsers(connection, channelName) = self else { return nil }
+            return (connection, channelName)
+        }
+        set {
+            guard case .applyIncomingChannelUsers = self, let newValue = newValue else { return }
+            self = .applyIncomingChannelUsers(connection: newValue.0, channelName: newValue.1)
+        }
+    }
+
+    internal var isApplyIncomingChannelUsers: Bool {
+        self.applyIncomingChannelUsers != nil
+    }
+
+    internal var addIncomingChannelUsers: (connection: Connection, channelName: String, users: Set<User>)? {
+        get {
+            guard case let .addIncomingChannelUsers(connection, channelName, users) = self else { return nil }
+            return (connection, channelName, users)
+        }
+        set {
+            guard case .addIncomingChannelUsers = self, let newValue = newValue else { return }
+            self = .addIncomingChannelUsers(connection: newValue.0, channelName: newValue.1, users: newValue.2)
+        }
+    }
+
+    internal var isAddIncomingChannelUsers: Bool {
+        self.addIncomingChannelUsers != nil
+    }
+
+    internal var clearIncomingChannelUsers: (connection: Connection, channelName: String)? {
+        get {
+            guard case let .clearIncomingChannelUsers(connection, channelName) = self else { return nil }
+            return (connection, channelName)
+        }
+        set {
+            guard case .clearIncomingChannelUsers = self, let newValue = newValue else { return }
+            self = .clearIncomingChannelUsers(connection: newValue.0, channelName: newValue.1)
+        }
+    }
+
+    internal var isClearIncomingChannelUsers: Bool {
+        self.clearIncomingChannelUsers != nil
     }
 
     internal var joinedChannel: (connection: Connection, channelName: String, identifier: IRCMessage.Prefix)? {

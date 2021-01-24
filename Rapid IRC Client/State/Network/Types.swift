@@ -74,6 +74,8 @@ class IRCChannel: Identifiable, Equatable {
     var notifications: Set<Notification> = Set()
     var access: AccessType?
     var messages: [ChannelMessage] = []
+    var userListState: UserListState
+    var incomingUsers: Set<User> = []
     var users: Set<User> = []
     
     static func == (lhs: IRCChannel, rhs: IRCChannel) -> Bool {
@@ -85,11 +87,18 @@ class IRCChannel: Identifiable, Equatable {
         self.name = name
         self.descriptor = descriptor
         self.type = ChannelType.parseString(string: name)
+        self.userListState = .received
         self.state = state
     }
 }
 
 extension IRCChannel {
+    
+    enum UserListState {
+        case receiving
+        case received
+    }
+    
     enum State {
         case joined
         case parted

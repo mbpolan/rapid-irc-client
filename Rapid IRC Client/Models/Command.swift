@@ -19,6 +19,8 @@ enum Command {
     case iSupport
     case statsLine
     case listUsers
+    case listOpsOnline
+    case listUnknownConnections
     case listUserChannels
     case listUserMe
     case localUsers
@@ -61,6 +63,10 @@ extension Command {
             return .statsLine
         case "251":
             return .listUsers
+        case "252":
+            return .listOpsOnline
+        case "253":
+            return .listUnknownConnections
         case "254":
             return .listUserChannels
         case "255":
