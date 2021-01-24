@@ -23,7 +23,8 @@ struct UserListView: View {
                     }
                 }
             }
-        }.listStyle(InsetListStyle())
+        }
+        .listStyle(InsetListStyle())
     }
     
     func makeUserItem(_ user: UserListViewModel.UserEntry) -> some View {
@@ -39,8 +40,8 @@ struct UserListView: View {
             }
             .popover(isPresented: binding, arrowEdge: .trailing) {
                 let popoverGrid = [
+                    GridItem(.fixed(70), spacing: 5),
                     GridItem(.fixed(100), spacing: 5),
-                    GridItem(.fixed(50), spacing: 5),
                 ]
                 
                 let cells = [
@@ -52,7 +53,7 @@ struct UserListView: View {
                 
                 LazyVGrid(
                     columns: popoverGrid,
-                    alignment: .center,
+                    alignment: .leading,
                     spacing: 5,
                     pinnedViews: []) {
                     ForEach(cells, id: \.self) { cell in
@@ -73,10 +74,19 @@ struct UserListViewModel {
     }
     
     struct ViewState: Equatable {
+        
+        static func == (lhs: ViewState, rhs: ViewState) -> Bool {
+            // compare only the last user list update timestamps to avoid comparing a large list
+            return lhs.lastUserListUpdate == rhs.lastUserListUpdate
+        }
+        
+        let lastUserListUpdate: Date
         let groups: [UserGroup]
         
         static var empty: ViewState {
-            .init(groups: [])
+            .init(
+                lastUserListUpdate: Date(),
+                groups: [])
         }
     }
     
@@ -106,7 +116,9 @@ struct UserListViewModel {
             }
         }
         
-        return ViewState(groups: groups.map { key, value in
+        return ViewState(
+            lastUserListUpdate: appState.ui.currentChannel?.lastUserListUpdate ?? Date(),
+            groups: groups.map { key, value in
             UserGroup(
                 category: key,
                 users: value.map { user in

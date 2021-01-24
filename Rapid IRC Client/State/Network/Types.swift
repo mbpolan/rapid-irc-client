@@ -76,7 +76,7 @@ class IRCChannel: Identifiable, Equatable {
     var notifications: Set<Notification> = Set()
     var access: AccessType?
     var messages: [ChannelMessage] = []
-    var userListState: UserListState
+    var lastUserListUpdate: Date
     var incomingUsers: Set<User> = []
     var users: Set<User> = []
     
@@ -89,7 +89,7 @@ class IRCChannel: Identifiable, Equatable {
         self.name = name
         self.descriptor = descriptor
         self.type = ChannelType.parseString(string: name)
-        self.userListState = .received
+        self.lastUserListUpdate = Date()
         self.state = state
     }
 }

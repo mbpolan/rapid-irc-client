@@ -84,6 +84,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         if let target = newState.connections.first(where: { $0 === connection }),
            var channel = target.channels.first(where: { $0.name == channelName }) {
             channel.users = channel.incomingUsers
+            channel.lastUserListUpdate = Date()
         }
         
         return newState
@@ -120,6 +121,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         if let target = newState.connections.first(where: { $0 === connection }),
            var channel = target.channels.first(where: { $0.name == channelName}) {
             channel.users.insert(user)
+            channel.lastUserListUpdate = Date()
         }
         
         return newState
@@ -151,6 +153,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
             
             channel.state = .parted
             channel.users.removeAll()
+            channel.lastUserListUpdate = Date()
         }
         
         return newState
@@ -160,6 +163,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         if let target = newState.connections.first(where: { $0 === connection }),
            let channel = target.channels.first(where: { $0.name == channelName }) {
             channel.users.remove(user)
+            channel.lastUserListUpdate = Date()
         }
         
         return newState

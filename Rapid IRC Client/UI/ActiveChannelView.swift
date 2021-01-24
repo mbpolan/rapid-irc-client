@@ -115,14 +115,12 @@ enum ActiveChannelViewModel {
         let topic: String?
         let currentChannel: IRCChannel?
         let showUserList: Bool
-        let users: Set<User>
         
         static var empty: ViewState {
             .init(
                 topic: nil,
                 currentChannel: nil,
-                showUserList: false,
-                users: [])
+                showUserList: false)
         }
     }
     
@@ -146,8 +144,7 @@ enum ActiveChannelViewModel {
         return ViewState(
             topic: currentChannel?.topic,
             currentChannel: currentChannel,
-            showUserList: currentChannel?.descriptor == .multiUser,
-            users: currentChannel?.users ?? Set())
+            showUserList: currentChannel?.descriptor == .multiUser)
     }
 }
 
@@ -187,8 +184,7 @@ struct ActiveChannelView_Previews: PreviewProvider {
         viewModel.state = ActiveChannelViewModel.ViewState(
             topic: "some topic",
             currentChannel: channel,
-            showUserList: true,
-            users: channel.users)
+            showUserList: true)
         
         return ActiveChannelView(viewModel: viewModel)
     }
