@@ -13,6 +13,7 @@ enum UIAction {
     case toggleJoinPartEvents(shown: Bool)
     case connectionAdded(connection: Connection)
     case changeChannel(connection: Connection, channelName: String)
+    case openPrivateMessage(connection: Connection, nick: String)
     
     case closeChannel(connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)
 }

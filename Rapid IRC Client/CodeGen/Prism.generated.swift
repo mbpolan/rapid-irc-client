@@ -547,6 +547,21 @@ extension UIAction {
         self.changeChannel != nil
     }
 
+    internal var openPrivateMessage: (connection: Connection, nick: String)? {
+        get {
+            guard case let .openPrivateMessage(connection, nick) = self else { return nil }
+            return (connection, nick)
+        }
+        set {
+            guard case .openPrivateMessage = self, let newValue = newValue else { return }
+            self = .openPrivateMessage(connection: newValue.0, nick: newValue.1)
+        }
+    }
+
+    internal var isOpenPrivateMessage: Bool {
+        self.openPrivateMessage != nil
+    }
+
     internal var closeChannel: (connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)? {
         get {
             guard case let .closeChannel(connection, channelName, descriptor) = self else { return nil }

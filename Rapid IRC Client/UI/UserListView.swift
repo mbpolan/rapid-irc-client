@@ -38,6 +38,17 @@ struct UserListView: View {
             .onHover { hovered in
                 self.hoveredNick = hovered ? user.nick : nil
             }
+            .contextMenu {
+                Button(action: {
+                    guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                    
+                    self.viewModel.dispatch(.openPrivateMessage(
+                                                channel: currentChannel,
+                                                user: user.user))
+                }) {
+                    Text("Private Message")
+                }
+            }
             .popover(isPresented: binding, arrowEdge: .trailing) {
                 let popoverGrid = [
                     GridItem(.fixed(70), spacing: 5),
@@ -80,32 +91,40 @@ struct UserListViewModel {
             return lhs.lastUserListUpdate == rhs.lastUserListUpdate
         }
         
+        let currentChannel: IRCChannel?
         let lastUserListUpdate: Date
         let groups: [UserGroup]
         
         static var empty: ViewState {
             .init(
+                currentChannel: nil,
                 lastUserListUpdate: Date(),
                 groups: [])
         }
     }
     
     enum ViewAction {
-        
+        case openPrivateMessage(channel: IRCChannel, user: User)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
-        return nil
+        switch viewAction {
+        case .openPrivateMessage(let channel, let user):
+            return .ui(
+                .openPrivateMessage(
+                    connection: channel.connection,
+                    nick: user.name))
+        }
     }
     
     private static func transform(appState: AppState) -> ViewState {
-        guard let users = appState.ui.currentChannel?.users else {
+        guard let currentChannel = appState.ui.currentChannel else {
             return ViewState.empty
         }
         
         // categorize users based on their access levels
         var groups = Dictionary<UserGroup.Category, [User]>()
-        users.forEach { user in
+        currentChannel.users.forEach { user in
             switch user.privilege {
             case .owner, .admin, .fullOperator, .halfOperator:
                 groups[.operators, default: []].append(user)
@@ -117,7 +136,8 @@ struct UserListViewModel {
         }
         
         return ViewState(
-            lastUserListUpdate: appState.ui.currentChannel?.lastUserListUpdate ?? Date(),
+            currentChannel: currentChannel,
+            lastUserListUpdate: currentChannel.lastUserListUpdate,
             groups: groups.map { key, value in
             UserGroup(
                 category: key,

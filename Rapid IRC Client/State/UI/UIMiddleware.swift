@@ -24,6 +24,25 @@ class UIMiddleware: Middleware {
     
     func handle(action: UIAction, from dispatcher: ActionSource, afterReducer: inout AfterReducer) {
         switch action {
+        case .openPrivateMessage(let connection, let nick):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { return }
+            
+            // do we have a channel for private messages to this nick? if so, change to that channel
+            // otherwise, open a new channel and change to it
+            if !target.channels.contains(where: { $0.name == nick && $0.descriptor == .user }) {
+                output.dispatch(.network(
+                                    .clientJoinedChannel(
+                                        connection: target,
+                                        channelName: nick,
+                                        descriptor: .user)))
+            }
+            
+            output.dispatch(.ui(
+                                .changeChannel(
+                                    connection: connection,
+                                    channelName: nick)))
+            
         case .closeChannel(let connection, let channelName, let descriptor):
             let state = getState()
             
