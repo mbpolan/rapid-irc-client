@@ -184,6 +184,21 @@ extension NetworkAction {
         self.channelTopicChanged != nil
     }
 
+    internal var channelTopicMetadataReceived: (connection: Connection, channelName: String, who: String, when: Date)? {
+        get {
+            guard case let .channelTopicMetadataReceived(connection, channelName, who, when) = self else { return nil }
+            return (connection, channelName, who, when)
+        }
+        set {
+            guard case .channelTopicMetadataReceived = self, let newValue = newValue else { return }
+            self = .channelTopicMetadataReceived(connection: newValue.0, channelName: newValue.1, who: newValue.2, when: newValue.3)
+        }
+    }
+
+    internal var isChannelTopicMetadataReceived: Bool {
+        self.channelTopicMetadataReceived != nil
+    }
+
     internal var updateChannelTopic: (connection: Connection, channelName: String, topic: String)? {
         get {
             guard case let .updateChannelTopic(connection, channelName, topic) = self else { return nil }
@@ -197,6 +212,21 @@ extension NetworkAction {
 
     internal var isUpdateChannelTopic: Bool {
         self.updateChannelTopic != nil
+    }
+
+    internal var updateChannelTopicMetadata: (connection: Connection, channelName: String, who: String, when: Date)? {
+        get {
+            guard case let .updateChannelTopicMetadata(connection, channelName, who, when) = self else { return nil }
+            return (connection, channelName, who, when)
+        }
+        set {
+            guard case .updateChannelTopicMetadata = self, let newValue = newValue else { return }
+            self = .updateChannelTopicMetadata(connection: newValue.0, channelName: newValue.1, who: newValue.2, when: newValue.3)
+        }
+    }
+
+    internal var isUpdateChannelTopicMetadata: Bool {
+        self.updateChannelTopicMetadata != nil
     }
 
     internal var usernamesReceived: (connection: Connection, channelName: String, usernames: [String])? {

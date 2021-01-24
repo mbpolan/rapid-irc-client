@@ -5,6 +5,8 @@
 //  Created by Mike Polan on 10/28/20.
 //
 
+import Foundation
+
 // MARK: - Actions
 // sourcery: Prism
 enum NetworkAction {
@@ -22,7 +24,9 @@ enum NetworkAction {
     case messageReceived(connection: Connection, channelName: String, message: ChannelMessage)
     case channelTopicReceived(connection: Connection, channelName: String, topic: String)
     case channelTopicChanged(connection: Connection, channelName: String, identifier: IRCMessage.Prefix, topic: String)
+    case channelTopicMetadataReceived(connection: Connection, channelName: String, who: String, when: Date)
     case updateChannelTopic(connection: Connection, channelName: String, topic: String)
+    case updateChannelTopicMetadata(connection: Connection, channelName: String, who: String, when: Date)
     case usernamesReceived(connection: Connection, channelName: String, usernames: [String])
     case allUsernamesReceived(connection: Connection, channelName: String)
     case applyIncomingChannelUsers(connection: Connection, channelName: String)

@@ -33,6 +33,7 @@ enum Command {
     case endOfWhoIsChannels
     case topicReply
     case topicChanged
+    case topicSetByWhen
     case nameReply
     case endOfNames
     case motd
@@ -89,6 +90,8 @@ extension Command {
             return .endOfWhoIsChannels
         case "332":
             return .topicReply
+        case "333":
+            return .topicSetByWhen
         case "353":
             return .nameReply
         case "366":

@@ -69,6 +69,16 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
         
+    case .updateChannelTopicMetadata(let connection, let channelName, let who, let when):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           let channel = target.channels.first(where: { $0.name == channelName }) {
+            channel.topicSetBy = who
+            channel.topicSetOn = when
+        }
+        
+        return newState
+        
     case .applyIncomingChannelUsers(let connection, let channelName):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),

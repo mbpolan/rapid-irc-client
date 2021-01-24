@@ -227,6 +227,26 @@ class NetworkMiddleware: Middleware {
                     text: "\(identifier.subject) sets channel topic to: \(topic)",
                     variant: .channelTopicEvent))
             
+        case .channelTopicMetadataReceived(let connection, let channelName, let who, let when):
+            // store the metadata for later viewing
+            output.dispatch(.network(
+                                .updateChannelTopicMetadata(
+                                    connection: connection,
+                                    channelName: channelName,
+                                    who: who,
+                                    when: when)))
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.setLocalizedDateFormatFromTemplate("dd MMM YYYY HH:mm:ss")
+            
+            // add a message to the channel
+            dispatchChannelMessage(
+                connection: connection,
+                channelName: channelName,
+                message: ChannelMessage(
+                    text: "Channel topic set by \(who) on \(dateFormatter.string(from: when))",
+                    variant: .channelTopicEvent))
+            
         case .messageSent(let channel, let text):
             var message = text
             var deferred: (() -> Void)?

@@ -158,6 +158,8 @@ extension ServerConnection {
                 handleTopicReply(ircMessage)
             case .topicChanged:
                 handleTopicChanged(ircMessage)
+            case .topicSetByWhen:
+                handleTopicSetByWhen(ircMessage)
             case .welcome:
                 handleServerWelcome(ircMessage)
             case .quit:
@@ -396,6 +398,35 @@ extension ServerConnection {
                                                 channelName: channel,
                                                 identifier: message.prefix!,
                                                 topic: topic)))
+        }
+        
+        private func handleTopicSetByWhen(_ message: IRCMessage) {
+            // expect least three parameters
+            if message.parameters.count < 3 {
+                print("ERROR: not enough params in TOPICWHOTIME reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel name
+            let channelName = message.parameters[0]
+            
+            // second parameter is the user who set the topic
+            let who = message.parameters[1]
+            
+            // third parameter is the unix timestamp for when the topic was set
+            guard let timestamp = Double(message.parameters[2]) else {
+                print("ERROR: invalid timestamp for TOPICWHOTIME: \(message.parameters[3])")
+                return
+            }
+            
+            let date = Date(timeIntervalSince1970: timestamp)
+            
+            self.connection.store.dispatch(.network(
+                                            .channelTopicMetadataReceived(
+                                                connection: self.connection.connection,
+                                                channelName: channelName,
+                                                who: who,
+                                                when: date)))
         }
         
         private func handleServerWelcome(_ message: IRCMessage) {

@@ -67,6 +67,8 @@ class IRCChannel: Identifiable, Equatable {
     var id: String = UUID().uuidString
     var connection: Connection
     var topic: String?
+    var topicSetBy: String?
+    var topicSetOn: Date?
     var name: String
     var descriptor: Descriptor
     var type: ChannelType?
