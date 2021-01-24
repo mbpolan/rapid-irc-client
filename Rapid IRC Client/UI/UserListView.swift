@@ -39,14 +39,10 @@ struct UserListView: View {
                 self.hoveredNick = hovered ? user.nick : nil
             }
             .contextMenu {
-                Button(action: {
-                    guard let currentChannel = self.viewModel.state.currentChannel else { return }
-                    
-                    self.viewModel.dispatch(.openPrivateMessage(
-                                                channel: currentChannel,
-                                                user: user.user))
-                }) {
-                    Text("Private Message")
+                ForEach(makeContextMenu(user), id: \.label) { entry in
+                    Button(action: entry.action) {
+                        Text(entry.label)
+                    }
                 }
             }
             .popover(isPresented: binding, arrowEdge: .trailing) {
@@ -72,6 +68,23 @@ struct UserListView: View {
                     }
                 }.padding()
             }
+    }
+    
+    func makeContextMenu(_ user: UserListViewModel.UserEntry) -> Array<(label: String, action: () -> Void)> {
+        var entries: Array<(String, () -> Void)> = []
+        
+        // don't allow private messaging ourselves
+        if !user.identity {
+            entries.append((label: "Private Message", action: {
+                guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                
+                self.viewModel.dispatch(.openPrivateMessage(
+                                            channel: currentChannel,
+                                            user: user.user))
+            }))
+        }
+        
+        return entries
     }
 }
 
@@ -143,6 +156,8 @@ struct UserListViewModel {
                 category: key,
                 users: value.map { user in
                     UserEntry(
+                        // is this user entry us?
+                        identity: user.name == currentChannel.connection.identifier?.subject,
                         nick: user.name,
                         user: user,
                         children: [])
@@ -163,6 +178,7 @@ extension UserListViewModel {
     }
     
     struct UserEntry: Equatable {
+        let identity: Bool
         let nick: String
         let user: User
         let children: [UserEntry]?
