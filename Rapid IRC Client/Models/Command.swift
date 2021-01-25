@@ -31,6 +31,8 @@ enum Command {
     case whoIsIdle
     case endOfWhoIs
     case endOfWhoIsChannels
+    case channelModes
+    case channelCreationTime
     case topicReply
     case topicChanged
     case topicSetByWhen
@@ -39,6 +41,7 @@ enum Command {
     case motd
     case serverMotd
     case endMotd
+    case mode
     case quit
     
     case errorGeneral
@@ -88,6 +91,10 @@ extension Command {
             return .endOfWhoIs
         case "319":
             return .endOfWhoIsChannels
+        case "324":
+            return .channelModes
+        case "329":
+            return .channelCreationTime
         case "332":
             return .topicReply
         case "333":
@@ -134,6 +141,8 @@ extension Command {
             return .notice
         case "topic":
             return .topicChanged
+        case "mode":
+            return .mode
         case "quit":
             return .quit
         default:

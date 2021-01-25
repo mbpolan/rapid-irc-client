@@ -106,8 +106,14 @@ extension ServerConnection {
             let bytes = buffer.readableBytes
             
             if let received = buffer.readBytes(length: bytes) {
+                // attempt to decode the incoming bytes as a string
+                guard let decoded = String(bytes: received, encoding: .utf8) else {
+                    print("ERROR: unable to decode bytes: \(received)")
+                    return
+                }
+                
                 // prepend any buffered data we received to the start of this message
-                let data = (bufferedMessage ?? "") + String(bytes: received, encoding: .utf8)!
+                let data = (bufferedMessage ?? "") + decoded
                 
                 // split messages by crlf. if the data does not end in a crlf, that means we received a
                 // partial message. in that case, buffer the remaining message until we receive more data
@@ -166,6 +172,12 @@ extension ServerConnection {
                 handleQuit(ircMessage)
             case .yourHost:
                 handleHost(ircMessage)
+            case .mode:
+                handleModeCommand(ircMessage)
+            case .channelModes:
+                handleChannelModes(ircMessage)
+            case .channelCreationTime:
+                handleChannelCreationTime(ircMessage)
             case .listOpsOnline,
                  .listUnknownConnections,
                     .listUserChannels:
@@ -475,6 +487,106 @@ extension ServerConnection {
             
             // propagate this message to the user as well
             handleServerMessage(message)
+        }
+        
+        private func handleModeCommand(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in MODE command: \(message)")
+                return
+            }
+            
+            // expect at least two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in MODE command: \(message)")
+                return
+            }
+            
+            // first parameter is the target
+            let target = message.parameters[0]
+            
+            // second parameter is the mode string
+            let modeString = message.parameters[1]
+            
+            // remaining parameters, if any, are mode parameters
+            let modeArgs = message.parameters[2...].joined(separator: " ").dropLeadingColon()
+            
+            var text = "\(message.prefix!.subject) sets mode \(modeString)"
+            if !modeArgs.isEmptyOrWhitespace {
+                text = "\(text) \(modeArgs)"
+            }
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: target,
+                                                message: ChannelMessage(
+                                                    text: text,
+                                                    variant: .modeEvent))))
+        }
+        
+        private func handleChannelModes(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in CHANNELMODES reply: \(message)")
+                return
+            }
+            
+            // expect at least two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in CHANNELMODES reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel name
+            let channelName = message.parameters[0]
+            
+            // second parameter is the mode string
+            let modeString = message.parameters[1]
+            
+            // remaining parameters, if present, are mode arguments
+            let modeArgs = message.parameters[2...].joined(separator: " ").dropLeadingColon()
+            
+            var text = "Channel mode is \(modeString)"
+            if !modeArgs.isEmptyOrWhitespace {
+                text = "\(text) (\(modeArgs))"
+            }
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: channelName,
+                                                message: ChannelMessage(
+                                                    text: text,
+                                                    variant: .modeEvent))))
+        }
+        
+        private func handleChannelCreationTime(_ message: IRCMessage) {
+            // expect at least two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in CREATIONTIME reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel name
+            let channelName = message.parameters[0]
+            
+            // second parameter is a unix timestamp representing the channel creation time
+            guard let timestamp = Double(message.parameters[1]) else {
+                print("ERROR: invalid timestamp in CREATIONTIME reply: \(message)")
+                return
+            }
+            
+            let creationTime = Date(timeIntervalSince1970: timestamp)
+            let text = "Channel created on \(DateFormatter.displayDateFormatter.string(from: creationTime))"
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: channelName,
+                                                message: ChannelMessage(
+                                                    text: text,
+                                                    variant: .other))))
         }
         
         private func handleServerStatistic(_ message: IRCMessage) {

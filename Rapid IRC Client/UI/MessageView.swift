@@ -85,7 +85,7 @@ struct MessageView: View {
         case .channelTopicEvent:
             text = Text(content)
                 .foregroundColor(.blue)
-        case .client, .other:
+        case .client, .modeEvent, .other:
             text = Text(content)
         }
         

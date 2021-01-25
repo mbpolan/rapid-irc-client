@@ -236,15 +236,14 @@ class NetworkMiddleware: Middleware {
                                     who: who,
                                     when: when)))
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.setLocalizedDateFormatFromTemplate("dd MMM YYYY HH:mm:ss")
+            let formattedDate = DateFormatter.displayDateFormatter.string(from: when)
             
             // add a message to the channel
             dispatchChannelMessage(
                 connection: connection,
                 channelName: channelName,
                 message: ChannelMessage(
-                    text: "Channel topic set by \(who) on \(dateFormatter.string(from: when))",
+                    text: "Channel topic set by \(who) on \(formattedDate)",
                     variant: .channelTopicEvent))
             
         case .messageSent(let channel, let text):
@@ -321,6 +320,30 @@ class NetworkMiddleware: Middleware {
                 // if there is a second parameter (the new channel topic), make sure to prefix it with a leading colon
                 if parts.count > 2 && parts[2].first != ":" {
                     parts[2] = ":\(parts[2])"
+                }
+                
+                message = parts.joined(separator: " ")
+                
+            // when querying or changing a mode, append the channel name if it is missing
+            case _ where text.starts(with: "/mode"):
+                let state = getState()
+                guard let currentChannel = state.ui.currentChannel else { break }
+                
+                // if the user issued the mode command from the server channel, assume they are requesting mode
+                // information about themselves. otherwise, if they do so in a channel, assume they are requesting
+                // mode reply for the channel itself.
+                guard let modeTarget = currentChannel.descriptor == .server
+                    ? currentChannel.connection.identifier?.subject
+                        : currentChannel.name else { break }
+                
+                var parts = text.components(separatedBy: " ")
+                
+                // first parameter should be a target. if it is missing, append the mode target.
+                // otherwise, insert the target name into the command string.
+                if parts.count == 1 {
+                    parts.append(modeTarget)
+                } else if parts[1] != currentChannel.name {
+                    parts.insert(modeTarget, at: 1)
                 }
                 
                 message = parts.joined(separator: " ")
