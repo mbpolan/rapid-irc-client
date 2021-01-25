@@ -178,6 +178,8 @@ extension ServerConnection {
                 handleChannelModes(ircMessage)
             case .channelCreationTime:
                 handleChannelCreationTime(ircMessage)
+            case .userModeIs:
+                handleUserModeIs(ircMessage)
             case .listOpsOnline,
                  .listUnknownConnections,
                     .listUserChannels:
@@ -506,7 +508,7 @@ extension ServerConnection {
             let target = message.parameters[0]
             
             // second parameter is the mode string
-            let modeString = message.parameters[1]
+            let modeString = message.parameters[1].dropLeadingColon()
             
             // remaining parameters, if any, are mode parameters
             let modeArgs = message.parameters[2...].joined(separator: " ").dropLeadingColon()
@@ -516,10 +518,17 @@ extension ServerConnection {
                 text = "\(text) \(modeArgs)"
             }
             
+            // if the target is a channel, add a message to the channel in question.
+            // otherwise, if this is a user mode message, add a message to the corresponding server channel
+            guard let targetPrefix = target.first else { return }
+            let channelName = IRCChannel.ChannelType.parseString(string: String(targetPrefix)) == nil
+                ? Connection.serverChannel
+                : target
+            
             self.connection.store.dispatch(.network(
                                             .messageReceived(
                                                 connection: self.connection.connection,
-                                                channelName: target,
+                                                channelName: channelName,
                                                 message: ChannelMessage(
                                                     text: text,
                                                     variant: .modeEvent))))
@@ -587,6 +596,27 @@ extension ServerConnection {
                                                 message: ChannelMessage(
                                                     text: text,
                                                     variant: .other))))
+        }
+        
+        private func handleUserModeIs(_ message: IRCMessage) {
+            // expect at least one parameters
+            if message.parameters.count < 1 {
+                print("ERROR: not enough params in UMODEIS reply: \(message)")
+                return
+            }
+            
+            // first parameter is the current user mode
+            let modeString = message.parameters[0]
+
+            let text = "Current user mode is \(modeString)"
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: Connection.serverChannel,
+                                                message: ChannelMessage(
+                                                    text: text,
+                                                    variant: .modeEvent))))
         }
         
         private func handleServerStatistic(_ message: IRCMessage) {

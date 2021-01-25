@@ -338,11 +338,11 @@ class NetworkMiddleware: Middleware {
                 
                 var parts = text.components(separatedBy: " ")
                 
-                // first parameter should be a target. if it is missing, append the mode target.
-                // otherwise, insert the target name into the command string.
+                // if no parameters are given, append the target to the command
+                // if the command is issued in a channel, and the first parameter is not the channel, insert the channel name
                 if parts.count == 1 {
                     parts.append(modeTarget)
-                } else if parts[1] != currentChannel.name {
+                } else if currentChannel.descriptor == .multiUser && parts[1] != modeTarget {
                     parts.insert(modeTarget, at: 1)
                 }
                 

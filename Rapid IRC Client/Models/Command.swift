@@ -17,6 +17,7 @@ enum Command {
     case created
     case myInfo
     case iSupport
+    case userModeIs
     case statsLine
     case listUsers
     case listOpsOnline
@@ -63,6 +64,8 @@ extension Command {
             return .myInfo
         case "005":
             return .iSupport
+        case "221":
+            return .userModeIs
         case "250":
             return .statsLine
         case "251":
