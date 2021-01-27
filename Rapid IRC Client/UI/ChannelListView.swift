@@ -11,12 +11,40 @@ import SwiftRex
 
 struct ChannelListView: View {
     
+    // non-changing id for channel list when we have at least one connection
+    private let listUuid = UUID()
+    
     @ObservedObject var viewModel: ObservableViewModel<ChannelListViewModel.ViewAction, ChannelListViewModel.ViewState>
     @State private var hoveredChannel: UUID?
     
     var body: some View {
         VStack {
-            makeList()
+            GeometryReader { geo in
+                List {
+                    ForEach(viewModel.state.list, id: \.id) { server in
+                        // header contains the server name
+                        Section(header: makeSectionText(server)) {
+                            // list each channel under this server as a group
+                            OutlineGroup(server.children ?? [], id: \.id, children: \.children) { channel in
+                                makeChannelItem(channel)
+                                    .onHover { hovering in
+                                        // keep track of which channel the user has hovered over
+                                        if hovering {
+                                            self.hoveredChannel = channel.id
+                                        } else {
+                                            self.hoveredChannel = nil
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                }
+                // randomize the list id when empty to force a view refresh. this is needed since swiftui sometimes
+                // tends to not redraw an empty list when the last server connection has been closed.
+                .id(viewModel.state.list.isEmpty ? UUID() : listUuid)
+                .listStyle(SidebarListStyle())
+                .frame(width: geo.size.width)
+            }
         }
     }
     
@@ -51,33 +79,6 @@ struct ChannelListView: View {
                     Text("Close")
                 }
             }
-    }
-    
-    private func makeList() -> some View {
-        print("\(viewModel.state.list.count)")
-        return GeometryReader { geo in
-            List {
-                ForEach(viewModel.state.list, id: \.id) { server in
-                    // header contains the server name
-                    Section(header: makeSectionText(server)) {
-                        // list each channel under this server as a group
-                        OutlineGroup(server.children ?? [], id: \.id, children: \.children) { channel in
-                            makeChannelItem(channel)
-                                .onHover { hovering in
-                                    // keep track of which channel the user has hovered over
-                                    if hovering {
-                                        self.hoveredChannel = channel.id
-                                    } else {
-                                        self.hoveredChannel = nil
-                                    }
-                                }
-                        }
-                    }
-                }
-            }
-            .listStyle(SidebarListStyle())
-            .frame(width: geo.size.width)
-        }
     }
     
     private func makeChannelItem(_ channel: ChannelListViewModel.ListItem) -> some View {
