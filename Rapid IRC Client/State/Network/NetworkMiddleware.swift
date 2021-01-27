@@ -158,6 +158,73 @@ class NetworkMiddleware: Middleware {
                                         user: targetUser)))
             }
             
+        case .nickReceived(let connection, let identifier, let nick):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            // rename the user in all known multiuser channels on this connection
+            target.channels
+                .filter { $0.descriptor == .multiUser }
+                .forEach { channel in
+                    if let user = channel.users.first(where: { $0.name == identifier.subject }) {
+                        // remove the user from the channel
+                        output.dispatch(.network(
+                                            .userLeftChannel(
+                                                conn: target,
+                                                channelName: channel.name,
+                                                user: user)))
+                        
+                        // rename the user
+                        let updatedUser = user
+                        updatedUser.name = nick
+                        
+                        // add them back to the channel
+                        output.dispatch(.network(
+                                            .userJoinedChannel(
+                                                connection: target,
+                                                channelName: channel.name,
+                                                user: updatedUser)))
+                        
+                        // dispatch a message into the channel
+                        dispatchChannelMessage(
+                            connection: target,
+                            channelName: channel.name,
+                            message: ChannelMessage(
+                                text: "\(identifier.subject) is now known as \(nick)",
+                                variant: .other))
+                    }
+                }
+            
+            // does this nick change refer to us? if so, update our own nick references
+            if identifier.subject == target.identifier?.subject {
+                target.identifier = target.identifier?.withSubject(nick)
+                
+                // dispatch a message into the server channel and each private channel we have open with other users
+                target.channels
+                    .filter { $0.descriptor == .user || $0.descriptor == .server }
+                    .forEach { channel in
+                        let text = channel.descriptor == .server
+                            ? "You are now known as \(nick)"
+                            : "\(identifier.subject) is now known as \(nick)"
+                        
+                        dispatchChannelMessage(
+                            connection: target,
+                            channelName: channel.name,
+                            message: ChannelMessage(
+                                text: text,
+                                variant: .other))
+                    }
+            }
+            
+            // if we have a private channel open with this user, we need to rename it as well
+            if target.channels.contains(where: { $0.name == identifier.subject && $0.descriptor == .user }) {
+                output.dispatch(.network(
+                                    .renameChannel(
+                                        connection: target,
+                                        oldChannelName: identifier.subject,
+                                        newChannelName: nick)))
+            }
+            
         case .usernamesReceived(let connection, let channelName, let usernames):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }

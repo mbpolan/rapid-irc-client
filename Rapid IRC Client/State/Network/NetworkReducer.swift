@@ -185,6 +185,16 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         
         return newState
         
+    case .renameChannel(let connection, let oldChannelName, let newChannelName):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           var channel = target.channels.first(where: { $0.name == oldChannelName }) {
+            
+            channel.name = newChannelName
+        }
+        
+        return newState
+        
     case .addChannelNotification(let connection, let channelName, let notification):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),

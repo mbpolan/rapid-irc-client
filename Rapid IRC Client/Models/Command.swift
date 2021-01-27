@@ -19,6 +19,7 @@ enum Command {
     case iSupport
     case userModeIs
     case statsLine
+    case nick
     case listUsers
     case listOpsOnline
     case listUnknownConnections
@@ -148,6 +149,8 @@ extension Command {
             return .mode
         case "quit":
             return .quit
+        case "nick":
+            return .nick
         default:
             return nil
         }

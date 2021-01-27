@@ -139,6 +139,21 @@ extension NetworkAction {
         self.hostnameReceived != nil
     }
 
+    internal var nickReceived: (connection: Connection, identifier: IRCMessage.Prefix, nick: String)? {
+        get {
+            guard case let .nickReceived(connection, identifier, nick) = self else { return nil }
+            return (connection, identifier, nick)
+        }
+        set {
+            guard case .nickReceived = self, let newValue = newValue else { return }
+            self = .nickReceived(connection: newValue.0, identifier: newValue.1, nick: newValue.2)
+        }
+    }
+
+    internal var isNickReceived: Bool {
+        self.nickReceived != nil
+    }
+
     internal var messageReceived: (connection: Connection, channelName: String, message: ChannelMessage)? {
         get {
             guard case let .messageReceived(connection, channelName, message) = self else { return nil }
@@ -422,6 +437,21 @@ extension NetworkAction {
 
     internal var isRemoveConnection: Bool {
         self.removeConnection != nil
+    }
+
+    internal var renameChannel: (connection: Connection, oldChannelName: String, newChannelName: String)? {
+        get {
+            guard case let .renameChannel(connection, oldChannelName, newChannelName) = self else { return nil }
+            return (connection, oldChannelName, newChannelName)
+        }
+        set {
+            guard case .renameChannel = self, let newValue = newValue else { return }
+            self = .renameChannel(connection: newValue.0, oldChannelName: newValue.1, newChannelName: newValue.2)
+        }
+    }
+
+    internal var isRenameChannel: Bool {
+        self.renameChannel != nil
     }
 
     internal var removeChannel: (connection: Connection, channelName: String)? {

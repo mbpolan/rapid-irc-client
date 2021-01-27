@@ -105,6 +105,12 @@ extension IRCMessage {
                 host: host)
         }
         
-        
+        func withSubject(_ subject: String) -> IRCMessage.Prefix {
+            return IRCMessage.Prefix(
+                raw: self.raw.replacingOccurrences(of: self.subject, with: subject),
+                subject: subject,
+                user: self.user,
+                host: self.host)
+        }
     }
 }

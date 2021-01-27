@@ -172,6 +172,8 @@ extension ServerConnection {
                 handleQuit(ircMessage)
             case .yourHost:
                 handleHost(ircMessage)
+            case .nick:
+                handleNick(ircMessage)
             case .mode:
                 handleModeCommand(ircMessage)
             case .channelModes:
@@ -489,6 +491,29 @@ extension ServerConnection {
             
             // propagate this message to the user as well
             handleServerMessage(message)
+        }
+        
+        private func handleNick(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in NICK command: \(message)")
+            }
+            
+            // expect one parameter
+            if message.parameters.count < 1 {
+                print("ERROR: not enough params in NICK command: \(message)")
+                return
+            }
+            
+            // first parameter is the new nick
+            let nick = message.parameters[0].dropLeadingColon()
+            
+            // note the hostname for the server
+            self.connection.store.dispatch(.network(
+                                            .nickReceived(
+                                                connection: self.connection.connection,
+                                                identifier: message.prefix!,
+                                                nick: nick)))
         }
         
         private func handleModeCommand(_ message: IRCMessage) {
