@@ -46,6 +46,7 @@ enum Command {
     case mode
     case quit
     
+    case error
     case errorGeneral
     case errorNoOrigin
     case errorNickInUse
@@ -151,6 +152,8 @@ extension Command {
             return .quit
         case "nick":
             return .nick
+        case "error":
+            return .error
         default:
             return nil
         }

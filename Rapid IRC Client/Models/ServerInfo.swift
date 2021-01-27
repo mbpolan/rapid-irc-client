@@ -11,4 +11,5 @@ struct ServerInfo: Equatable {
     var username: String
     var host: String
     var port: Int
+    var password: String?
 }

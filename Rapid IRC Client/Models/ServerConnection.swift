@@ -97,6 +97,11 @@ extension ServerConnection {
             let realName = connection.server.realName
             let username = connection.server.username
             
+            // if a password was given, send the PASS command
+            if let password = connection.server.password, !password.isEmptyOrWhitespace {
+                send("PASS \(password)")
+            }
+            
             send("NICK \(nick)", context: context)
             send("USER \(username) 0 * :\(realName)", context: context)
         }
@@ -198,8 +203,9 @@ extension ServerConnection {
                 .serverMotd,
                 .endMotd:
                 handleServerMessage(ircMessage)
-                
-            case .errorGeneral:
+            
+            case .error,
+                 .errorGeneral:
                 handleGeneralError(ircMessage)
             case .errorNickInUse:
                 handleNickInUseError(ircMessage)
