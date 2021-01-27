@@ -8,6 +8,8 @@
 // MARK: - Actions
 // sourcery: Prism
 enum UIAction {
+    case resetActiveChannel
+    
     case toggleConnectSheet(shown: Bool)
     case toggleChatTimestamps(shown: Bool)
     case toggleJoinPartEvents(shown: Bool)
@@ -15,5 +17,6 @@ enum UIAction {
     case changeChannel(connection: Connection, channelName: String)
     case openPrivateMessage(connection: Connection, nick: String)
     
+    case closeServer(connection: Connection)
     case closeChannel(connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)
 }

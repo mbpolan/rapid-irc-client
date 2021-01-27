@@ -10,6 +10,11 @@ import SwiftRex
 // MARK: - Reducer
 let uiReducer = Reducer<UIAction, UIState> { action, state in
     switch action {
+    case .resetActiveChannel:
+        var newState = state
+        newState.currentChannel = nil
+        return newState
+        
     case .toggleConnectSheet(let value):
         var newState = state
         newState.connectSheetShown = value

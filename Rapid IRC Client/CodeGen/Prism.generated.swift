@@ -409,6 +409,21 @@ extension NetworkAction {
         self.userLeftChannel != nil
     }
 
+    internal var removeConnection: Connection? {
+        get {
+            guard case let .removeConnection(connection) = self else { return nil }
+            return (connection)
+        }
+        set {
+            guard case .removeConnection = self, let newValue = newValue else { return }
+            self = .removeConnection(connection: newValue)
+        }
+    }
+
+    internal var isRemoveConnection: Bool {
+        self.removeConnection != nil
+    }
+
     internal var removeChannel: (connection: Connection, channelName: String)? {
         get {
             guard case let .removeChannel(connection, channelName) = self else { return nil }
@@ -472,6 +487,17 @@ extension NetworkAction {
 }
 
 extension UIAction {
+    internal var resetActiveChannel: Void? {
+        get {
+            guard case .resetActiveChannel = self else { return nil }
+            return ()
+        }
+    }
+
+    internal var isResetActiveChannel: Bool {
+        self.resetActiveChannel != nil
+    }
+
     internal var toggleConnectSheet: Bool? {
         get {
             guard case let .toggleConnectSheet(shown) = self else { return nil }
@@ -560,6 +586,21 @@ extension UIAction {
 
     internal var isOpenPrivateMessage: Bool {
         self.openPrivateMessage != nil
+    }
+
+    internal var closeServer: Connection? {
+        get {
+            guard case let .closeServer(connection) = self else { return nil }
+            return (connection)
+        }
+        set {
+            guard case .closeServer = self, let newValue = newValue else { return }
+            self = .closeServer(connection: newValue)
+        }
+    }
+
+    internal var isCloseServer: Bool {
+        self.closeServer != nil
     }
 
     internal var closeChannel: (connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)? {

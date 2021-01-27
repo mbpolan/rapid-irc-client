@@ -10,5 +10,5 @@ import Foundation
 // MARK: - State
 struct NetworkState {
     var connections: [Connection] = []
-    var channelUuids: [String: IRCChannel] = [:]
+    var channelUuids: [UUID: IRCChannel] = [:]
 }

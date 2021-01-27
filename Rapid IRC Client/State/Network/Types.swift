@@ -11,6 +11,7 @@ class Connection: Identifiable {
     
     static let serverChannel = "_"
     
+    let id = UUID()
     var name: String
     var hostname: String?
     var state: State
@@ -65,7 +66,7 @@ extension ChannelMessage {
 
 class IRCChannel: Identifiable, Equatable {
     
-    var id: String = UUID().uuidString
+    let id = UUID()
     var connection: Connection
     var topic: String?
     var topicSetBy: String?

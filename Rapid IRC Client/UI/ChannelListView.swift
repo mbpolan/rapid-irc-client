@@ -12,7 +12,7 @@ import SwiftRex
 struct ChannelListView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<ChannelListViewModel.ViewAction, ChannelListViewModel.ViewState>
-    @State private var hoveredChannel: String?
+    @State private var hoveredChannel: UUID?
     
     var body: some View {
         VStack {
@@ -43,11 +43,19 @@ struct ChannelListView: View {
                         Text("Connect")
                     }
                 }
+                
+                Button(action: {
+                    guard let connection = server.connection else { return }
+                    self.viewModel.dispatch(.closeServer(connection))
+                }) {
+                    Text("Close")
+                }
             }
     }
     
     private func makeList() -> some View {
-        GeometryReader { geo in
+        print("\(viewModel.state.list.count)")
+        return GeometryReader { geo in
             List {
                 ForEach(viewModel.state.list, id: \.id) { server in
                     // header contains the server name
@@ -66,7 +74,8 @@ struct ChannelListView: View {
                         }
                     }
                 }
-            }.listStyle(SidebarListStyle())
+            }
+            .listStyle(SidebarListStyle())
             .frame(width: geo.size.width)
         }
     }
@@ -91,7 +100,8 @@ struct ChannelListView: View {
                 Text(channel.type == .server ? "Server" : channel.name)
                     .foregroundColor(color)
                     .font(fontStyle)
-            }.buttonStyle(BorderlessButtonStyle())
+            }
+            .buttonStyle(BorderlessButtonStyle())
             
             Spacer()
             
@@ -104,9 +114,11 @@ struct ChannelListView: View {
                     }
                 }) {
                     Image(systemName: "xmark")
-                }.buttonStyle(BorderlessButtonStyle())
+                }
+                .buttonStyle(BorderlessButtonStyle())
             }
-        }.frame(maxWidth: .infinity)
+        }
+        .frame(maxWidth: .infinity)
     }
     
     private func makeChannelIcon(_ channel: ChannelListViewModel.ListItem) -> some View {
@@ -169,6 +181,7 @@ enum ChannelListViewModel {
     }
     
     enum ViewAction {
+        case closeServer(Connection)
         case setChannel(IRCChannel)
         case closeChannel(IRCChannel)
         case reconnect(Connection)
@@ -177,6 +190,10 @@ enum ChannelListViewModel {
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
         switch viewAction {
+        case .closeServer(let connection):
+            return .ui(
+                .closeServer(
+                    connection: connection))
         case .setChannel(let channel):
             return .ui(
                 .changeChannel(
@@ -202,7 +219,7 @@ enum ChannelListViewModel {
         ViewState(
             list: appState.network.connections.map { conn in
                 return ListItem(
-                    id: conn.getServerChannel()!.id,
+                    id: conn.id,
                     name: conn.name,
                     channelName: Connection.serverChannel,
                     mentioned: false,
@@ -241,7 +258,7 @@ extension ChannelListViewModel {
     }
     
     struct ListItem: Identifiable {
-        var id: String
+        var id: UUID
         var name: String
         var channelName: String
         var mentioned: Bool

@@ -167,6 +167,15 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         }
         
         return newState
+    
+    case .removeConnection(let connection):
+        var newState = state
+        if let target = newState.connections.first(where: { $0 === connection }) {
+            newState.channelUuids = state.channelUuids.filter { $0.value.connection !== connection }
+            newState.connections = state.connections.filter { $0 !== connection }
+        }
+        
+        return newState
         
     case .removeChannel(let connection, let channelName):
         let newState = state

@@ -39,6 +39,7 @@ enum NetworkAction {
     case clientJoinedChannel(connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)
     case clientLeftChannel(connection: Connection, channelName: String)
     case userLeftChannel(conn: Connection, channelName: String, user: User)
+    case removeConnection(connection: Connection)
     case removeChannel(connection: Connection, channelName: String)
     case privateMessageReceived(connection: Connection, identifier: IRCMessage.Prefix, recipient: String, message: ChannelMessage)
     case userQuit(connection: Connection, identifier: IRCMessage.Prefix, reason: String)

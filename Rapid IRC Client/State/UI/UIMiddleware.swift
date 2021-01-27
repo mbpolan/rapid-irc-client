@@ -42,6 +42,35 @@ class UIMiddleware: Middleware {
                                 .changeChannel(
                                     connection: connection,
                                     channelName: nick)))
+        
+        case .closeServer(let connection):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { return }
+            
+            // if the connection is active, we need to first disconnect it
+            if target.state == .connected {
+                output.dispatch(.network(
+                                    .disconnect(
+                                        connection: target)))
+            }
+            
+            // if the currently active channel belongs to this connection, we need to choose another one
+            // or default to no open channel if this is our only connection
+            if state.ui.currentChannel?.connection === connection {
+                if let newConnection = state.network.connections.first(where: { $0 !== connection }) {
+                    output.dispatch(.ui(
+                                        .changeChannel(
+                                            connection: newConnection,
+                                            channelName: Connection.serverChannel)))
+                } else {
+                    output.dispatch(.ui(.resetActiveChannel))
+                }
+            }
+            
+            // remove the connection and all of its associated channels
+            output.dispatch(.network(
+                                .removeConnection(
+                                    connection: target)))
             
         case .closeChannel(let connection, let channelName, let descriptor):
             let state = getState()
