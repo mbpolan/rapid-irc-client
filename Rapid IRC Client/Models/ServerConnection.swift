@@ -348,7 +348,7 @@ extension ServerConnection {
             // first parameter is the channel type
             let type = IRCChannel.AccessType(rawValue: message.parameters[0])
             
-            // second parameter is the channel name, or asterisk for all channels
+            // second parameter is the channel name, or asterisk for server users
             let target = message.parameters[1]
             let channelName = target == "*" ? Connection.serverChannel : target
             
@@ -369,8 +369,9 @@ extension ServerConnection {
                 return
             }
             
-            // first parameter is the channel name
-            let channelName = message.parameters[0]
+            // first parameter is the channel name, or asterisk for server users
+            let channel = message.parameters[0]
+            let channelName = channel == "*" ? Connection.serverChannel : channel
             
             self.connection.store.dispatch(.network(
                                             .allUsernamesReceived(

@@ -239,28 +239,50 @@ class NetworkMiddleware: Middleware {
                 return User(name: nick, privilege: .none)
             }
             
-            // dispatch an action that contains this new list of incoming users
-            output.dispatch(.network(
-                                .addIncomingChannelUsers(
-                                    connection: target,
-                                    channelName: channelName,
-                                    users: Set(users))))
+            // if the channel corresponds to the server channel, then this names list is for all users on the server
+            if channelName == Connection.serverChannel {
+                let text = users.map { " - \($0.name)" }.joined(separator: "\n")
+                
+                dispatchChannelMessage(
+                    connection: target,
+                    channelName: Connection.serverChannel,
+                    message: ChannelMessage(
+                        text: text,
+                        variant: .other))
+            } else {
+                // dispatch an action that contains this new list of incoming users for this channel
+                output.dispatch(.network(
+                                    .addIncomingChannelUsers(
+                                        connection: target,
+                                        channelName: channelName,
+                                        users: Set(users))))
+            }
         
         case .allUsernamesReceived(let connection, let channelName):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
             
-            // the list of incoming users becomes the complete list of users
-            output.dispatch(.network(
-                                .applyIncomingChannelUsers(
-                                    connection: target,
-                                    channelName: channelName)))
-            
-            // the list of incoming users is cleared out
-            output.dispatch(.network(
-                                .clearIncomingChannelUsers(
-                                    connection: target,
-                                    channelName: channelName)))
+            // if the channel corresponds to the server channel, then this names list was for all users on the server
+            if channelName == Connection.serverChannel {
+                dispatchChannelMessage(
+                    connection: target,
+                    channelName: Connection.serverChannel,
+                    message: ChannelMessage(
+                        text: "End of user list",
+                        variant: .other))
+            } else {
+                // the list of incoming users becomes the complete list of users
+                output.dispatch(.network(
+                                    .applyIncomingChannelUsers(
+                                        connection: target,
+                                        channelName: channelName)))
+                
+                // the list of incoming users is cleared out
+                output.dispatch(.network(
+                                    .clearIncomingChannelUsers(
+                                        connection: target,
+                                        channelName: channelName)))
+            }
             
         case .channelTopicReceived(let connection, let channelName, let topic):
             // update the topic on the channel
