@@ -10,6 +10,10 @@
 enum UIAction {
     case resetActiveChannel
     
+    case showOperatorSheet(connection: Connection)
+    case hideOperatorSheet
+    case sendOperatorLogin(username: String, password: String)
+    case connectToServer(serverInfo: ServerInfo)
     case toggleConnectSheet(shown: Bool)
     case toggleChatTimestamps(shown: Bool)
     case toggleJoinPartEvents(shown: Bool)

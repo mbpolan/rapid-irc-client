@@ -64,6 +64,21 @@ extension NetworkAction {
         self.messageSent != nil
     }
 
+    internal var operatorLogin: (connection: Connection, username: String, password: String)? {
+        get {
+            guard case let .operatorLogin(connection, username, password) = self else { return nil }
+            return (connection, username, password)
+        }
+        set {
+            guard case .operatorLogin = self, let newValue = newValue else { return }
+            self = .operatorLogin(connection: newValue.0, username: newValue.1, password: newValue.2)
+        }
+    }
+
+    internal var isOperatorLogin: Bool {
+        self.operatorLogin != nil
+    }
+
     internal var addChannelNotification: (connection: Connection, channelName: String, notification: IRCChannel.Notification)? {
         get {
             guard case let .addChannelNotification(connection, channelName, notification) = self else { return nil }
@@ -526,6 +541,62 @@ extension UIAction {
 
     internal var isResetActiveChannel: Bool {
         self.resetActiveChannel != nil
+    }
+
+    internal var showOperatorSheet: Connection? {
+        get {
+            guard case let .showOperatorSheet(connection) = self else { return nil }
+            return (connection)
+        }
+        set {
+            guard case .showOperatorSheet = self, let newValue = newValue else { return }
+            self = .showOperatorSheet(connection: newValue)
+        }
+    }
+
+    internal var isShowOperatorSheet: Bool {
+        self.showOperatorSheet != nil
+    }
+
+    internal var hideOperatorSheet: Void? {
+        get {
+            guard case .hideOperatorSheet = self else { return nil }
+            return ()
+        }
+    }
+
+    internal var isHideOperatorSheet: Bool {
+        self.hideOperatorSheet != nil
+    }
+
+    internal var sendOperatorLogin: (username: String, password: String)? {
+        get {
+            guard case let .sendOperatorLogin(username, password) = self else { return nil }
+            return (username, password)
+        }
+        set {
+            guard case .sendOperatorLogin = self, let newValue = newValue else { return }
+            self = .sendOperatorLogin(username: newValue.0, password: newValue.1)
+        }
+    }
+
+    internal var isSendOperatorLogin: Bool {
+        self.sendOperatorLogin != nil
+    }
+
+    internal var connectToServer: ServerInfo? {
+        get {
+            guard case let .connectToServer(serverInfo) = self else { return nil }
+            return (serverInfo)
+        }
+        set {
+            guard case .connectToServer = self, let newValue = newValue else { return }
+            self = .connectToServer(serverInfo: newValue)
+        }
+    }
+
+    internal var isConnectToServer: Bool {
+        self.connectToServer != nil
     }
 
     internal var toggleConnectSheet: Bool? {

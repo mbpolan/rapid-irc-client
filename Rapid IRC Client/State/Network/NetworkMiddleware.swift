@@ -489,6 +489,12 @@ class NetworkMiddleware: Middleware {
                 finalizer()
             }
             
+        case .operatorLogin(let connection, let username, let password):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            target.client.sendMessage("OPER \(username) \(password)")
+            
         case .privateMessageReceived(let connection, let identifier, let recipient, let message):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }

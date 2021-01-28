@@ -36,6 +36,7 @@
 		2799124025B6067F004D0DDC /* CommandTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799123F25B6067F004D0DDC /* CommandTextField.swift */; };
 		2799124D25BBABF9004D0DDC /* CTCPCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799124C25BBABF9004D0DDC /* CTCPCommand.swift */; };
 		279F87FB25BE42D600DA9F66 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FA25BE42D600DA9F66 /* DateFormatter.swift */; };
+		279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */; };
 		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
 		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
 		27CF74CB2543ABD900DA4598 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* Main.swift */; };
@@ -44,7 +45,7 @@
 		27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D12543ABDA00DA4598 /* Preview Assets.xcassets */; };
 		27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */; };
 		27CF74EC2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */; };
-		27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */; };
+		27CF75302544DE2A00DA4598 /* QuickConnectSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* QuickConnectSheet.swift */; };
 		5444AE3E84D69FA33A076E6D /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A88395C4FB638885BFDEAD /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework */; };
 		5580B0C0DEE8BD3B956EBEDE /* Pods_Rapid_IRC_Client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACA00DB5572EFEE5F5960DBE /* Pods_Rapid_IRC_Client.framework */; };
 		B8CCD82FB4FA8510768D643D /* Pods_Rapid_IRC_ClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6821C205091C38544D451F6B /* Pods_Rapid_IRC_ClientTests.framework */; };
@@ -98,6 +99,7 @@
 		2799123F25B6067F004D0DDC /* CommandTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandTextField.swift; sourceTree = "<group>"; };
 		2799124C25BBABF9004D0DDC /* CTCPCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTCPCommand.swift; sourceTree = "<group>"; };
 		279F87FA25BE42D600DA9F66 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorLoginSheet.swift; sourceTree = "<group>"; };
 		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,7 +115,7 @@
 		27CF74E72543ABDA00DA4598 /* Rapid IRC ClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rapid_IRC_ClientUITests.swift; sourceTree = "<group>"; };
 		27CF74ED2543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectDialog.swift; sourceTree = "<group>"; };
+		27CF752F2544DE2A00DA4598 /* QuickConnectSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickConnectSheet.swift; sourceTree = "<group>"; };
 		2B24F48610E25B8057DEC9D9 /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client-Rapid IRC ClientUITests/Pods-Rapid IRC Client-Rapid IRC ClientUITests.release.xcconfig"; sourceTree = "<group>"; };
 		630FC394CFDCFDD7AE56888B /* Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig"; path = "Target Support Files/Pods-Rapid IRC Client-Rapid IRC ClientUITests/Pods-Rapid IRC Client-Rapid IRC ClientUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		6821C205091C38544D451F6B /* Pods_Rapid_IRC_ClientTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rapid_IRC_ClientTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -288,7 +290,7 @@
 			isa = PBXGroup;
 			children = (
 				27CF74CC2543ABD900DA4598 /* ContentView.swift */,
-				27CF752F2544DE2A00DA4598 /* ConnectDialog.swift */,
+				27CF752F2544DE2A00DA4598 /* QuickConnectSheet.swift */,
 				2757C2D3254A5377002335CB /* MessageView.swift */,
 				2757C2EB254A5873002335CB /* ChannelListView.swift */,
 				2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */,
@@ -297,6 +299,7 @@
 				2799122525B532D2004D0DDC /* SettingsView.swift */,
 				2799122A25B533CD004D0DDC /* ServersSettingsView.swift */,
 				2799123F25B6067F004D0DDC /* CommandTextField.swift */,
+				279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -615,11 +618,12 @@
 				2757C2DA254A5483002335CB /* NetworkReducer.swift in Sources */,
 				2799121125B2A735004D0DDC /* UIMiddleware.swift in Sources */,
 				2799122125B53240004D0DDC /* GeneralSettingsView.swift in Sources */,
+				279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */,
 				27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */,
 				2757C2E7254A575D002335CB /* Types.swift in Sources */,
 				279F87FB25BE42D600DA9F66 /* DateFormatter.swift in Sources */,
 				2776AE0D256CABD600371A28 /* UIActions.swift in Sources */,
-				27CF75302544DE2A00DA4598 /* ConnectDialog.swift in Sources */,
+				27CF75302544DE2A00DA4598 /* QuickConnectSheet.swift in Sources */,
 				27CF74CB2543ABD900DA4598 /* Main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

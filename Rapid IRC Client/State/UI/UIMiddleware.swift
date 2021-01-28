@@ -24,6 +24,28 @@ class UIMiddleware: Middleware {
     
     func handle(action: UIAction, from dispatcher: ActionSource, afterReducer: inout AfterReducer) {
         switch action {
+        case .sendOperatorLogin(let username, let password):
+            let state = getState()
+            
+            if let connection = state.ui.pendingOperatorConnection {
+                // send the OPER command to the server
+                output.dispatch(.network(
+                                    .operatorLogin(
+                                        connection: connection,
+                                        username: username,
+                                        password: password)))
+            }
+            
+            // hide the operator login sheet, if it's shown
+            output.dispatch(.ui(.hideOperatorSheet))
+        
+        case .connectToServer(let serverInfo):
+            // initiate the connection to the server
+            output.dispatch(.network(.connect(serverInfo: serverInfo)))
+            
+            // hide the connect sheet
+            output.dispatch(.ui(.toggleConnectSheet(shown: false)))
+            
         case .openPrivateMessage(let connection, let nick):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { return }
@@ -42,7 +64,7 @@ class UIMiddleware: Middleware {
                                 .changeChannel(
                                     connection: connection,
                                     channelName: nick)))
-        
+            
         case .closeServer(let connection):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { return }

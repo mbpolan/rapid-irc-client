@@ -15,6 +15,18 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
         newState.currentChannel = nil
         return newState
         
+    case .showOperatorSheet(let connection):
+        var newState = state
+        newState.pendingOperatorConnection = connection
+        newState.requestOperatorSheetShown = true
+        return newState
+        
+    case .hideOperatorSheet:
+        var newState = state
+        newState.pendingOperatorConnection = nil
+        newState.requestOperatorSheetShown = false
+        return newState
+        
     case .toggleConnectSheet(let value):
         var newState = state
         newState.connectSheetShown = value

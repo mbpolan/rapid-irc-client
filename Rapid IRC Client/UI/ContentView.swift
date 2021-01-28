@@ -18,16 +18,11 @@ struct ContentView: View {
     private let onConnectToServer = NotificationCenter.default.publisher(for: .connectToServer)
     
     var body: some View {
-        let sheetBinding: Binding<Bool> = Binding(
+        let sheetBinding: Binding<ContentViewModel.ActiveSheet?> = Binding(
             get: {
-                return viewModel.state.connectSheetShown
+                return viewModel.state.activeSheet
             },
             set: { value in
-                if value {
-                    viewModel.dispatch(.showConnectSheet)
-                } else {
-                    viewModel.dispatch(.closeConnectSheet)
-                }
             }
         )
         
@@ -36,20 +31,39 @@ struct ContentView: View {
                 .layoutPriority(1)
             ActiveChannelView(viewModel: ActiveChannelViewModel.viewModel(from: Store.instance))
                 .layoutPriority(2)
-        }.sheet(isPresented: sheetBinding, content: {
-            ConnectDialog(shown: sheetBinding, onClose: handleConnectToServer)
-        }).onReceive(onConnectToServer) { event in
+        }
+        .sheet(item: sheetBinding) { sheet in
+            switch sheet {
+            case .connectToServer:
+                QuickConnectSheet(onClose: handleConnectToServer)
+            case .requestOperator:
+                OperatorLoginSheet(onClose: handleRequestOperator)
+            }
+        }
+        .onReceive(onConnectToServer) { event in
             self.viewModel.dispatch(.showConnectSheet)
-        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    private func handleConnectToServer(result: ConnectDialog.Result) {
+    private func handleConnectToServer(result: QuickConnectSheet.Result) {
         guard let server = result.server, result.accepted else {
             self.viewModel.dispatch(.closeConnectSheet)
             return
         }
         
         self.viewModel.dispatch(.connectToServer(server: server))
+    }
+    
+    private func handleRequestOperator(result: OperatorLoginSheet.Result) {
+        guard let credentials = result.credentials, result.accepted else {
+            self.viewModel.dispatch(.closeOperatorLoginSheet)
+            return
+        }
+        
+        self.viewModel.dispatch(.sendOperatorLogin(
+                                    username: credentials.username,
+                                    password: credentials.password))
     }
 }
 
@@ -63,10 +77,11 @@ enum ContentViewModel {
     }
     
     struct ViewState: Equatable {
-        var connectSheetShown: Bool
+        
+        var activeSheet: ActiveSheet?
         
         static var empty: ViewState {
-            .init(connectSheetShown: false)
+            .init(activeSheet: nil)
         }
     }
     
@@ -74,6 +89,8 @@ enum ContentViewModel {
         case showConnectSheet
         case connectToServer(server: ServerInfo)
         case closeConnectSheet
+        case sendOperatorLogin(username: String, password: String)
+        case closeOperatorLoginSheet
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -82,17 +99,48 @@ enum ContentViewModel {
             return .ui(
                 .toggleConnectSheet(
                     shown: true))
+            
         case .connectToServer(let server):
-            return .network(.connect(serverInfo: server))
+            return .ui(
+                .connectToServer(serverInfo: server))
+            
         case .closeConnectSheet:
             return .ui(
                 .toggleConnectSheet(
                     shown: false))
+            
+        case .sendOperatorLogin(let username, let password):
+            return .ui(
+                .sendOperatorLogin(
+                    username: username,
+                    password: password))
+            
+        case .closeOperatorLoginSheet:
+            return .ui(.hideOperatorSheet)
         }
     }
     
     private static func transform(appState: AppState) -> ViewState {
-        ViewState(connectSheetShown: appState.ui.connectSheetShown)
+        var activeSheet: ActiveSheet? = nil
+        if appState.ui.connectSheetShown {
+            activeSheet = .connectToServer
+        } else if appState.ui.requestOperatorSheetShown {
+            activeSheet = .requestOperator
+        }
+        
+        return ViewState(activeSheet: activeSheet)
+    }
+}
+
+extension ContentViewModel {
+    
+    enum ActiveSheet: Identifiable {
+        case connectToServer
+        case requestOperator
+        
+        var id: Int {
+            hashValue
+        }
     }
 }
 

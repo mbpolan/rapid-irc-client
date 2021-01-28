@@ -43,6 +43,7 @@ enum Command {
     case motd
     case serverMotd
     case endMotd
+    case youreOperator
     case mode
     case quit
     
@@ -114,6 +115,8 @@ extension Command {
             return .serverMotd
         case "376":
             return .endMotd
+        case "381":
+            return .youreOperator
         case "409":
             return .errorNoOrigin
         case "433":

@@ -1,5 +1,5 @@
 //
-//  Dialogs.swift
+//  QuickConnectSheet.swift
 //  Rapid IRC Client
 //
 //  Created by Mike Polan on 10/24/20.
@@ -8,9 +8,8 @@
 import Combine
 import SwiftUI
 
-struct ConnectDialog: View {
-
-    @Binding var shown: Bool
+struct QuickConnectSheet: View {
+    
     var onClose: (Result) -> Void
 
     @State private var nick = UserDefaults.standard.string(forKey: AppSettings.preferredNick.rawValue) ?? ""
@@ -48,8 +47,6 @@ struct ConnectDialog: View {
                 Spacer()
                 
                 Button("Connect") {
-                    self.shown = false
-                    
                     // default to the system username if not provided
                     let effectiveUsername = username.isEmptyOrWhitespace ? NSUserName() : username
                     
@@ -65,7 +62,6 @@ struct ConnectDialog: View {
                 }
                 
                 Button("Cancel") {
-                    self.shown = false
                     onClose(Result(accepted: false))
                 }
             }
@@ -74,7 +70,7 @@ struct ConnectDialog: View {
     }
 }
 
-extension ConnectDialog {
+extension QuickConnectSheet {
     struct Result {
         var accepted: Bool
         var server: ServerInfo?
@@ -87,8 +83,7 @@ struct ConnectDialog_Previews: PreviewProvider {
             get: { true },
             set: { _ in })
         
-        ConnectDialog(
-            shown: shown,
+        QuickConnectSheet(
             onClose: { _ in })
     }
 }

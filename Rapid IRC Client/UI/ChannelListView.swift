@@ -72,6 +72,17 @@ struct ChannelListView: View {
                     }
                 }
                 
+                Divider()
+                
+                Button(action: {
+                    guard let connection = server.connection else { return }
+                    self.viewModel.dispatch(.requestOperator(connection))
+                }) {
+                    Text("Become Operator")
+                }
+                
+                Divider()
+                
                 Button(action: {
                     guard let connection = server.connection else { return }
                     self.viewModel.dispatch(.closeServer(connection))
@@ -187,6 +198,7 @@ enum ChannelListViewModel {
         case closeChannel(IRCChannel)
         case reconnect(Connection)
         case disconnect(Connection)
+        case requestOperator(Connection)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -213,6 +225,9 @@ enum ChannelListViewModel {
             
         case .disconnect(let connection):
             return .network(.disconnect(connection: connection))
+        
+        case .requestOperator(let connection):
+            return .ui(.showOperatorSheet(connection: connection))
         }
     }
     

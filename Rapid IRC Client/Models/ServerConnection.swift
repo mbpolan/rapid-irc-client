@@ -201,7 +201,8 @@ extension ServerConnection {
                 .globalUsers,
                 .motd,
                 .serverMotd,
-                .endMotd:
+                .endMotd,
+                .youreOperator:
                 handleServerMessage(ircMessage)
             
             case .error,
@@ -347,8 +348,9 @@ extension ServerConnection {
             // first parameter is the channel type
             let type = IRCChannel.AccessType(rawValue: message.parameters[0])
             
-            // second parameter is the channel name
-            let channel = message.parameters[1]
+            // second parameter is the channel name, or asterisk for all channels
+            let target = message.parameters[1]
+            let channelName = target == "*" ? Connection.serverChannel : target
             
             // remaining parameters are a list of usernames
             let users = message.parameters[2...].map { $0.dropLeadingColon() }
@@ -356,7 +358,7 @@ extension ServerConnection {
             self.connection.store.dispatch(.network(
                                             .usernamesReceived(
                                                 connection: self.connection.connection,
-                                                channelName: channel,
+                                                channelName: channelName,
                                                 usernames: users)))
         }
         
