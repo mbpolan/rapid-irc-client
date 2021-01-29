@@ -25,6 +25,10 @@ enum Command {
     case listUnknownConnections
     case listUserChannels
     case listUserMe
+    case adminMe
+    case adminLocation1
+    case adminLocation2
+    case adminEmail
     case localUsers
     case globalUsers
     case userIsAway
@@ -48,6 +52,7 @@ enum Command {
     case serverMotd
     case endMotd
     case youreOperator
+    case time
     case mode
     case quit
     
@@ -85,6 +90,14 @@ extension Command {
             return .listUserChannels
         case "255":
             return .listUserMe
+        case "256":
+            return .adminMe
+        case "257":
+            return .adminLocation1
+        case "258":
+            return .adminLocation2
+        case "259":
+            return .adminEmail
         case "265":
             return .localUsers
         case "266":
@@ -129,6 +142,8 @@ extension Command {
             return .endMotd
         case "381":
             return .youreOperator
+        case "391":
+            return .time
         case "409":
             return .errorNoOrigin
         case "433":

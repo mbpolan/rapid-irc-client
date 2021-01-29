@@ -201,13 +201,18 @@ extension ServerConnection {
                 .statsLine,
                 .listUsers,
                 .listUserMe,
+                .adminMe,
+                .adminLocation1,
+                .adminLocation2,
+                .adminEmail,
                 .localUsers,
                 .globalUsers,
                 .motd,
                 .serverMotd,
                 .endMotd,
                 .version,
-                .youreOperator:
+                .youreOperator,
+                .time:
                 handleServerMessage(ircMessage)
             
             case .error,
