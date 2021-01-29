@@ -83,7 +83,7 @@ extension ServerConnection {
         private let connection: ServerConnection
         private let channel: Channel
         
-        private var bufferedMessage: String?
+        private var bufferedMessage: [UInt8] = []
         
         init(_ connection: ServerConnection, _ channel: Channel) {
             self.connection = connection
@@ -111,28 +111,26 @@ extension ServerConnection {
             let bytes = buffer.readableBytes
             
             if let received = buffer.readBytes(length: bytes) {
-                // attempt to decode the incoming bytes as a string
-                guard let decoded = String(bytes: received, encoding: .utf8) else {
-                    print("ERROR: unable to decode bytes: \(received)")
-                    return
-                }
+                // append the data to our ongoing buffer
+                bufferedMessage.append(contentsOf: received)
                 
-                // prepend any buffered data we received to the start of this message
-                let data = (bufferedMessage ?? "") + decoded
-                
-                // split messages by crlf. if the data does not end in a crlf, that means we received a
-                // partial message. in that case, buffer the remaining message until we receive more data
-                // from the server.
-                var lines = data.components(separatedBy: "\r\n")
-                if let last = lines.last,
-                   !last.hasSuffix("\r\n") {
+                // find each complete message, ending in a CRLF
+                while let cr = bufferedMessage.firstIndex(of: 0x0D),
+                      cr < bufferedMessage.count,
+                      bufferedMessage[cr + 1] == 0x0A {
+                   
+                    if let decoded = String(bytes: bufferedMessage[0..<cr], encoding: .utf8) {
+                        print("Incoming: \(decoded)")
+                        processMessage(decoded)
+                    } else {
+                        print("ERROR: failed to decode message, dropping...")
+                    }
                     
-                    lines = lines.dropLast()
-                    bufferedMessage = last
-                }
-                
-                lines.forEach { line in
-                    processMessage(line)
+                    if cr + 2 < bufferedMessage.count {
+                        bufferedMessage = Array(bufferedMessage[(cr + 2)...])
+                    } else {
+                        bufferedMessage = []
+                    }
                 }
             }
         }
@@ -181,6 +179,12 @@ extension ServerConnection {
                 handleNick(ircMessage)
             case .mode:
                 handleModeCommand(ircMessage)
+            case .channelListStart:
+                handleChannelListStart(ircMessage)
+            case .channelList:
+                handleChannelList(ircMessage)
+            case .channelListEnd:
+                handleChannelListEnd(ircMessage)
             case .channelModes:
                 handleChannelModes(ircMessage)
             case .channelCreationTime:
@@ -523,6 +527,71 @@ extension ServerConnection {
                                                 connection: self.connection.connection,
                                                 identifier: message.prefix!,
                                                 nick: nick)))
+        }
+        
+        private func handleChannelListStart(_ message: IRCMessage) {
+            // expect at least three parameters
+            if message.parameters.count < 3 {
+                print("ERROR: not enough params in LISTSTART reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel name header
+            let channelName = message.parameters[0]
+            
+            // second parameter is the user count header
+            let users = message.parameters[1].dropLeadingColon()
+            
+            // third parameter is the channel topic header
+            let topic = message.parameters[2]
+            
+            let text = "\(channelName) \(users) \(topic)"
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: Connection.serverChannel,
+                                                message: ChannelMessage(
+                                                    text: text,
+                                                    variant: .other))))
+        }
+        
+        private func handleChannelList(_ message: IRCMessage) {
+            // expect at least three parameters
+            if message.parameters.count < 3 {
+                print("ERROR: not enough params in LIST reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel name
+            let channelName = message.parameters[0]
+            
+            // second parameter is the user count
+            let users = message.parameters[1]
+            
+            // third parameter is the channel topic
+            let topic = message.parameters[2...].joined(separator: " ").dropLeadingColon()
+            
+            let realTopic = topic.isEmptyOrWhitespace ? "(no topic)" : "'\(topic)'"
+            let text = "\(channelName) \(users) \(realTopic)"
+            
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: Connection.serverChannel,
+                                                message: ChannelMessage(
+                                                    text: text,
+                                                    variant: .other))))
+        }
+        
+        private func handleChannelListEnd(_ message: IRCMessage) {
+            self.connection.store.dispatch(.network(
+                                            .messageReceived(
+                                                connection: self.connection.connection,
+                                                channelName: Connection.serverChannel,
+                                                message: ChannelMessage(
+                                                    text: "End of channel list",
+                                                    variant: .other))))
         }
         
         private func handleModeCommand(_ message: IRCMessage) {

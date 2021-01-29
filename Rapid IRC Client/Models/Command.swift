@@ -33,6 +33,9 @@ enum Command {
     case whoIsIdle
     case endOfWhoIs
     case endOfWhoIsChannels
+    case channelListStart
+    case channelList
+    case channelListEnd
     case channelModes
     case channelCreationTime
     case topicReply
@@ -97,6 +100,12 @@ extension Command {
             return .endOfWhoIs
         case "319":
             return .endOfWhoIsChannels
+        case "321":
+            return .channelListStart
+        case "322":
+            return .channelList
+        case "323":
+            return .channelListEnd
         case "324":
             return .channelModes
         case "329":
