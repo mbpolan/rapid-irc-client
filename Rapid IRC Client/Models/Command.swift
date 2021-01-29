@@ -17,7 +17,18 @@ enum Command {
     case created
     case myInfo
     case iSupport
+    case statsLinkInfo
+    case statsCommands
+    case statsCLine
+    case statsNLine
+    case statsILine
+    case statsKLine
+    case statsYLine
+    case endOfStats
     case userModeIs
+    case statsLLine
+    case statsUptime
+    case statsOLine
     case statsLine
     case nick
     case listUsers
@@ -76,8 +87,30 @@ extension Command {
             return .myInfo
         case "005":
             return .iSupport
+        case "211":
+            return .statsLinkInfo
+        case "212":
+            return .statsCommands
+        case "213":
+            return .statsCLine
+        case "214":
+            return .statsNLine
+        case "215":
+            return .statsILine
+        case "216":
+            return .statsKLine
+        case "218":
+            return statsYLine
+        case "219":
+            return .endOfStats
         case "221":
             return .userModeIs
+        case "241":
+            return .statsLLine
+        case "242":
+            return .statsUptime
+        case"243":
+            return .statsOLine
         case "250":
             return .statsLine
         case "251":
