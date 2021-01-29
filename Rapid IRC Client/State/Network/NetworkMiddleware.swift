@@ -257,7 +257,7 @@ class NetworkMiddleware: Middleware {
                                         channelName: channelName,
                                         users: Set(users))))
             }
-        
+            
         case .allUsernamesReceived(let connection, let channelName):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
@@ -340,6 +340,17 @@ class NetworkMiddleware: Middleware {
             var deferred: (() -> Void)?
             
             switch text.lowercased() {
+            // prefix away messages with a leading colon
+            case _ where text.starts(with: "/away"):
+                let parts = text.components(separatedBy: " ")
+                
+                // if there is at least one parameter, that implies there is an away message
+                if parts.count > 1 {
+                    message = "\(parts[0]) :\(parts[1...].joined(separator: " "))"
+                } else {
+                    message = text
+                }
+                
             // add the origin name to a ping commnd
             case _ where text.starts(with: "/ping"):
                 let state = getState()
@@ -422,7 +433,7 @@ class NetworkMiddleware: Middleware {
                 // information about themselves. otherwise, if they do so in a channel, assume they are requesting
                 // mode reply for the channel itself.
                 guard let modeTarget = currentChannel.descriptor == .server
-                    ? currentChannel.connection.identifier?.subject
+                        ? currentChannel.connection.identifier?.subject
                         : currentChannel.name else { break }
                 
                 var parts = text.components(separatedBy: " ")
@@ -436,7 +447,7 @@ class NetworkMiddleware: Middleware {
                 }
                 
                 message = parts.joined(separator: " ")
-            
+                
             // ctcp action command
             case _ where text.starts(with: "/me"):
                 let state = getState()
@@ -560,6 +571,25 @@ class NetworkMiddleware: Middleware {
                     channelName: Connection.serverChannel,
                     message: message)
             }
+            
+        case .userAwayReceived(let connection, let nick, let message):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            // do we have a private message channel open with this user? send a message to that channel
+            // otherwise open the channel and send the message to the server channel
+            if !target.channels.contains(where: { $0.name == nick && $0.descriptor == .user }) {
+                output.dispatch(.network(
+                                    .clientJoinedChannel(
+                                        connection: target,
+                                        channelName: nick,
+                                        descriptor: .user)))
+            }
+            
+            dispatchChannelMessage(
+                connection: target,
+                channelName: nick,
+                message: message)
             
         case .userQuit(let connection, let identifier, let reason):
             let state = getState()

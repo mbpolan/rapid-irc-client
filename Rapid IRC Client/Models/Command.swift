@@ -44,6 +44,9 @@ enum Command {
     case localUsers
     case globalUsers
     case userIsAway
+    case userHost
+    case unAway
+    case nowAway
     case whoIsUser
     case whoIsServer
     case whoIsIdle
@@ -142,6 +145,12 @@ extension Command {
             return .globalUsers
         case "301":
             return .userIsAway
+        case "302":
+            return .userHost
+        case "305":
+            return .unAway
+        case "306":
+            return .nowAway
         case "311":
             return .whoIsUser
         case "312":

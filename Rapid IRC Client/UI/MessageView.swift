@@ -58,12 +58,14 @@ struct MessageView: View {
                 text = Text("??? \(content)")
                     .italic()
             }
+            
         case .privateMessage:
             if let sender = message.sender {
                 text = Text("<\(sender)>") + Text(" \(content)")
             } else {
                 text = Text(content)
             }
+            
         case .notice:
             if let sender = message.sender {
                 text = Text("<\(sender)>") + Text(" \(content)")
@@ -72,20 +74,36 @@ struct MessageView: View {
                 text = Text(content)
                     .foregroundColor(.orange)
             }
+            
         case .userJoined:
             text = Text(content)
                 .foregroundColor(.green)
+            
+        case .userAway:
+            if let sender = message.sender {
+                text = Text("\(sender) is away: \(content)")
+                    .foregroundColor(.purple)
+            } else {
+                text = Text("User is away: \(content)")
+                    .foregroundColor(.purple)
+            }
+            
         case .userParted,
              .userQuit:
             text = Text(content)
                 .foregroundColor(.yellow)
+            
         case .error:
             text = Text(content)
                 .foregroundColor(.red)
+            
         case .channelTopicEvent:
             text = Text(content)
                 .foregroundColor(.blue)
-        case .client, .modeEvent, .other:
+            
+        case .client,
+             .modeEvent,
+             .other:
             text = Text(content)
         }
         

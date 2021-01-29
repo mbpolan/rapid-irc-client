@@ -499,6 +499,21 @@ extension NetworkAction {
         self.privateMessageReceived != nil
     }
 
+    internal var userAwayReceived: (connection: Connection, nick: String, message: ChannelMessage)? {
+        get {
+            guard case let .userAwayReceived(connection, nick, message) = self else { return nil }
+            return (connection, nick, message)
+        }
+        set {
+            guard case .userAwayReceived = self, let newValue = newValue else { return }
+            self = .userAwayReceived(connection: newValue.0, nick: newValue.1, message: newValue.2)
+        }
+    }
+
+    internal var isUserAwayReceived: Bool {
+        self.userAwayReceived != nil
+    }
+
     internal var userQuit: (connection: Connection, identifier: IRCMessage.Prefix, reason: String)? {
         get {
             guard case let .userQuit(connection, identifier, reason) = self else { return nil }

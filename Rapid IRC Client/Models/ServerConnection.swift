@@ -197,6 +197,8 @@ extension ServerConnection {
                 handleServerStatistic(ircMessage)
             case .tryAgain:
                 handleTryAgain(ircMessage)
+            case .userIsAway:
+                handleUserAway(ircMessage)
             case.created,
                 .myInfo,
                 .iSupport,
@@ -220,6 +222,9 @@ extension ServerConnection {
                 .adminEmail,
                 .localUsers,
                 .globalUsers,
+                .userHost,
+                .unAway,
+                .nowAway,
                 .info,
                 .motd,
                 .endOfInfo,
@@ -796,9 +801,32 @@ extension ServerConnection {
                                                 variant: .error))))
         }
         
+        private func handleUserAway(_ message: IRCMessage) {
+            // expect at least one parameter
+            if message.parameters.count < 1 {
+                print("ERROR: not enough params in USERISAWAY reply: \(message)")
+                return
+            }
+            
+            // first parameter is the nick
+            let nick = message.parameters[0]
+            
+            // remaining parameters are the away message
+            let text = message.parameters[1...].joined(separator: " ").dropLeadingColon()
+            
+            connection.store.dispatch(.network(
+                                        .userAwayReceived(
+                                            connection: self.connection.connection,
+                                            nick: nick,
+                                            message: ChannelMessage(
+                                                sender: nick,
+                                                text: text,
+                                                variant: .userAway))))
+        }
+        
         private func handleServerMessage(_ message: IRCMessage) {
             // combine parameters into a single string message
-            var text = message.parameters.joined(separator: " ").dropLeadingColon()
+            let text = message.parameters.joined(separator: " ").dropLeadingColon()
             
             connection.store.dispatch(.network(
                                         .messageReceived(
