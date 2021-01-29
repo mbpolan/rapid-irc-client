@@ -193,7 +193,7 @@ extension ServerConnection {
                 handleUserModeIs(ircMessage)
             case .listOpsOnline,
                  .listUnknownConnections,
-                    .listUserChannels:
+                 .listUserChannels:
                 handleServerStatistic(ircMessage)
             case.created,
                 .myInfo,
@@ -206,6 +206,7 @@ extension ServerConnection {
                 .motd,
                 .serverMotd,
                 .endMotd,
+                .version,
                 .youreOperator:
                 handleServerMessage(ircMessage)
             

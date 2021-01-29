@@ -41,6 +41,7 @@ enum Command {
     case topicReply
     case topicChanged
     case topicSetByWhen
+    case version
     case nameReply
     case endOfNames
     case motd
@@ -114,6 +115,8 @@ extension Command {
             return .topicReply
         case "333":
             return .topicSetByWhen
+        case "351":
+            return .version
         case "353":
             return .nameReply
         case "366":
