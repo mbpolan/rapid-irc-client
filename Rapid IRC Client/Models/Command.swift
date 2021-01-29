@@ -40,6 +40,7 @@ enum Command {
     case adminLocation1
     case adminLocation2
     case adminEmail
+    case tryAgain
     case localUsers
     case globalUsers
     case userIsAway
@@ -59,7 +60,9 @@ enum Command {
     case version
     case nameReply
     case endOfNames
+    case info
     case motd
+    case endOfInfo
     case serverMotd
     case endMotd
     case youreOperator
@@ -131,6 +134,8 @@ extension Command {
             return .adminLocation2
         case "259":
             return .adminEmail
+        case "263":
+            return .tryAgain
         case "265":
             return .localUsers
         case "266":
@@ -167,8 +172,12 @@ extension Command {
             return .nameReply
         case "366":
             return .endOfNames
+        case "371":
+            return .info
         case "372":
             return .motd
+        case "374":
+            return .endOfInfo
         case "375":
             return .serverMotd
         case "376":

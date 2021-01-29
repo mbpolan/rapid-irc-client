@@ -195,6 +195,8 @@ extension ServerConnection {
                  .listUnknownConnections,
                  .listUserChannels:
                 handleServerStatistic(ircMessage)
+            case .tryAgain:
+                handleTryAgain(ircMessage)
             case.created,
                 .myInfo,
                 .iSupport,
@@ -218,7 +220,9 @@ extension ServerConnection {
                 .adminEmail,
                 .localUsers,
                 .globalUsers,
+                .info,
                 .motd,
+                .endOfInfo,
                 .serverMotd,
                 .endMotd,
                 .version,
@@ -761,14 +765,40 @@ extension ServerConnection {
                                                 variant: .other))))
         }
         
+        private func handleTryAgain(_ message: IRCMessage) {
+            // expect at least one parameter
+            if message.parameters.count < 1 {
+                print("ERROR: not enough params in TRYAGAIN reply: \(message)")
+                return
+            }
+            
+            // if the first parameter starts with a colon, then assume the entire parameter list is an error message
+            // otherwise, try to break out the command from the error message itself
+            var text: String
+            if message.parameters[0].first == ":" {
+                text = message.parameters[0...].joined(separator: " ").dropLeadingColon()
+            } else {
+                // first parameter is the command
+                let command = message.parameters[0]
+                
+                // remaining parameters are the error/retry message
+                let reason = message.parameters[1...].joined(separator: " ").dropLeadingColon()
+                
+                text = "\(command) - \(reason)"
+            }
+            
+            connection.store.dispatch(.network(
+                                        .messageReceived(
+                                            connection: self.connection.connection,
+                                            channelName: Connection.serverChannel,
+                                            message: ChannelMessage(
+                                                text: text,
+                                                variant: .error))))
+        }
+        
         private func handleServerMessage(_ message: IRCMessage) {
             // combine parameters into a single string message
-            var text = message.parameters.joined(separator: " ")
-            
-            // drop leading colons
-            if text.first == ":" {
-                text = text.subString(from: 1)
-            }
+            var text = message.parameters.joined(separator: " ").dropLeadingColon()
             
             connection.store.dispatch(.network(
                                         .messageReceived(
