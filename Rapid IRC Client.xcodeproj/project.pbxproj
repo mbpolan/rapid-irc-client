@@ -37,6 +37,7 @@
 		2799124D25BBABF9004D0DDC /* CTCPCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799124C25BBABF9004D0DDC /* CTCPCommand.swift */; };
 		279F87FB25BE42D600DA9F66 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FA25BE42D600DA9F66 /* DateFormatter.swift */; };
 		279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */; };
+		279F881825C5078A00DA9F66 /* FormattedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F881725C5078A00DA9F66 /* FormattedText.swift */; };
 		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
 		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
 		27CF74CB2543ABD900DA4598 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* Main.swift */; };
@@ -100,6 +101,7 @@
 		2799124C25BBABF9004D0DDC /* CTCPCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTCPCommand.swift; sourceTree = "<group>"; };
 		279F87FA25BE42D600DA9F66 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorLoginSheet.swift; sourceTree = "<group>"; };
+		279F881725C5078A00DA9F66 /* FormattedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedText.swift; sourceTree = "<group>"; };
 		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -300,6 +302,7 @@
 				2799122A25B533CD004D0DDC /* ServersSettingsView.swift */,
 				2799123F25B6067F004D0DDC /* CommandTextField.swift */,
 				279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */,
+				279F881725C5078A00DA9F66 /* FormattedText.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -625,6 +628,7 @@
 				2776AE0D256CABD600371A28 /* UIActions.swift in Sources */,
 				27CF75302544DE2A00DA4598 /* QuickConnectSheet.swift in Sources */,
 				27CF74CB2543ABD900DA4598 /* Main.swift in Sources */,
+				279F881825C5078A00DA9F66 /* FormattedText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

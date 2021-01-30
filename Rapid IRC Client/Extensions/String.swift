@@ -30,6 +30,25 @@ extension String {
         return self
     }
     
+    func peek(_ index: String.Index, amount: UInt = 1, offsetBy: Int = 0) -> String? {
+        var str = ""
+        var i = 0
+        var idx = self.index(index, offsetBy: offsetBy)
+        
+        while i < amount {
+            // end of string? return nil to indicate this operation is out of bounds
+            if idx == self.endIndex {
+                return nil
+            }
+            
+            str.append(self[idx])
+            idx = self.index(after: idx)
+            i += 1
+        }
+        
+        return str
+    }
+    
     var isEmptyOrWhitespace: Bool {
         return isEmpty || trimmingCharacters(in: .whitespaces).isEmpty
     }

@@ -62,6 +62,7 @@ extension ChannelMessage {
         case error
         case client
         case other
+        case motd
     }
 }
 

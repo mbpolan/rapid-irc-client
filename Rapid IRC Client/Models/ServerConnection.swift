@@ -199,6 +199,8 @@ extension ServerConnection {
                 handleTryAgain(ircMessage)
             case .userIsAway:
                 handleUserAway(ircMessage)
+            case .motd:
+                handleMotd(ircMessage)
             case.created,
                 .myInfo,
                 .iSupport,
@@ -226,7 +228,6 @@ extension ServerConnection {
                 .unAway,
                 .nowAway,
                 .info,
-                .motd,
                 .endOfInfo,
                 .serverMotd,
                 .endMotd,
@@ -822,6 +823,25 @@ extension ServerConnection {
                                                 sender: nick,
                                                 text: text,
                                                 variant: .userAway))))
+        }
+        
+        private func handleMotd(_ message: IRCMessage) {
+            // expect at least one parameter
+            if message.parameters.count < 1 {
+                print("ERROR: not enough params in MOTD reply: \(message)")
+                return
+            }
+            
+            // all parameters are the message
+            let text = message.parameters[0...].joined(separator: " ").dropLeadingColon()
+            
+            connection.store.dispatch(.network(
+                                        .messageReceived(
+                                            connection: self.connection.connection,
+                                            channelName: Connection.serverChannel,
+                                            message: ChannelMessage(
+                                                text: text,
+                                                variant: .motd))))
         }
         
         private func handleServerMessage(_ message: IRCMessage) {

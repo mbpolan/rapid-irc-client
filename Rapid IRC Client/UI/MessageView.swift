@@ -44,67 +44,70 @@ struct MessageView: View {
         }
     }
     
-    private func makeMessage(_ message: ChannelMessage) -> Text {
-        let text: Text
+    private func makeMessage(_ message: ChannelMessage) -> AnyView {
+        let text: AnyView
         let content = message.text
         
         switch message.variant {
         case .action:
             if let sender = message.sender {
-                text = Text("\(sender) \(content)")
-                    .italic()
+                text = AnyView(Text("\(sender) \(content)")
+                                .italic())
             } else {
                 // really not a valid situation, but be cautious regardless
-                text = Text("??? \(content)")
-                    .italic()
+                text = AnyView(Text("??? \(content)")
+                                .italic())
             }
             
         case .privateMessage:
             if let sender = message.sender {
-                text = Text("<\(sender)>") + Text(" \(content)")
+                text = AnyView(FormattedText("<\(sender)> \(content)"))
             } else {
-                text = Text(content)
+                text = AnyView(FormattedText(content))
             }
             
         case .notice:
             if let sender = message.sender {
-                text = Text("<\(sender)>") + Text(" \(content)")
-                    .foregroundColor(.orange)
+                text = AnyView(FormattedText("<\(sender)> \(content)")
+                                .foregroundColor(.orange))
             } else {
-                text = Text(content)
-                    .foregroundColor(.orange)
+                text = AnyView(FormattedText(content)
+                                .foregroundColor(.orange))
             }
             
         case .userJoined:
-            text = Text(content)
-                .foregroundColor(.green)
+            text = AnyView(Text(content)
+                            .foregroundColor(.green))
             
         case .userAway:
             if let sender = message.sender {
-                text = Text("\(sender) is away: \(content)")
-                    .foregroundColor(.purple)
+                text = AnyView(Text("\(sender) is away: \(content)")
+                                .foregroundColor(.purple))
             } else {
-                text = Text("User is away: \(content)")
-                    .foregroundColor(.purple)
+                text = AnyView(Text("User is away: \(content)")
+                                .foregroundColor(.purple))
             }
             
         case .userParted,
              .userQuit:
-            text = Text(content)
-                .foregroundColor(.yellow)
+            text = AnyView(Text(content)
+                            .foregroundColor(.yellow))
             
         case .error:
-            text = Text(content)
-                .foregroundColor(.red)
+            text = AnyView(Text(content)
+                            .foregroundColor(.red))
             
         case .channelTopicEvent:
-            text = Text(content)
-                .foregroundColor(.blue)
+            text = AnyView(Text(content)
+                            .foregroundColor(.blue))
             
         case .client,
              .modeEvent,
              .other:
-            text = Text(content)
+            text = AnyView(Text(content))
+            
+        case .motd:
+            text = AnyView(FormattedText(content))
         }
         
         return text

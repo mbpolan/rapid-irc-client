@@ -21,7 +21,7 @@ struct ActiveChannelView: View {
             // display messages and channel activity on the left side
             VStack {
                 if let channelTopic = viewModel.state.topic {
-                    Text(channelTopic)
+                    FormattedText(channelTopic)
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                         .border(SeparatorShapeStyle(), width: 1)
                         .layoutPriority(1)
