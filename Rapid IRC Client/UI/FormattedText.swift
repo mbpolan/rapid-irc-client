@@ -163,6 +163,12 @@ struct FormattedText: View {
             
             // reset all formatting
             case 0x0F:
+                // apply any currently buffered formatted text
+                if !current.isEmpty {
+                    views.append(formatting.apply(current))
+                    current = ""
+                }
+                
                 formatting = TextFormatter()
                 i = text.index(after: i)
             
