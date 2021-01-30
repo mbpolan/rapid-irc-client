@@ -57,6 +57,56 @@ struct FormattedText: View {
             let ch = text[i]
             
             switch ch.asciiValue {
+            // toggles bold font
+            case 0x02:
+                if formatting.bold || !current.isEmpty {
+                    views.append(formatting.apply(current))
+                    current = ""
+                }
+                
+                formatting.bold = !formatting.bold
+                i = text.index(after: i)
+                
+            // toggles italics font
+            case 0x1D:
+                if formatting.italics || !current.isEmpty {
+                    views.append(formatting.apply(current))
+                    current = ""
+                }
+                
+                formatting.italics = !formatting.italics
+                i = text.index(after: i)
+                
+            // toggles strikethrough font
+            case 0x1E:
+                if formatting.strikethrough || !current.isEmpty {
+                    views.append(formatting.apply(current))
+                    current = ""
+                }
+                
+                formatting.strikethrough = !formatting.strikethrough
+                i = text.index(after: i)
+                
+            // toggles underline font
+            case 0x1F:
+                if formatting.underline || !current.isEmpty {
+                    views.append(formatting.apply(current))
+                    current = ""
+                }
+                
+                formatting.underline = !formatting.underline
+                i = text.index(after: i)
+                
+            // invert foreground and background colors
+            case 0x16:
+                if formatting.inverted || !current.isEmpty {
+                    views.append(formatting.apply(current))
+                    current = ""
+                }
+                
+                formatting.inverted = !formatting.inverted
+                i = text.index(after: i)
+                
             // controls foreground and optionally background text color
             case 0x03:
                 // is a color already active?
@@ -110,6 +160,11 @@ struct FormattedText: View {
                     formatting.fgColor = nil
                     formatting.bgColor = nil
                 }
+            
+            // reset all formatting
+            case 0x0F:
+                formatting = TextFormatter()
+                i = text.index(after: i)
             
             // no formatting; take the character as-is
             default:
@@ -169,21 +224,58 @@ extension FormattedText {
         
         var bgColor: Color?
         var fgColor: Color?
+        var inverted: Bool = false
+        var bold: Bool = false
+        var italics: Bool = false
+        var underline: Bool = false
+        var strikethrough: Bool = false
         
         func apply(_ str: String) -> AnyView {
             var text = Text(str)
             
+            // apply bold font face
+            if bold {
+                text = text.bold()
+            }
+            
+            // apply italics
+            if italics {
+                text = text.italic()
+            }
+            
+            // apply underline decoration
+            if underline {
+                text = text.underline()
+            }
+            
+            // apply strikethrough decoration
+            if strikethrough {
+                text = text.strikethrough()
+            }
+            
+            var realFgColor = fgColor
+            var realBgColor = bgColor
+            
+            // when colors are inverted, we need to assign actual colors when none
+            // are specified. for this, we can default to the system text foreground
+            // and background colors.
+            if inverted {
+                realFgColor = bgColor ?? Color(NSColor.textBackgroundColor)
+                realBgColor = fgColor ?? Color(NSColor.textColor)
+            }
+            
             // apply foreground color to the text view directly
-            if let fgColor = fgColor {
+            if let fgColor = realFgColor {
                 text = text.foregroundColor(fgColor)
             }
             
-            // background color requires a separate view
-            if let bgColor = bgColor {
-                return AnyView(text.background(bgColor))
+            // background color requires a separate view, so we need to apply it last
+            var view = AnyView(text)
+            if let bgColor = realBgColor {
+                view = AnyView(text.background(bgColor))
             }
             
-            return AnyView(text)
+            return view
         }
     }
 }
@@ -191,6 +283,14 @@ extension FormattedText {
 struct FormattedText_Previews: PreviewProvider {
     
     static var previews: some View {
-        FormattedText("this is \u{03}03,08green\u{03} and \u{03}red?\u{03} eyy")
+        VStack {
+            FormattedText("this is \u{03}03,08green\u{03} lorem ipsum")
+            FormattedText("this is \u{03}04red\u{03} lorem ipsum")
+            FormattedText("this is \u{02}bold\u{02} and \u{1D}italics\u{1D} lorem ipsum")
+            FormattedText("this is \u{1F}underlined\u{1F} and \u{1E}strikethrough\u{1E} lorem ipsum")
+            FormattedText("this is \u{16}defaults reversed\u{16} lorem ipsum")
+            FormattedText("this is \u{03}03\u{16}foreground reversed\u{16}\u{03} lorem ipsum")
+            FormattedText("this is \u{03}03,08\u{16}both reversed\u{16}\u{03} lorem ipsum")
+        }
     }
 }
