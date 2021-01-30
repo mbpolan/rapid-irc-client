@@ -16,10 +16,11 @@ support the following functionality prior to release:
 
 - [X] Connecting and disconnecting to/from servers
 - [X] Joining and leaving channels
-- [ ] Sending and receiving messages in a channel
-- [ ] Private messaging other users
+- [X] Sending and receiving messages in a channel
+- [X] Private messaging other users
 - [ ] User profile and nick customization
 - [ ] Channel ops (topics, kicking users, etc.)
+- [ ] Text formatting (colors, font styles)
 - [ ] Fairly robust error handling for invalid messages
 
 ## Developing
