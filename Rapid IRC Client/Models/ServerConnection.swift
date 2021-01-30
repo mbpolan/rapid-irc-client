@@ -116,7 +116,7 @@ extension ServerConnection {
                 
                 // find each complete message, ending in a CRLF
                 while let cr = bufferedMessage.firstIndex(of: 0x0D),
-                      cr < bufferedMessage.count,
+                      cr < bufferedMessage.count - 1,
                       bufferedMessage[cr + 1] == 0x0A {
                    
                     if let decoded = String(bytes: bufferedMessage[0..<cr], encoding: .utf8) {
