@@ -48,7 +48,7 @@ struct FormattedText: View {
     }
     
     private func makeText() -> [AnyView] {
-        var views: [AnyView] = []
+        var views: [ViewHolder] = []
         var formatting = TextFormatter()
         var current = ""
         
@@ -173,11 +173,32 @@ struct FormattedText: View {
             }
         }
         
+        // apply any remaining text formatting into our ongoing message
         if !current.isEmpty {
             views.append(formatting.apply(current))
         }
         
-        return views
+        // merge consecutive text views into as few instances as possible. plain views remain as-is
+        // since those cannot be reliably merged.
+        var consolidated: [ViewHolder] = []
+        views.forEach { view in
+            if consolidated.isEmpty {
+                consolidated.append(view)
+            } else if view.view != nil {
+                consolidated.append(view)
+            } else if view.text != nil {
+                // if the previous view is a text view, we can merge the two
+                // together to reduce nesting of views
+                if let previous = consolidated.last, previous.text != nil {
+                    consolidated = consolidated.dropLast()
+                    consolidated.append(previous.mergeText(view))
+                } else {
+                    consolidated.append(view)
+                }
+            }
+        }
+        
+        return consolidated.map { $0.toErasedView() }
     }
 }
 
@@ -220,6 +241,34 @@ extension FormattedText {
         }
     }
     
+    struct ViewHolder {
+        
+        var text: Text?
+        var view: AnyView?
+        
+        func toErasedView() -> AnyView {
+            if let text = self.text {
+                return AnyView(text)
+            } else if let view = self.view {
+                return AnyView(view)
+            } else {
+                return AnyView(EmptyView())
+            }
+        }
+        
+        func mergeText(_ other: ViewHolder) -> ViewHolder {
+            guard let ourText = self.text else {
+                return self
+            }
+            
+            guard let theirText = other.text else {
+                return self
+            }
+            
+            return ViewHolder(text: ourText + theirText)
+        }
+    }
+    
     struct TextFormatter {
         
         var bgColor: Color?
@@ -230,7 +279,7 @@ extension FormattedText {
         var underline: Bool = false
         var strikethrough: Bool = false
         
-        func apply(_ str: String) -> AnyView {
+        func apply(_ str: String) -> ViewHolder {
             var text = Text(str)
             
             // apply bold font face
@@ -270,12 +319,11 @@ extension FormattedText {
             }
             
             // background color requires a separate view, so we need to apply it last
-            var view = AnyView(text)
             if let bgColor = realBgColor {
-                view = AnyView(text.background(bgColor))
+                return ViewHolder(view: AnyView(text.background(bgColor)))
             }
             
-            return view
+            return ViewHolder(text: text)
         }
     }
 }

@@ -17,7 +17,7 @@ struct IRCMessage {
     var timestamp: Date
     
     init(from message: String) {
-        var parts = message.split(separator: " ")
+        var parts = message.components(separatedBy: " ")
         
         // no-op
         if parts.isEmpty {
