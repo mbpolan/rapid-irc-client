@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// MARK: - View
 struct FormattedText: View {
     
     private let text: String
@@ -47,18 +48,45 @@ struct FormattedText: View {
         }
     }
     
+    private func extractUrls() -> String {
+        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        var urls: Dictionary<Int, String> = [:]
+        
+        var string = text
+        var matches = detector.matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
+        while let first = matches.first {
+            guard let range = Range(first.range, in: string) else { break }
+            
+            // extract the matched url and surround it with formatting control characters
+            let url = string[range]
+            string.replaceSubrange(range, with: "\u{19}\(urls.count)\u{19}")
+            urls[urls.count] = String(url)
+            
+            matches = detector.matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
+        }
+        
+        urls.forEach { (key: Int, value: String) in
+            string = string.replacingOccurrences(of: "\u{19}\(key)\u{19}", with: "\u{19}\(value)\u{19}")
+        }
+        
+        return string
+    }
+    
     private func makeText() -> [AnyView] {
         var views: [ViewHolder] = []
         var formatting = TextFormatter()
         var current = ""
         
+        // preprocess the text before we begin formatting it
+        let text = extractUrls()
+        
         var i = text.startIndex
         while i < text.endIndex {
             let ch = text[i]
             
-            switch ch.asciiValue {
+            switch ControlCharacter(rawValue: ch.asciiValue ?? 0x00) {
             // toggles bold font
-            case 0x02:
+            case .bold:
                 if formatting.bold || !current.isEmpty {
                     views.append(formatting.apply(current))
                     current = ""
@@ -68,7 +96,7 @@ struct FormattedText: View {
                 i = text.index(after: i)
                 
             // toggles italics font
-            case 0x1D:
+            case .italics:
                 if formatting.italics || !current.isEmpty {
                     views.append(formatting.apply(current))
                     current = ""
@@ -78,7 +106,7 @@ struct FormattedText: View {
                 i = text.index(after: i)
                 
             // toggles strikethrough font
-            case 0x1E:
+            case .strikethrough:
                 if formatting.strikethrough || !current.isEmpty {
                     views.append(formatting.apply(current))
                     current = ""
@@ -88,7 +116,7 @@ struct FormattedText: View {
                 i = text.index(after: i)
                 
             // toggles underline font
-            case 0x1F:
+            case .underline:
                 if formatting.underline || !current.isEmpty {
                     views.append(formatting.apply(current))
                     current = ""
@@ -98,7 +126,7 @@ struct FormattedText: View {
                 i = text.index(after: i)
                 
             // invert foreground and background colors
-            case 0x16:
+            case .invert:
                 if formatting.inverted || !current.isEmpty {
                     views.append(formatting.apply(current))
                     current = ""
@@ -108,7 +136,7 @@ struct FormattedText: View {
                 i = text.index(after: i)
                 
             // controls foreground and optionally background text color
-            case 0x03:
+            case .color:
                 // is a color already active?
                 if formatting.fgColor != nil || !current.isEmpty {
                     views.append(formatting.apply(current))
@@ -162,7 +190,7 @@ struct FormattedText: View {
                 }
             
             // reset all formatting
-            case 0x0F:
+            case .reset:
                 // apply any currently buffered formatted text
                 if !current.isEmpty {
                     views.append(formatting.apply(current))
@@ -170,6 +198,17 @@ struct FormattedText: View {
                 }
                 
                 formatting = TextFormatter()
+                i = text.index(after: i)
+            
+            // custom: indicates a url
+            case .url:
+                // apply any currently buffered formatted text
+                if !current.isEmpty {
+                    views.append(formatting.apply(current))
+                    current = ""
+                }
+                
+                formatting.url = !formatting.url
                 i = text.index(after: i)
             
             // no formatting; take the character as-is
@@ -188,9 +227,7 @@ struct FormattedText: View {
         // since those cannot be reliably merged.
         var consolidated: [ViewHolder] = []
         views.forEach { view in
-            if consolidated.isEmpty {
-                consolidated.append(view)
-            } else if view.view != nil {
+            if consolidated.isEmpty || !view.canBeMerged {
                 consolidated.append(view)
             } else if view.text != nil {
                 // if the previous view is a text view, we can merge the two
@@ -208,7 +245,21 @@ struct FormattedText: View {
     }
 }
 
+// MARK: - Extensions
 extension FormattedText {
+    
+    enum ControlCharacter: UInt8 {
+        case bold = 0x02
+        case color = 0x03
+        case invert = 0x16
+        case reset = 0x0F
+        case italics = 0x01D
+        case strikethrough = 0x1E
+        case underline = 0x1F
+        
+        // custom (non-standard) codes for our client
+        case url = 0x19
+    }
     
     enum Palette: String {
         case white      = "#FFFFFF"
@@ -247,16 +298,28 @@ extension FormattedText {
         }
     }
     
+    struct URLResult {
+        let string: String
+        let urls: Dictionary<String, String>
+    }
+    
     struct ViewHolder {
         
         var text: Text?
+        var url: AnyView?
         var view: AnyView?
+        
+        var canBeMerged: Bool {
+            return text != nil
+        }
         
         func toErasedView() -> AnyView {
             if let text = self.text {
                 return AnyView(text)
             } else if let view = self.view {
-                return AnyView(view)
+                return view
+            } else if let url = self.url {
+                return url
             } else {
                 return AnyView(EmptyView())
             }
@@ -284,9 +347,30 @@ extension FormattedText {
         var italics: Bool = false
         var underline: Bool = false
         var strikethrough: Bool = false
+        var url: Bool = false
         
         func apply(_ str: String) -> ViewHolder {
             var text = Text(str)
+            
+            // url formatting overrides all other format options
+            if url {
+                return ViewHolder(url: AnyView(
+                    text
+                        .foregroundColor(.blue)
+                        .bold()
+                        .onTapGesture {
+                            guard let url = URL(string: str) else { return }
+                            NSWorkspace.shared.open(url)
+                        }
+                        .onHover { hover in
+                            if hover {
+                                NSCursor.pointingHand.push()
+                            } else {
+                                NSCursor.pop()
+                            }
+                        }
+                ))
+            }
             
             // apply bold font face
             if bold {
@@ -334,6 +418,7 @@ extension FormattedText {
     }
 }
 
+// MARK: - Preview
 struct FormattedText_Previews: PreviewProvider {
     
     static var previews: some View {
