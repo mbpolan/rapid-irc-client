@@ -50,7 +50,6 @@ struct FormattedText: View {
     
     private func extractUrls() -> String {
         let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-        var urls: Dictionary<Int, String> = [:]
         
         var string = text
         var matches = detector.matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
@@ -58,15 +57,15 @@ struct FormattedText: View {
             guard let range = Range(first.range, in: string) else { break }
             
             // extract the matched url and surround it with formatting control characters
-            let url = string[range]
-            string.replaceSubrange(range, with: "\u{19}\(urls.count)\u{19}")
-            urls[urls.count] = String(url)
+            let url = String(string[range])
+            string.replaceSubrange(range, with: ControlCharacter.url.wrap(url))
             
-            matches = detector.matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
-        }
-        
-        urls.forEach { (key: Int, value: String) in
-            string = string.replacingOccurrences(of: "\u{19}\(key)\u{19}", with: "\u{19}\(value)\u{19}")
+            matches = detector.matches(
+                in: string,
+                options: [],
+                range: NSRange(
+                    location: first.range.upperBound,
+                    length: string.utf16.count - first.range.upperBound))
         }
         
         return string
@@ -259,6 +258,10 @@ extension FormattedText {
         
         // custom (non-standard) codes for our client
         case url = 0x19
+        
+        func wrap(_ string: String) -> String {
+            return "\(UnicodeScalar(self.rawValue))\(string)\(UnicodeScalar(self.rawValue))"
+        }
     }
     
     enum Palette: String {
