@@ -12,12 +12,14 @@ import SwiftRex
 // MARK: - State
 struct AppState {
     var network: NetworkState = NetworkState()
+    var snapshot: SnapshotState = .empty
     var ui: UIState = .empty
 }
 
 // MARK: - Actions
 enum AppAction {
     case network(NetworkAction)
+    case snapshot(SnapshotAction)
     case ui(UIAction)
 }
 
@@ -30,6 +32,17 @@ extension AppAction {
         set {
             guard case .network = self, let newValue = newValue else { return }
             self = .network(newValue)
+        }
+    }
+    
+    public var snapshot: SnapshotAction? {
+        get {
+            guard case let .snapshot(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .snapshot = self, let newValue = newValue else { return }
+            self = .snapshot(newValue)
         }
     }
     
@@ -52,18 +65,23 @@ let appReducer = uiReducer.lift(
 ) <> networkReducer.lift(
     action: \AppAction.network,
     state: \AppState.network
-)
+) <> snapshotReducer.lift(
+    action: \AppAction.snapshot,
+    state: \AppState.snapshot)
 
 // MARK: - Middleware
 let appMiddleware = NetworkMiddleware().lift(
     inputAction: \AppAction.network,
     outputAction: identity,
     state: identity
-) <> UIMiddleware() .lift(
+) <> UIMiddleware().lift(
     inputAction: \AppAction.ui,
     outputAction: identity,
     state: identity
-)
+) <> SnapshotMiddleware().lift(
+    inputAction: \AppAction.snapshot,
+    outputAction: identity,
+    state: identity)
 
 // MARK: - Store
 class Store: ReduxStoreBase<AppAction, AppState> {

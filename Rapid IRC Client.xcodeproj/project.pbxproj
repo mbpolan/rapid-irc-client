@@ -38,6 +38,11 @@
 		279F87FB25BE42D600DA9F66 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FA25BE42D600DA9F66 /* DateFormatter.swift */; };
 		279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */; };
 		279F881825C5078A00DA9F66 /* FormattedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F881725C5078A00DA9F66 /* FormattedText.swift */; };
+		279F882D25C8D81200DA9F66 /* AppSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F882C25C8D81200DA9F66 /* AppSnapshot.swift */; };
+		279F883925C9074E00DA9F66 /* SnapshotState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F883825C9074E00DA9F66 /* SnapshotState.swift */; };
+		279F884225C907DC00DA9F66 /* SnapshotMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F884125C907DC00DA9F66 /* SnapshotMiddleware.swift */; };
+		279F884A25C9080E00DA9F66 /* SnapshotAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F884925C9080E00DA9F66 /* SnapshotAction.swift */; };
+		279F884F25C908A000DA9F66 /* SnapshotReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F884E25C908A000DA9F66 /* SnapshotReducer.swift */; };
 		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
 		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
 		27CF74CB2543ABD900DA4598 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* Main.swift */; };
@@ -102,6 +107,11 @@
 		279F87FA25BE42D600DA9F66 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorLoginSheet.swift; sourceTree = "<group>"; };
 		279F881725C5078A00DA9F66 /* FormattedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedText.swift; sourceTree = "<group>"; };
+		279F882C25C8D81200DA9F66 /* AppSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSnapshot.swift; sourceTree = "<group>"; };
+		279F883825C9074E00DA9F66 /* SnapshotState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotState.swift; sourceTree = "<group>"; };
+		279F884125C907DC00DA9F66 /* SnapshotMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMiddleware.swift; sourceTree = "<group>"; };
+		279F884925C9080E00DA9F66 /* SnapshotAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotAction.swift; sourceTree = "<group>"; };
+		279F884E25C908A000DA9F66 /* SnapshotReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotReducer.swift; sourceTree = "<group>"; };
 		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +169,7 @@
 		2757C2CA254A4F68002335CB /* State */ = {
 			isa = PBXGroup;
 			children = (
+				279F883725C9074000DA9F66 /* Snapshot */,
 				2776AE03256CABAA00371A28 /* UI */,
 				2757C2D8254A5456002335CB /* Network */,
 				2757C2CB254A4F78002335CB /* Store.swift */,
@@ -186,6 +197,7 @@
 				2757C307254E4917002335CB /* IRCMessage.swift */,
 				2757C314254E527F002335CB /* Command.swift */,
 				2799124C25BBABF9004D0DDC /* CTCPCommand.swift */,
+				279F882C25C8D81200DA9F66 /* AppSnapshot.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -216,6 +228,17 @@
 				2799120825AFE1CA004D0DDC /* Prism.stencil */,
 			);
 			name = Templates;
+			sourceTree = "<group>";
+		};
+		279F883725C9074000DA9F66 /* Snapshot */ = {
+			isa = PBXGroup;
+			children = (
+				279F883825C9074E00DA9F66 /* SnapshotState.swift */,
+				279F884125C907DC00DA9F66 /* SnapshotMiddleware.swift */,
+				279F884925C9080E00DA9F66 /* SnapshotAction.swift */,
+				279F884E25C908A000DA9F66 /* SnapshotReducer.swift */,
+			);
+			path = Snapshot;
 			sourceTree = "<group>";
 		};
 		27CF74BE2543ABD800DA4598 = {
@@ -600,6 +623,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */,
+				279F884225C907DC00DA9F66 /* SnapshotMiddleware.swift in Sources */,
 				2757C2F1254A5AD5002335CB /* ActiveChannelView.swift in Sources */,
 				2799124D25BBABF9004D0DDC /* CTCPCommand.swift in Sources */,
 				2757C2D4254A5377002335CB /* MessageView.swift in Sources */,
@@ -607,6 +631,7 @@
 				2757C2F8254A5DE0002335CB /* ServerInfo.swift in Sources */,
 				2757C2E2254A5496002335CB /* NetworkActions.swift in Sources */,
 				2757C303254D23C7002335CB /* String.swift in Sources */,
+				279F882D25C8D81200DA9F66 /* AppSnapshot.swift in Sources */,
 				2799121C25B4B5DE004D0DDC /* UserListView.swift in Sources */,
 				2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */,
 				2799122625B532D2004D0DDC /* SettingsView.swift in Sources */,
@@ -626,9 +651,12 @@
 				2757C2E7254A575D002335CB /* Types.swift in Sources */,
 				279F87FB25BE42D600DA9F66 /* DateFormatter.swift in Sources */,
 				2776AE0D256CABD600371A28 /* UIActions.swift in Sources */,
+				279F884F25C908A000DA9F66 /* SnapshotReducer.swift in Sources */,
 				27CF75302544DE2A00DA4598 /* QuickConnectSheet.swift in Sources */,
 				27CF74CB2543ABD900DA4598 /* Main.swift in Sources */,
+				279F884A25C9080E00DA9F66 /* SnapshotAction.swift in Sources */,
 				279F881825C5078A00DA9F66 /* FormattedText.swift in Sources */,
+				279F883925C9074E00DA9F66 /* SnapshotState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,6 +824,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mbpolan.rapidirc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

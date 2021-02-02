@@ -10,7 +10,12 @@ import SwiftUI
 @main
 struct Main: App {
     
+    @Environment(\.scenePhase) private var scenePhase: ScenePhase
+    private let coordinator: Coordinator
+    
     init() {
+        self.coordinator = Coordinator()
+        
         UserDefaults.standard.register(defaults: [
             AppSettings.timestampsInChat.rawValue: true,
             AppSettings.preferredNick.rawValue: "guest",
@@ -21,12 +26,64 @@ struct Main: App {
     var body: some Scene {
         WindowGroup {
             ContentView(viewModel: ContentViewModel.viewModel(from: Store.instance))
-        }.commands {
+        }
+        .commands {
             AppCommands()
         }
         
         Settings {
             SettingsView()
+        }
+    }
+}
+
+extension Main {
+    
+    class Coordinator {
+        
+        init() {
+            NSWorkspace.shared.notificationCenter.addObserver(
+                self,
+                selector: #selector(handleWillSleepNotification(note:)),
+                name: NSWorkspace.willSleepNotification,
+                object: nil)
+            
+            NSWorkspace.shared.notificationCenter.addObserver(
+                self,
+                selector: #selector(handleWakeNotification(note:)),
+                name: NSWorkspace.didWakeNotification,
+                object: nil)
+            
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleWillSleepNotification(note:)),
+                name: .debugSimulateSleep,
+                object: nil)
+            
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleWakeNotification(note:)),
+                name: .debugSimulateWake,
+                object: nil)
+        }
+        
+        @objc private func handleWillSleepNotification(note: NSNotification) {
+            let group = DispatchGroup()
+            group.enter()
+            
+            // save the current snapshot of our connections, then forcefully disconnect from all servers
+            Store.instance.dispatch(.snapshot(.save {
+                Store.instance.dispatch(.network(.disconnectAllForSleep {
+                    group.leave()
+                }))
+            }))
+            
+            group.wait()
+        }
+        
+        @objc private func handleWakeNotification(note: NSNotification) {
+            // restore the previously saved application state
+            Store.instance.dispatch(.snapshot(.restore))
         }
     }
 }
@@ -42,6 +99,19 @@ struct AppCommands: Commands {
                 Text("Quick Connect")
             }.keyboardShortcut("C", modifiers: [.control, .shift])
         }
+        
+        CommandMenu("Debug") {
+            Button(action: {
+                NotificationCenter.default.post(name: .debugSimulateSleep, object: nil)
+            }) {
+                Text("Simulate Sleep")
+            }
+            Button(action: {
+                NotificationCenter.default.post(name: .debugSimulateWake, object: nil)
+            }) {
+                Text("Simulate Wake")
+            }
+        }
     }
 }
 
@@ -55,4 +125,7 @@ enum AppSettings: String {
 
 extension Notification.Name {
     static let connectToServer = Notification.Name("connect_to_server")
+    
+    static let debugSimulateSleep = Notification.Name("debug_simulate_sleep")
+    static let debugSimulateWake = Notification.Name("debug_simulate_wake")
 }

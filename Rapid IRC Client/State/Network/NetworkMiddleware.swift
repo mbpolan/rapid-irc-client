@@ -23,7 +23,7 @@ class NetworkMiddleware: Middleware {
     
     func handle(action: NetworkAction, from dispatcher: ActionSource, afterReducer: inout AfterReducer) {
         switch action {
-        case .connect(let serverInfo):
+        case .connect(let serverInfo, let joinChannelNames):
             let connection = Connection(
                 name: serverInfo.host,
                 serverInfo: serverInfo,
@@ -49,12 +49,20 @@ class NetworkMiddleware: Middleware {
                                     connection: connection)))
             
             connection.client.connect() { result in
-                self.handleConnectionStatus(connection: connection, result: result)
+                self.updateServerConnectionStatus(connection: connection, result: result)
+                
+                if let joinChannelNames = joinChannelNames {
+                    self.joinChannelsAfterConnect(result, connection: connection, channelNames: joinChannelNames)
+                }
             }
             
-        case .reconnect(let connection):
+        case .reconnect(let connection, let joinChannelNames):
             connection.client.connect() { result in
-                self.handleConnectionStatus(connection: connection, result: result)
+                self.updateServerConnectionStatus(connection: connection, result: result)
+                
+                if let joinChannelNames = joinChannelNames {
+                    self.joinChannelsAfterConnect(result, connection: connection, channelNames: joinChannelNames)
+                }
             }
             
         case .disconnect(let connection):
@@ -71,11 +79,47 @@ class NetworkMiddleware: Middleware {
                                                 variant: .client))))
                 
                 // dispatch the connection is no longer active
-                self.output.dispatch(.network(
-                                        .connectionStateChanged(
-                                            connection: connection,
-                                            connectionState: .disconnected)))
+                self.updateServerConnectionStatus(
+                    connection: connection,
+                    result: .success(.disconnected))
             }
+        
+        case .disconnectAllForSleep(let completion):
+            let state = getState()
+            let group = DispatchGroup()
+            
+            // find all active connections
+            state.network.connections
+                .filter { $0.state == .connected }
+                .forEach { connection in
+                    group.enter()
+                    
+                    // disconnect from the server
+                    connection.client.disconnect(status: { _ in
+                        // push a message indicating we disconnected because of sleep mode
+                        self.output.dispatch(.network(
+                                            .messageReceived(
+                                                connection: connection,
+                                                channelName: Connection.serverChannel,
+                                                message: ChannelMessage(
+                                                    text: "Disconnected due to sleep",
+                                                    variant: .client))))
+                        
+                        // update connection state to indicate it's disconnected
+                        self.updateServerConnectionStatus(
+                            connection: connection,
+                            result: .success(.disconnected))
+                        
+                        // upon disconnect, mark that this task is complete
+                        group.leave()
+                    })
+            }
+            
+            // wait for all connections to be dropped
+            group.wait()
+            
+            // invoke the completion handler to indicate we're done
+            afterReducer = .do(completion)
             
         case .joinedChannel(let connection, let channelName, let identifier):
             let state = getState()
@@ -625,13 +669,28 @@ class NetworkMiddleware: Middleware {
         }
     }
     
-    private func handleConnectionStatus(connection: Connection, result: Result<Connection.State, Error>) {
+    private func joinChannelsAfterConnect(_ result: Result<Connection.State, Error>, connection: Connection, channelNames: [String]) {
+        // once connected, automatically join the given set of channels
+        switch result {
+        case .success(let state):
+            if state == .connected {
+                channelNames.forEach { channelName in
+                    connection.client.sendMessage("JOIN \(channelName)")
+                }
+            }
+        default:
+            break
+        }
+    }
+    
+    private func updateServerConnectionStatus(connection: Connection, result: Result<Connection.State, Error>) {
         let serverInfo = connection.client.server
         
         switch result {
         case .success(let state):
             switch state {
             case .connecting:
+                // push a status message to indicate we're connecting
                 self.output.dispatch(.network(
                                         .messageReceived(
                                             connection: connection,
@@ -639,8 +698,26 @@ class NetworkMiddleware: Middleware {
                                             message: ChannelMessage(
                                                 text: "Connecting to \(serverInfo.host):\(serverInfo.port)...",
                                                 variant: .client))))
-            default:
-                break
+                
+            case .connected:
+                // ensure that the server channel is "joined" once we connect
+                self.output.dispatch(.network(
+                                        .channelStateChanged(
+                                            connection: connection,
+                                            channelName: Connection.serverChannel,
+                                            channelState: .joined)))
+                
+            case .disconnected:
+                // ensure that all active channels are no longer in joined status upon disconnecting
+                connection.channels
+                    .filter { $0.state == .joined && ($0.descriptor == .multiUser || $0.descriptor == .server) }
+                    .forEach { channel in
+                        self.output.dispatch(.network(
+                                                .channelStateChanged(
+                                                    connection: connection,
+                                                    channelName: channel.name,
+                                                    channelState: .parted)))
+                    }
             }
             
             // propagate the connection state change down the pipeline

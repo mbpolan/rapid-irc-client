@@ -4,14 +4,14 @@
 
 
 extension NetworkAction {
-    internal var connect: ServerInfo? {
+    internal var connect: (serverInfo: ServerInfo, joinChannelNames: [String]?)? {
         get {
-            guard case let .connect(serverInfo) = self else { return nil }
-            return (serverInfo)
+            guard case let .connect(serverInfo, joinChannelNames) = self else { return nil }
+            return (serverInfo, joinChannelNames)
         }
         set {
             guard case .connect = self, let newValue = newValue else { return }
-            self = .connect(serverInfo: newValue)
+            self = .connect(serverInfo: newValue.0, joinChannelNames: newValue.1)
         }
     }
 
@@ -19,14 +19,14 @@ extension NetworkAction {
         self.connect != nil
     }
 
-    internal var reconnect: Connection? {
+    internal var reconnect: (connection: Connection, joinChannelNames: [String]?)? {
         get {
-            guard case let .reconnect(connection) = self else { return nil }
-            return (connection)
+            guard case let .reconnect(connection, joinChannelNames) = self else { return nil }
+            return (connection, joinChannelNames)
         }
         set {
             guard case .reconnect = self, let newValue = newValue else { return }
-            self = .reconnect(connection: newValue)
+            self = .reconnect(connection: newValue.0, joinChannelNames: newValue.1)
         }
     }
 
@@ -77,6 +77,21 @@ extension NetworkAction {
 
     internal var isOperatorLogin: Bool {
         self.operatorLogin != nil
+    }
+
+    internal var disconnectAllForSleep: (() -> Void)? {
+        get {
+            guard case let .disconnectAllForSleep(completion) = self else { return nil }
+            return (completion)
+        }
+        set {
+            guard case .disconnectAllForSleep = self, let newValue = newValue else { return }
+            self = .disconnectAllForSleep(completion: newValue)
+        }
+    }
+
+    internal var isDisconnectAllForSleep: Bool {
+        self.disconnectAllForSleep != nil
     }
 
     internal var addChannelNotification: (connection: Connection, channelName: String, notification: IRCChannel.Notification)? {
@@ -542,6 +557,61 @@ extension NetworkAction {
 
     internal var isErrorReceived: Bool {
         self.errorReceived != nil
+    }
+
+}
+
+extension SnapshotAction {
+    internal var save: (() -> Void)? {
+        get {
+            guard case let .save(completion) = self else { return nil }
+            return (completion)
+        }
+        set {
+            guard case .save = self, let newValue = newValue else { return }
+            self = .save(completion: newValue)
+        }
+    }
+
+    internal var isSave: Bool {
+        self.save != nil
+    }
+
+    internal var restore: Void? {
+        get {
+            guard case .restore = self else { return nil }
+            return ()
+        }
+    }
+
+    internal var isRestore: Bool {
+        self.restore != nil
+    }
+
+    internal var push: (timestamp: Date, connectionsToChannels: Dictionary<UUID, [String]>)? {
+        get {
+            guard case let .push(timestamp, connectionsToChannels) = self else { return nil }
+            return (timestamp, connectionsToChannels)
+        }
+        set {
+            guard case .push = self, let newValue = newValue else { return }
+            self = .push(timestamp: newValue.0, connectionsToChannels: newValue.1)
+        }
+    }
+
+    internal var isPush: Bool {
+        self.push != nil
+    }
+
+    internal var pop: Void? {
+        get {
+            guard case .pop = self else { return nil }
+            return ()
+        }
+    }
+
+    internal var isPop: Bool {
+        self.pop != nil
     }
 
 }

@@ -22,14 +22,6 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
     case .connectionStateChanged(let connection, let connectionState):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }) {
-            // if a connection is no longer active, then all of its channels are also parted
-            if connectionState == .disconnected {
-                target.channels = target.channels.map { channel in
-                    channel.state = .parted
-                    return channel
-                }
-            }
-            
             target.state = connectionState
         }
         
