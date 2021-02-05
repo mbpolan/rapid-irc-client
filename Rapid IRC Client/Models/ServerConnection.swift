@@ -641,27 +641,18 @@ extension ServerConnection {
             let modeString = message.parameters[1].dropLeadingColon()
             
             // remaining parameters, if any, are mode parameters
-            let modeArgs = message.parameters[2...].joined(separator: " ").dropLeadingColon()
-            
-            var text = "\(message.prefix!.subject) sets mode \(modeString)"
-            if !modeArgs.isEmptyOrWhitespace {
-                text = "\(text) \(modeArgs)"
+            var modeArgs = Array(message.parameters[2...])
+            if let first = modeArgs.first {
+                modeArgs[0] = first.dropLeadingColon()
             }
             
-            // if the target is a channel, add a message to the channel in question.
-            // otherwise, if this is a user mode message, add a message to the corresponding server channel
-            guard let targetPrefix = target.first else { return }
-            let channelName = IRCChannel.ChannelType.parseString(string: String(targetPrefix)) == nil
-                ? Connection.serverChannel
-                : target
-            
             self.connection.store.dispatch(.network(
-                                            .messageReceived(
+                                            .modeReceived(
                                                 connection: self.connection.connection,
-                                                channelName: channelName,
-                                                message: ChannelMessage(
-                                                    text: text,
-                                                    variant: .modeEvent))))
+                                                identifier: message.prefix!,
+                                                target: target,
+                                                modeString: modeString,
+                                                modeArgs: modeArgs)))
         }
         
         private func handleChannelModes(_ message: IRCMessage) {

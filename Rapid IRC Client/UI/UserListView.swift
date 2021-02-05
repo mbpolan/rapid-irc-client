@@ -40,8 +40,12 @@ struct UserListView: View {
             }
             .contextMenu {
                 ForEach(makeContextMenu(user), id: \.label) { entry in
-                    Button(action: entry.action) {
-                        Text(entry.label)
+                    if let label = entry.label {
+                        Button(action: entry.action) {
+                            Text(label)
+                        }
+                    } else {
+                        Divider()
                     }
                 }
             }
@@ -70,17 +74,76 @@ struct UserListView: View {
             }
     }
     
-    func makeContextMenu(_ user: UserListViewModel.UserEntry) -> Array<(label: String, action: () -> Void)> {
-        var entries: Array<(String, () -> Void)> = []
+    private func makeContextMenu(_ entry: UserListViewModel.UserEntry) -> Array<(label: String?, action: () -> Void)> {
+        var entries: Array<(String?, () -> Void)> = []
         
         // don't allow private messaging ourselves
-        if !user.identity {
+        if !entry.identity {
             entries.append((label: "Private Message", action: {
                 guard let currentChannel = self.viewModel.state.currentChannel else { return }
                 
                 self.viewModel.dispatch(.openPrivateMessage(
                                             channel: currentChannel,
-                                            user: user.user))
+                                            user: entry.user))
+            }))
+            
+            entries.append((label: nil, action: {}))
+        }
+            
+        // promote or revoke operator status
+        if entry.user.privileges.contains(.fullOperator) {
+            entries.append((label: "Revoke Operator", action: {
+                guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                
+                self.viewModel.dispatch(.takeOperator(
+                                            channel: currentChannel,
+                                            user: entry.user))
+            }))
+        } else {
+            entries.append((label: "Make Operator", action: {
+                guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                
+                self.viewModel.dispatch(.giveOperator(
+                                            channel: currentChannel,
+                                            user: entry.user))
+            }))
+        }
+        
+        // promote or revoke half operator status
+        if entry.user.privileges.contains(.fullOperator) {
+            entries.append((label: "Revoke Half-Operator", action: {
+                guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                
+                self.viewModel.dispatch(.takeHalfOperator(
+                                            channel: currentChannel,
+                                            user: entry.user))
+            }))
+        } else {
+            entries.append((label: "Make Half-Operator", action: {
+                guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                
+                self.viewModel.dispatch(.giveHalfOperator(
+                                            channel: currentChannel,
+                                            user: entry.user))
+            }))
+        }
+        
+        // promote or revoke voice status
+        if entry.user.privileges.contains(.fullOperator) {
+            entries.append((label: "Revoke Voice", action: {
+                guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                
+                self.viewModel.dispatch(.takeVoice(
+                                            channel: currentChannel,
+                                            user: entry.user))
+            }))
+        } else {
+            entries.append((label: "Make Voice", action: {
+                guard let currentChannel = self.viewModel.state.currentChannel else { return }
+                
+                self.viewModel.dispatch(.giveVoice(
+                                            channel: currentChannel,
+                                            user: entry.user))
             }))
         }
         
@@ -118,6 +181,12 @@ struct UserListViewModel {
     
     enum ViewAction {
         case openPrivateMessage(channel: IRCChannel, user: User)
+        case giveOperator(channel: IRCChannel, user: User)
+        case takeOperator(channel: IRCChannel, user: User)
+        case giveHalfOperator(channel: IRCChannel, user: User)
+        case takeHalfOperator(channel: IRCChannel, user: User)
+        case giveVoice(channel: IRCChannel, user: User)
+        case takeVoice(channel: IRCChannel, user: User)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -126,7 +195,55 @@ struct UserListViewModel {
             return .ui(
                 .openPrivateMessage(
                     connection: channel.connection,
-                    nick: user.name))
+                    nick: user.nick))
+            
+        case .giveOperator(let channel, let user):
+            return .network(
+                .setUserMode(
+                    connection: channel.connection,
+                    channelName: channel.name,
+                    nick: user.nick,
+                    mode: User.ChannelPrivilege.fullOperator.given))
+            
+        case .takeOperator(channel: let channel, user: let user):
+            return .network(
+                .setUserMode(
+                    connection: channel.connection,
+                    channelName: channel.name,
+                    nick: user.nick,
+                    mode: User.ChannelPrivilege.fullOperator.taken))
+            
+        case .giveHalfOperator(channel: let channel, user: let user):
+            return .network(
+                .setUserMode(
+                    connection: channel.connection,
+                    channelName: channel.name,
+                    nick: user.nick,
+                    mode: User.ChannelPrivilege.halfOperator.given))
+            
+        case .takeHalfOperator(channel: let channel, user: let user):
+            return .network(
+                .setUserMode(
+                    connection: channel.connection,
+                    channelName: channel.name,
+                    nick: user.nick,
+                    mode: User.ChannelPrivilege.halfOperator.taken))
+            
+        case .giveVoice(channel: let channel, user: let user):
+            return .network(
+                .setUserMode(
+                    connection: channel.connection,
+                    channelName: channel.name,
+                    nick: user.nick,
+                    mode: User.ChannelPrivilege.voiced.given))
+            
+        case .takeVoice(channel: let channel, user: let user):
+            return .network(
+                .setUserMode(
+                    connection: channel.connection,
+                    channelName: channel.name,
+                    nick: user.nick,
+                    mode: User.ChannelPrivilege.voiced.taken))
         }
     }
     
@@ -138,12 +255,17 @@ struct UserListViewModel {
         // categorize users based on their access levels
         var groups = Dictionary<UserGroup.Category, [User]>()
         currentChannel.users.forEach { user in
-            switch user.privilege {
-            case .owner, .admin, .fullOperator, .halfOperator:
+            switch user.highestPrivilege() {
+            case .founder,
+                 .protected,
+                 .fullOperator,
+                 .halfOperator:
                 groups[.operators, default: []].append(user)
+                
             case .voiced:
                 groups[.voiced, default: []].append(user)
-            case .none:
+                
+            default:
                 groups[.users, default: []].append(user)
             }
         }
@@ -152,17 +274,17 @@ struct UserListViewModel {
             currentChannel: currentChannel,
             lastUserListUpdate: currentChannel.lastUserListUpdate,
             groups: groups.map { key, value in
-            UserGroup(
-                category: key,
-                users: value.map { user in
-                    UserEntry(
-                        // is this user entry us?
-                        identity: user.name == currentChannel.connection.identifier?.subject,
-                        nick: user.name,
-                        user: user,
-                        children: [])
-                }.sorted { $0.nick < $1.nick })
-        }.sorted { $0.category.info.order < $1.category.info.order })
+                UserGroup(
+                    category: key,
+                    users: value.map { user in
+                        UserEntry(
+                            // is this user entry us?
+                            identity: user.nick == currentChannel.connection.identifier?.subject,
+                            nick: user.nick,
+                            user: user,
+                            children: [])
+                    }.sorted { $0.nick < $1.nick })
+            }.sorted { $0.category.info.order < $1.category.info.order })
     }
 }
 
@@ -188,18 +310,18 @@ extension UserListViewModel {
         }
         
         var privilege: String {
-            switch user.privilege {
-            case .owner:
-                return "Owner"
-            case .admin:
-                return "Administrator"
+            switch user.highestPrivilege() {
+            case .founder:
+                return "Founder"
+            case .protected:
+                return "Protected"
             case .fullOperator:
                 return "Operator"
             case .halfOperator:
                 return "Half Operator"
             case .voiced:
                 return "Voice"
-            case .none:
+            default:
                 return "None"
             }
         }

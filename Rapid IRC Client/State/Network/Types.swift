@@ -145,7 +145,7 @@ extension IRCChannel {
 class User: Identifiable, Hashable {
     
     static func == (lhs: User, rhs: User) -> Bool {
-        return lhs.name == rhs.name && lhs.privilege == rhs.privilege
+        return lhs.nick == rhs.nick && lhs.privileges == rhs.privileges
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -153,45 +153,78 @@ class User: Identifiable, Hashable {
     }
     
     var id: String {
-        return name
+        return nick
     }
     
-    var name: String
-    var privilege: ChannelPrivilege?
+    var nick: String
+    var privileges: [ChannelPrivilege]
     
-    init(name: String, privilege: ChannelPrivilege?) {
-        self.name = name
-        self.privilege = privilege
-    }
-    
-    init(from identifier: IRCMessage.Prefix) {
-        self.name = identifier.subject
+    init(from nick: String) {
+        self.privileges = []
         
-        let subject = identifier.subject
-        if let privilege = ChannelPrivilege.init(rawValue: subject.first!) {
-            self.privilege = privilege
-        } else {
-            self.privilege = .none
+        // parse all known privilege characters from the nick
+        var privilegeString = nick
+        while let code = privilegeString.first,
+              let privilege = ChannelPrivilege.init(rawValue: code) {
+            
+            self.privileges.append(privilege)
+            privilegeString = String(privilegeString.dropFirst())
         }
+        
+        // the remaining characters are the actual nick
+        self.nick = privilegeString
+    }
+    
+    convenience init(from identifier: IRCMessage.Prefix) {
+        self.init(from: identifier.subject)
+    }
+    
+    func highestPrivilege() -> ChannelPrivilege? {
+        return privileges.max(by: { (a, b) -> Bool in
+            return a.ordinal < b.ordinal
+        })
     }
 }
 
 extension User {
     enum ChannelPrivilege: Character {
-        case owner = "~"
-        case admin = "&"
+        case founder = "~"
+        case protected = "&"
         case fullOperator = "@"
         case halfOperator = "%"
         case voiced = "+"
+        
+        var modeString: String {
+            switch self {
+            case .founder:
+                return "q"
+            case .protected:
+                return "a"
+            case .fullOperator:
+                return "o"
+            case .halfOperator:
+                return "h"
+            case .voiced:
+                return "v"
+            }
+        }
+        
+        var given: String {
+            return "+\(self.modeString)"
+        }
+        
+        var taken: String {
+            return "-\(self.modeString)"
+        }
     }
 }
 
 extension User.ChannelPrivilege {
-    func ordinal() -> Int {
+    var ordinal: Int {
         switch self {
-        case .owner:
+        case .founder:
             return 5
-        case .admin:
+        case .protected:
             return 4
         case .fullOperator:
             return 3

@@ -194,7 +194,7 @@ class NetworkMiddleware: Middleware {
                                     .clientLeftChannel(
                                         connection: target,
                                         channelName: channelName)))
-            } else if let targetUser = channel.users.first(where: { $0.name == nick }) {
+            } else if let targetUser = channel.users.first(where: { $0.nick == nick }) {
                 output.dispatch(.network(
                                     .userLeftChannel(
                                         conn: connection,
@@ -210,7 +210,7 @@ class NetworkMiddleware: Middleware {
             target.channels
                 .filter { $0.descriptor == .multiUser }
                 .forEach { channel in
-                    if let user = channel.users.first(where: { $0.name == identifier.subject }) {
+                    if let user = channel.users.first(where: { $0.nick == identifier.subject }) {
                         // remove the user from the channel
                         output.dispatch(.network(
                                             .userLeftChannel(
@@ -220,7 +220,7 @@ class NetworkMiddleware: Middleware {
                         
                         // rename the user
                         let updatedUser = user
-                        updatedUser.name = nick
+                        updatedUser.nick = nick
                         
                         // add them back to the channel
                         output.dispatch(.network(
@@ -274,18 +274,12 @@ class NetworkMiddleware: Middleware {
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
             
             let users = usernames.map { (nick: String) -> User in
-                // does this user have elevated privileges in this channel? if so, parse the prefix and remove it
-                // from the nick itself
-                if let privilege = User.ChannelPrivilege(rawValue: nick.first!) {
-                    return User(name: String(nick.dropFirst()), privilege: privilege)
-                }
-                
-                return User(name: nick, privilege: .none)
+                return User(from: nick)
             }
             
             // if the channel corresponds to the server channel, then this names list is for all users on the server
             if channelName == Connection.serverChannel {
-                let text = users.map { " - \($0.name)" }.joined(separator: "\n")
+                let text = users.map { " - \($0.nick)" }.joined(separator: "\n")
                 
                 dispatchChannelMessage(
                     connection: target,
@@ -571,6 +565,66 @@ class NetworkMiddleware: Middleware {
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
             
             target.client.sendMessage("OPER \(username) \(password)")
+        
+        case .modeReceived(let connection, let identifier, let modeTarget, let modeString, let modeArgs):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }),
+                  let modeTargetPrefix = modeTarget.first else { break }
+            
+            var text = "\(identifier.subject) sets mode \(modeString)"
+            if !modeArgs.isEmpty {
+                text = "\(text) \(modeArgs.joined(separator: " "))"
+            }
+            
+            // if the target is a channel, add a message to the channel in question.
+            // otherwise, if this is a user mode message, add a message to the corresponding server channel
+            let channelName = IRCChannel.ChannelType.parseString(string: String(modeTargetPrefix)) == nil
+                ? Connection.serverChannel
+                : modeTarget
+            
+            output.dispatch(.network(
+                                .messageReceived(
+                                    connection: target,
+                                    channelName: channelName,
+                                    message: ChannelMessage(
+                                        text: text,
+                                        variant: .modeEvent))))
+            
+            // if the target is a channel, and the mode affects one or more users, we need to determine what that
+            // impact is
+            if channelName != Connection.serverChannel {
+                let modeChange = ChannelModeChange(from: modeString, modeArgs: modeArgs)
+                
+                // update modes added for users
+                modeChange.privilegesAdded.forEach { privilege, nicks in
+                    nicks.forEach { nick in
+                        output.dispatch(.network(
+                                            .userChannelModeAdded(
+                                                connection: target,
+                                                channelName: channelName,
+                                                nick: nick,
+                                                privilege: privilege)))
+                    }
+                }
+                
+                // update modes removed from users
+                modeChange.privilegesRemoved.forEach { privilege, nicks in
+                    nicks.forEach { nick in
+                        output.dispatch(.network(
+                                            .userChannelModeRemoved(
+                                                connection: target,
+                                                channelName: channelName,
+                                                nick: nick,
+                                                privilege: privilege)))
+                    }
+                }
+            }
+        
+        case .setUserMode(let connection, let channelName, let nick, let mode):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            target.client.sendMessage("MODE \(channelName) \(mode) \(nick)")
             
         case .privateMessageReceived(let connection, let identifier, let recipient, let message):
             let state = getState()
@@ -646,7 +700,7 @@ class NetworkMiddleware: Middleware {
             
             // find all channels where this user is present
             target.channels.forEach { channel in
-                if let user = channel.users.first(where: { $0.name == identifier.subject }) {
+                if let user = channel.users.first(where: { $0.nick == identifier.subject }) {
                     // remove the user from the channel
                     output.dispatch(.network(
                                         .userLeftChannel(

@@ -196,6 +196,31 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
         }
         
         return newState
+    
+    case .userChannelModeAdded(let connection, let channelName, let nick, let privilege):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           let channel = target.channels.first(where: { $0.name == channelName }),
+           let user = channel.users.first(where: { $0.nick == nick }) {
+            
+            user.privileges.append(privilege)
+            channel.lastUserListUpdate = Date()
+        }
+        
+        return newState
+        
+    case .userChannelModeRemoved(let connection, let channelName, let nick, let privilege):
+        let newState = state
+        if let target = newState.connections.first(where: { $0 === connection }),
+           let channel = target.channels.first(where: { $0.name == channelName }),
+           let user = channel.users.first(where: { $0.nick == nick }),
+           let index = user.privileges.firstIndex(of: privilege) {
+            
+            user.privileges.remove(at: index)
+            channel.lastUserListUpdate = Date()
+        }
+        
+        return newState
         
     default:
         return state

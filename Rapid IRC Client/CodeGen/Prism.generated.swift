@@ -499,6 +499,36 @@ extension NetworkAction {
         self.removeChannel != nil
     }
 
+    internal var modeReceived: (connection: Connection, identifier: IRCMessage.Prefix, target: String, modeString: String, modeArgs: [String])? {
+        get {
+            guard case let .modeReceived(connection, identifier, target, modeString, modeArgs) = self else { return nil }
+            return (connection, identifier, target, modeString, modeArgs)
+        }
+        set {
+            guard case .modeReceived = self, let newValue = newValue else { return }
+            self = .modeReceived(connection: newValue.0, identifier: newValue.1, target: newValue.2, modeString: newValue.3, modeArgs: newValue.4)
+        }
+    }
+
+    internal var isModeReceived: Bool {
+        self.modeReceived != nil
+    }
+
+    internal var setUserMode: (connection: Connection, channelName: String, nick: String, mode: String)? {
+        get {
+            guard case let .setUserMode(connection, channelName, nick, mode) = self else { return nil }
+            return (connection, channelName, nick, mode)
+        }
+        set {
+            guard case .setUserMode = self, let newValue = newValue else { return }
+            self = .setUserMode(connection: newValue.0, channelName: newValue.1, nick: newValue.2, mode: newValue.3)
+        }
+    }
+
+    internal var isSetUserMode: Bool {
+        self.setUserMode != nil
+    }
+
     internal var privateMessageReceived: (connection: Connection, identifier: IRCMessage.Prefix, recipient: String, message: ChannelMessage)? {
         get {
             guard case let .privateMessageReceived(connection, identifier, recipient, message) = self else { return nil }
@@ -512,6 +542,36 @@ extension NetworkAction {
 
     internal var isPrivateMessageReceived: Bool {
         self.privateMessageReceived != nil
+    }
+
+    internal var userChannelModeAdded: (connection: Connection, channelName: String, nick: String, privilege: User.ChannelPrivilege)? {
+        get {
+            guard case let .userChannelModeAdded(connection, channelName, nick, privilege) = self else { return nil }
+            return (connection, channelName, nick, privilege)
+        }
+        set {
+            guard case .userChannelModeAdded = self, let newValue = newValue else { return }
+            self = .userChannelModeAdded(connection: newValue.0, channelName: newValue.1, nick: newValue.2, privilege: newValue.3)
+        }
+    }
+
+    internal var isUserChannelModeAdded: Bool {
+        self.userChannelModeAdded != nil
+    }
+
+    internal var userChannelModeRemoved: (connection: Connection, channelName: String, nick: String, privilege: User.ChannelPrivilege)? {
+        get {
+            guard case let .userChannelModeRemoved(connection, channelName, nick, privilege) = self else { return nil }
+            return (connection, channelName, nick, privilege)
+        }
+        set {
+            guard case .userChannelModeRemoved = self, let newValue = newValue else { return }
+            self = .userChannelModeRemoved(connection: newValue.0, channelName: newValue.1, nick: newValue.2, privilege: newValue.3)
+        }
+    }
+
+    internal var isUserChannelModeRemoved: Bool {
+        self.userChannelModeRemoved != nil
     }
 
     internal var userAwayReceived: (connection: Connection, nick: String, message: ChannelMessage)? {

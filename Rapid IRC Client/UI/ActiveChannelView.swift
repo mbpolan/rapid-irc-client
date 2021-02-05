@@ -59,8 +59,8 @@ struct ActiveChannelView: View {
     
     private func sortUsers(_ users: Set<User>) -> [User] {
         return users.sorted(by: { (a, b) -> Bool in
-            let aOrdinal = a.privilege?.ordinal() ?? 0
-            let bOrdinal = b.privilege?.ordinal() ?? 0
+            let aOrdinal = a.highestPrivilege()?.ordinal ?? 0
+            let bOrdinal = b.highestPrivilege()?.ordinal ?? 0
             
             return aOrdinal > bOrdinal
         })
@@ -169,16 +169,13 @@ struct ActiveChannelView_Previews: PreviewProvider {
         channel.topic = "some topic message for this channel"
         
         channel.users.insert(User(
-                                name: "mike",
-                                privilege: nil))
+                                from: "mike"))
         
         channel.users.insert(User(
-                                name: "piotr",
-                                privilege: .voiced))
+                                from: "+piotr"))
         
         channel.users.insert(User(
-                                name: "jase",
-                                privilege: .fullOperator))
+                                from: "@jase"))
         
         let viewModel = ActiveChannelViewModel.viewModel(from: store)
         viewModel.state = ActiveChannelViewModel.ViewState(
