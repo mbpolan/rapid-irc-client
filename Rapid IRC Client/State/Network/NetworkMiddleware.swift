@@ -707,8 +707,14 @@ class NetworkMiddleware: Middleware {
                     text: message,
                     variant: .kick))
             
-            // remove the user from the user list in that channel
-            if let user = channel.users.first(where: { $0.nick == nick }) {
+            // if this kick was for us, then we need to also part the channel
+            // otherwise, remove the kickd user from the user list in said channel
+            if nick == target.identifier?.subject {
+                output.dispatch(.network(
+                                    .clientLeftChannel(
+                                        connection: target,
+                                        channelName: channelName)))
+            } else if let user = channel.users.first(where: { $0.nick == nick }) {
                 output.dispatch(.network(
                                     .userLeftChannel(
                                         conn: target,
