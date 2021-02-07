@@ -184,6 +184,21 @@ extension NetworkAction {
         self.nickReceived != nil
     }
 
+    internal var kickReceived: (connection: Connection, identifier: IRCMessage.Prefix, channelName: String, nick: String, reason: String?)? {
+        get {
+            guard case let .kickReceived(connection, identifier, channelName, nick, reason) = self else { return nil }
+            return (connection, identifier, channelName, nick, reason)
+        }
+        set {
+            guard case .kickReceived = self, let newValue = newValue else { return }
+            self = .kickReceived(connection: newValue.0, identifier: newValue.1, channelName: newValue.2, nick: newValue.3, reason: newValue.4)
+        }
+    }
+
+    internal var isKickReceived: Bool {
+        self.kickReceived != nil
+    }
+
     internal var messageReceived: (connection: Connection, channelName: String, message: ChannelMessage)? {
         get {
             guard case let .messageReceived(connection, channelName, message) = self else { return nil }
@@ -587,6 +602,21 @@ extension NetworkAction {
 
     internal var isUserAwayReceived: Bool {
         self.userAwayReceived != nil
+    }
+
+    internal var kickUserFromChannel: (connection: Connection, channelName: String, nick: String, reason: String?)? {
+        get {
+            guard case let .kickUserFromChannel(connection, channelName, nick, reason) = self else { return nil }
+            return (connection, channelName, nick, reason)
+        }
+        set {
+            guard case .kickUserFromChannel = self, let newValue = newValue else { return }
+            self = .kickUserFromChannel(connection: newValue.0, channelName: newValue.1, nick: newValue.2, reason: newValue.3)
+        }
+    }
+
+    internal var isKickUserFromChannel: Bool {
+        self.kickUserFromChannel != nil
     }
 
     internal var userQuit: (connection: Connection, identifier: IRCMessage.Prefix, reason: String)? {

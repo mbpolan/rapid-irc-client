@@ -688,6 +688,44 @@ class NetworkMiddleware: Middleware {
                 connection: target,
                 channelName: nick,
                 message: message)
+        
+        case .kickReceived(let connection, let identifier, let channelName, let nick, let reason):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }),
+                  let channel = target.channels.first(where: { $0.name == channelName }) else { break }
+            
+            // dispatch a message to the channel
+            var message = "\(identifier.subject) has kicked \(nick)"
+            if let reason = reason {
+                message = "\(message) (\(reason))"
+            }
+            
+            dispatchChannelMessage(
+                connection: target,
+                channelName: channelName,
+                message: ChannelMessage(
+                    text: message,
+                    variant: .kick))
+            
+            // remove the user from the user list in that channel
+            if let user = channel.users.first(where: { $0.nick == nick }) {
+                output.dispatch(.network(
+                                    .userLeftChannel(
+                                        conn: target,
+                                        channelName: channelName,
+                                        user: user)))
+            }
+        
+        case .kickUserFromChannel(let connection, let channelName, let nick, let reason):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            var message = "KICK \(channelName) \(nick)"
+            if let reason = reason, !reason.isEmptyOrWhitespace {
+                message = "\(message) :\(reason)"
+            }
+            
+            target.client.sendMessage(message)
             
         case .userQuit(let connection, let identifier, let reason):
             let state = getState()

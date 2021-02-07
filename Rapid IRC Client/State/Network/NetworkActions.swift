@@ -24,6 +24,7 @@ enum NetworkAction {
     case welcomeReceived(connection: Connection, identifier: String)
     case hostnameReceived(connection: Connection, hostname: String)
     case nickReceived(connection: Connection, identifier: IRCMessage.Prefix, nick: String)
+    case kickReceived(connection: Connection, identifier: IRCMessage.Prefix, channelName: String, nick: String, reason: String?)
     case messageReceived(connection: Connection, channelName: String, message: ChannelMessage)
     case channelTopicReceived(connection: Connection, channelName: String, topic: String)
     case channelTopicChanged(connection: Connection, channelName: String, identifier: IRCMessage.Prefix, topic: String)
@@ -51,6 +52,7 @@ enum NetworkAction {
     case userChannelModeAdded(connection: Connection, channelName: String, nick: String, privilege: User.ChannelPrivilege)
     case userChannelModeRemoved(connection: Connection, channelName: String, nick: String, privilege: User.ChannelPrivilege)
     case userAwayReceived(connection: Connection, nick: String, message: ChannelMessage)
+    case kickUserFromChannel(connection: Connection, channelName: String, nick: String, reason: String?)
     case userQuit(connection: Connection, identifier: IRCMessage.Prefix, reason: String)
     
     case errorReceived(connection: Connection, message: ChannelMessage)

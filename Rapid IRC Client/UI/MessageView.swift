@@ -93,7 +93,8 @@ struct MessageView: View {
             text = AnyView(Text(content)
                             .foregroundColor(.yellow))
             
-        case .error:
+        case .error,
+             .kick:
             text = AnyView(Text(content)
                             .foregroundColor(.red))
             

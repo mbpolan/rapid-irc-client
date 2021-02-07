@@ -60,6 +60,7 @@ extension ChannelMessage {
         case channelTopicEvent
         case modeEvent
         case error
+        case kick
         case client
         case other
         case motd

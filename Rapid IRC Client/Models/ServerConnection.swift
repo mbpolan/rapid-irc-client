@@ -177,6 +177,8 @@ extension ServerConnection {
                 handleHost(ircMessage)
             case .nick:
                 handleNick(ircMessage)
+            case .kick:
+                handleKick(ircMessage)
             case .mode:
                 handleModeCommand(ircMessage)
             case .channelListStart:
@@ -554,6 +556,37 @@ extension ServerConnection {
                                                 connection: self.connection.connection,
                                                 identifier: message.prefix!,
                                                 nick: nick)))
+        }
+        
+        private func handleKick(_ message: IRCMessage) {
+            // expect a valid prefix
+            if message.prefix == nil {
+                print("ERROR: no prefix in KICK command: \(message)")
+            }
+            
+            // expect at least two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in KICK command: \(message)")
+                return
+            }
+            
+            // first parameter is the channel
+            let channelName = message.parameters[0]
+            
+            // second parameter is the nick
+            let nick = message.parameters[1]
+            
+            // remaining parameters, if any, are the kick message
+            let reason = message.parameters[2...].joined(separator: " ").dropLeadingColon()
+            
+            // note the hostname for the server
+            self.connection.store.dispatch(.network(
+                                            .kickReceived(
+                                                connection: self.connection.connection,
+                                                identifier: message.prefix!,
+                                                channelName: channelName,
+                                                nick: nick,
+                                                reason: reason)))
         }
         
         private func handleChannelListStart(_ message: IRCMessage) {

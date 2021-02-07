@@ -71,6 +71,7 @@ enum Command {
     case youreOperator
     case time
     case mode
+    case kick
     case quit
     
     case error
@@ -233,6 +234,8 @@ extension Command {
             return .quit
         case "nick":
             return .nick
+        case "kick":
+            return .kick
         case "error":
             return .error
         default:

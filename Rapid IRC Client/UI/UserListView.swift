@@ -13,6 +13,8 @@ struct UserListView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<UserListViewModel.ViewAction, UserListViewModel.ViewState>
     @State var hoveredNick: String?
+    @State var kickReasonNick: String?
+    @State var kickReason: String = ""
     
     var body: some View {
         List {
@@ -28,9 +30,14 @@ struct UserListView: View {
     }
     
     func makeUserItem(_ user: UserListViewModel.UserEntry) -> some View {
-        let binding = Binding<Bool>(
+        let userInfoBinding = Binding<Bool>(
             get: { hoveredNick == user.nick },
             set: { hoveredNick = $0 ? hoveredNick : nil}
+        )
+        
+        let kickReasonBinding = Binding<Bool>(
+            get: { kickReasonNick == user.nick },
+            set: { kickReasonNick = $0 ? kickReasonNick : nil}
         )
         
         return Text(user.nick)
@@ -49,7 +56,7 @@ struct UserListView: View {
                     }
                 }
             }
-            .popover(isPresented: binding, arrowEdge: .trailing) {
+            .popover(isPresented: userInfoBinding, arrowEdge: .trailing) {
                 let popoverGrid = [
                     GridItem(.fixed(70), spacing: 5),
                     GridItem(.fixed(100), spacing: 5),
@@ -72,12 +79,36 @@ struct UserListView: View {
                     }
                 }.padding()
             }
+            .popover(isPresented: kickReasonBinding, arrowEdge: .leading) {
+                VStack(alignment: .trailing) {
+                    TextField("(reason)", text: $kickReason)
+                        .frame(minWidth: 300)
+                    
+                    HStack(alignment: .lastTextBaseline) {
+                        Button(action: {
+                            guard let currentChannel = self.viewModel.state.currentChannel,
+                                  let user = currentChannel.users.first(where: { $0.nick == kickReasonNick }) else { return }
+                            
+                            self.viewModel.dispatch(.kickUser(
+                                                        channel: currentChannel,
+                                                        user: user,
+                                                        reason: kickReason))
+                            
+                            kickReason = ""
+                            kickReasonNick = ""
+                        }) {
+                            Text("Kick")
+                        }
+                    }
+                }
+                .padding()
+            }
     }
     
     private func makeContextMenu(_ entry: UserListViewModel.UserEntry) -> Array<(label: String?, action: () -> Void)> {
         var entries: Array<(String?, () -> Void)> = []
         
-        // don't allow private messaging ourselves
+        // don't allow private messaging or kicking ourselves
         if !entry.identity {
             entries.append((label: "Private Message", action: {
                 guard let currentChannel = self.viewModel.state.currentChannel else { return }
@@ -88,6 +119,10 @@ struct UserListView: View {
             }))
             
             entries.append((label: nil, action: {}))
+            
+            entries.append((label: "Kick", action: {
+                kickReasonNick = entry.nick
+            }))
         }
             
         // promote or revoke operator status
@@ -110,7 +145,7 @@ struct UserListView: View {
         }
         
         // promote or revoke half operator status
-        if entry.user.privileges.contains(.fullOperator) {
+        if entry.user.privileges.contains(.halfOperator) {
             entries.append((label: "Revoke Half-Operator", action: {
                 guard let currentChannel = self.viewModel.state.currentChannel else { return }
                 
@@ -129,7 +164,7 @@ struct UserListView: View {
         }
         
         // promote or revoke voice status
-        if entry.user.privileges.contains(.fullOperator) {
+        if entry.user.privileges.contains(.voiced) {
             entries.append((label: "Revoke Voice", action: {
                 guard let currentChannel = self.viewModel.state.currentChannel else { return }
                 
@@ -187,6 +222,7 @@ struct UserListViewModel {
         case takeHalfOperator(channel: IRCChannel, user: User)
         case giveVoice(channel: IRCChannel, user: User)
         case takeVoice(channel: IRCChannel, user: User)
+        case kickUser(channel: IRCChannel, user: User, reason: String?)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -244,6 +280,14 @@ struct UserListViewModel {
                     channelName: channel.name,
                     nick: user.nick,
                     mode: User.ChannelPrivilege.voiced.taken))
+        
+        case .kickUser(let channel, let user, let reason):
+            return .network(
+                .kickUserFromChannel(
+                    connection: channel.connection,
+                    channelName: channel.name,
+                    nick: user.nick,
+                    reason: reason))
         }
     }
     
