@@ -149,6 +149,9 @@ class NetworkMiddleware: Middleware {
                                             connection: target,
                                             channelName: channelName)))
                 }
+                
+                // ask for the latest channel mode
+                target.client.sendMessage("MODE \(channelName)")
             } else {
                 output.dispatch(.network(
                                     .userJoinedChannel(
