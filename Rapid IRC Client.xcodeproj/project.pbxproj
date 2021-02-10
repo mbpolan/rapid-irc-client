@@ -52,7 +52,6 @@
 		27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CC2543ABD900DA4598 /* ContentView.swift */; };
 		27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74CE2543ABDA00DA4598 /* Assets.xcassets */; };
 		27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27CF74D12543ABDA00DA4598 /* Preview Assets.xcassets */; };
-		27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */; };
 		27CF74EC2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */; };
 		27CF75302544DE2A00DA4598 /* QuickConnectSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF752F2544DE2A00DA4598 /* QuickConnectSheet.swift */; };
 		5444AE3E84D69FA33A076E6D /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A88395C4FB638885BFDEAD /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework */; };
@@ -128,7 +127,6 @@
 		27CF74D62543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27CF74D72543ABDA00DA4598 /* Rapid_IRC_Client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Rapid_IRC_Client.entitlements; sourceTree = "<group>"; };
 		27CF74DC2543ABDA00DA4598 /* Rapid IRC ClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rapid_IRC_ClientTests.swift; sourceTree = "<group>"; };
 		27CF74E22543ABDA00DA4598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27CF74E72543ABDA00DA4598 /* Rapid IRC ClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Rapid IRC ClientUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27CF74EB2543ABDA00DA4598 /* Rapid_IRC_ClientUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rapid_IRC_ClientUITests.swift; sourceTree = "<group>"; };
@@ -219,6 +217,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		2773A93C25D38FB500865106 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				27A1E27925D37FBC00124755 /* ChannelModeTests.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		2776AE03256CABAA00371A28 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -304,9 +310,8 @@
 		27CF74DF2543ABDA00DA4598 /* Rapid IRC ClientTests */ = {
 			isa = PBXGroup;
 			children = (
-				27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */,
+				2773A93C25D38FB500865106 /* Models */,
 				27CF74E22543ABDA00DA4598 /* Info.plist */,
-				27A1E27925D37FBC00124755 /* ChannelModeTests.swift */,
 			);
 			path = "Rapid IRC ClientTests";
 			sourceTree = "<group>";
@@ -676,7 +681,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				27A1E27A25D37FBC00124755 /* ChannelModeTests.swift in Sources */,
-				27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
