@@ -71,6 +71,7 @@ class IRCChannel: Identifiable, Equatable {
     
     let id = UUID()
     var connection: Connection
+    var mode: ChannelMode = .default
     var topic: String?
     var topicSetBy: String?
     var topicSetOn: Date?

@@ -44,6 +44,8 @@
 		279F884A25C9080E00DA9F66 /* SnapshotAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F884925C9080E00DA9F66 /* SnapshotAction.swift */; };
 		279F884F25C908A000DA9F66 /* SnapshotReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F884E25C908A000DA9F66 /* SnapshotReducer.swift */; };
 		27A1E26425CCDD0100124755 /* ChannelModeChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A1E26325CCDD0100124755 /* ChannelModeChange.swift */; };
+		27A1E27525D373DB00124755 /* ChannelMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A1E27425D373DB00124755 /* ChannelMode.swift */; };
+		27A1E27A25D37FBC00124755 /* ChannelModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A1E27925D37FBC00124755 /* ChannelModeTests.swift */; };
 		27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1F525ABDAD300468A20 /* UIState.swift */; };
 		27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8D1FA25ABDB1000468A20 /* NetworkState.swift */; };
 		27CF74CB2543ABD900DA4598 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CF74CA2543ABD900DA4598 /* Main.swift */; };
@@ -114,6 +116,8 @@
 		279F884925C9080E00DA9F66 /* SnapshotAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotAction.swift; sourceTree = "<group>"; };
 		279F884E25C908A000DA9F66 /* SnapshotReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotReducer.swift; sourceTree = "<group>"; };
 		27A1E26325CCDD0100124755 /* ChannelModeChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelModeChange.swift; sourceTree = "<group>"; };
+		27A1E27425D373DB00124755 /* ChannelMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelMode.swift; sourceTree = "<group>"; };
+		27A1E27925D37FBC00124755 /* ChannelModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelModeTests.swift; sourceTree = "<group>"; };
 		27A8D1F525ABDAD300468A20 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		27A8D1FA25ABDB1000468A20 /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		27CF74C72543ABD900DA4598 /* Rapid IRC Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rapid IRC Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,6 +205,7 @@
 				2799124C25BBABF9004D0DDC /* CTCPCommand.swift */,
 				279F882C25C8D81200DA9F66 /* AppSnapshot.swift */,
 				27A1E26325CCDD0100124755 /* ChannelModeChange.swift */,
+				27A1E27425D373DB00124755 /* ChannelMode.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -301,6 +306,7 @@
 			children = (
 				27CF74E02543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift */,
 				27CF74E22543ABDA00DA4598 /* Info.plist */,
+				27A1E27925D37FBC00124755 /* ChannelModeTests.swift */,
 			);
 			path = "Rapid IRC ClientTests";
 			sourceTree = "<group>";
@@ -652,6 +658,7 @@
 				2799122125B53240004D0DDC /* GeneralSettingsView.swift in Sources */,
 				279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */,
 				27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */,
+				27A1E27525D373DB00124755 /* ChannelMode.swift in Sources */,
 				2757C2E7254A575D002335CB /* Types.swift in Sources */,
 				279F87FB25BE42D600DA9F66 /* DateFormatter.swift in Sources */,
 				2776AE0D256CABD600371A28 /* UIActions.swift in Sources */,
@@ -668,6 +675,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27A1E27A25D37FBC00124755 /* ChannelModeTests.swift in Sources */,
 				27CF74E12543ABDA00DA4598 /* Rapid_IRC_ClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -872,7 +880,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -894,7 +902,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -915,6 +923,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -935,6 +944,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mbpolan.Rapid-IRC-ClientUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

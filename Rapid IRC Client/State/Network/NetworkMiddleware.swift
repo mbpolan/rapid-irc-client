@@ -595,8 +595,17 @@ class NetworkMiddleware: Middleware {
             
             // if the target is a channel, and the mode affects one or more users, we need to determine what that
             // impact is
-            if channelName != Connection.serverChannel {
+            if let channel = target.channels.first(where: { $0.name == channelName && $0.descriptor == .multiUser }) {
+                // parse the mode string and apply the deltas to the current channel mode
                 let modeChange = ChannelModeChange(from: modeString, modeArgs: modeArgs)
+                let newMode = channel.mode.apply(modeChange)
+                
+                // update the current channel mode
+                output.dispatch(.network(
+                                    .channelModeChanged(
+                                        connection: target,
+                                        channelName: channelName,
+                                        mode: newMode)))
                 
                 // update modes added for users
                 modeChange.privilegesAdded.forEach { privilege, nicks in

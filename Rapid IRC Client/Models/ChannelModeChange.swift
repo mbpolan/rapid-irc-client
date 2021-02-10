@@ -7,12 +7,12 @@
 
 struct ChannelModeChange {
     
-    var bansAdded: [String] = []
-    var bansRemoved: [String] = []
-    var exceptionsAdded: [String] = []
-    var exceptionsRemoved: [String] = []
-    var inviteExceptionsAdded: [String] = []
-    var inviteExceptionsRemoved: [String] = []
+    var bansAdded: Set<String> = Set()
+    var bansRemoved: Set<String> = Set()
+    var exceptionsAdded: Set<String> = Set()
+    var exceptionsRemoved: Set<String> = Set()
+    var inviteExceptionsAdded: Set<String> = Set()
+    var inviteExceptionsRemoved: Set<String> = Set()
     var privilegesAdded: Dictionary<User.ChannelPrivilege, [String]> = [:]
     var privilegesRemoved: Dictionary<User.ChannelPrivilege, [String]> = [:]
     var clientLimit: UnaryMode<Int>? = nil
@@ -42,7 +42,7 @@ struct ChannelModeChange {
                 if let adding = adding,
                    let mask = args.first {
                     
-                    adding ? bansAdded.append(mask) : bansRemoved.append(mask)
+                    _ = adding ? bansAdded.insert(mask) : bansRemoved.insert(mask)
                     args = Array(args.dropFirst())
                 }
                 
@@ -51,7 +51,7 @@ struct ChannelModeChange {
                 if let adding = adding,
                    let mask = args.first {
                     
-                    adding ? exceptionsAdded.append(mask) : exceptionsRemoved.append(mask)
+                    _ = adding ? exceptionsAdded.insert(mask) : exceptionsRemoved.insert(mask)
                     args = Array(args.dropFirst())
                 }
                 
@@ -84,7 +84,7 @@ struct ChannelModeChange {
                 if let adding = adding,
                    let mask = args.first {
                     
-                    adding ? inviteExceptionsAdded.append(mask) : inviteExceptionsRemoved.append(mask)
+                    _ = adding ? inviteExceptionsAdded.insert(mask) : inviteExceptionsRemoved.insert(mask)
                     args = Array(args.dropFirst())
                 }
                 
@@ -151,5 +151,10 @@ extension ChannelModeChange {
     struct UnaryMode<T> {
         let added: Bool
         let parameter: T?
+        
+        func preferIfAdded(_ defaultValue: T?) -> T? {
+            guard let parameter = parameter else { return defaultValue }
+            return added ? parameter : defaultValue
+        }
     }
 }

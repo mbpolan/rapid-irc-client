@@ -39,6 +39,7 @@ enum NetworkAction {
     case joinedChannel(connection: Connection, channelName: String, identifier: IRCMessage.Prefix)
     case partedChannel(connection: Connection, channelName: String, identifier: String, nick: String, reason: String?)
     case channelStateChanged(connection: Connection, channelName: String, channelState: IRCChannel.State)
+    case channelModeChanged(connection: Connection, channelName: String, mode: ChannelMode)
     case userJoinedChannel(connection: Connection, channelName: String, user: User)
     case clientJoinedChannel(connection: Connection, channelName: String, descriptor: IRCChannel.Descriptor)
     case clientLeftChannel(connection: Connection, channelName: String)

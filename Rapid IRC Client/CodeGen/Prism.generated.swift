@@ -409,6 +409,21 @@ extension NetworkAction {
         self.channelStateChanged != nil
     }
 
+    internal var channelModeChanged: (connection: Connection, channelName: String, mode: ChannelMode)? {
+        get {
+            guard case let .channelModeChanged(connection, channelName, mode) = self else { return nil }
+            return (connection, channelName, mode)
+        }
+        set {
+            guard case .channelModeChanged = self, let newValue = newValue else { return }
+            self = .channelModeChanged(connection: newValue.0, channelName: newValue.1, mode: newValue.2)
+        }
+    }
+
+    internal var isChannelModeChanged: Bool {
+        self.channelModeChanged != nil
+    }
+
     internal var userJoinedChannel: (connection: Connection, channelName: String, user: User)? {
         get {
             guard case let .userJoinedChannel(connection, channelName, user) = self else { return nil }
