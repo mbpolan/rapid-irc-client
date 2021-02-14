@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ChannelMode {
+struct ChannelMode: Equatable {
     
     var bans: Set<String>
     var exceptions: Set<String>
@@ -32,6 +32,25 @@ struct ChannelMode {
             protectedTopic: false,
             secret: false,
             noExternalMessages: false)
+    }
+    
+    func toModeChange() -> ChannelModeChange {
+        return ChannelModeChange(
+            bansAdded: bans,
+            bansRemoved: Set(),
+            exceptionsAdded: exceptions,
+            exceptionsRemoved: Set(),
+            inviteExceptionsAdded: inviteExceptions,
+            inviteExceptionsRemoved: Set(),
+            privilegesAdded: [:],
+            privilegesRemoved: [:],
+            clientLimit: ChannelModeChange.UnaryMode(added: clientLimit != nil, parameter: clientLimit),
+            inviteOnly: inviteOnly,
+            key: ChannelModeChange.UnaryMode(added: key != nil, parameter: key),
+            moderated: moderated,
+            protectedTopic: protectedTopic,
+            secret: secret,
+            noExternalMessages: noExternalMessages)
     }
     
     func apply(_ change: ChannelModeChange) -> ChannelMode {

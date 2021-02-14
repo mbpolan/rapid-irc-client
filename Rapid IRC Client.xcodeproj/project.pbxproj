@@ -20,6 +20,7 @@
 		2757C308254E4917002335CB /* IRCMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C307254E4917002335CB /* IRCMessage.swift */; };
 		2757C315254E527F002335CB /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C314254E527F002335CB /* Command.swift */; };
 		276209EF2585AA8A00212F36 /* NetworkMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */; };
+		276CC0C925D76EA800BD7606 /* ChannelPropertiesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */; };
 		2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE04256CABCC00371A28 /* UIReducer.swift */; };
 		2776AE0D256CABD600371A28 /* UIActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE0C256CABD600371A28 /* UIActions.swift */; };
 		279911DE25AFD9FA004D0DDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 279911DB25AFD9FA004D0DDC /* README.md */; };
@@ -91,6 +92,7 @@
 		2757C307254E4917002335CB /* IRCMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRCMessage.swift; sourceTree = "<group>"; };
 		2757C314254E527F002335CB /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMiddleware.swift; sourceTree = "<group>"; };
+		276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPropertiesSheet.swift; sourceTree = "<group>"; };
 		2776AE04256CABCC00371A28 /* UIReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIReducer.swift; sourceTree = "<group>"; };
 		2776AE0C256CABD600371A28 /* UIActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIActions.swift; sourceTree = "<group>"; };
 		279911DB25AFD9FA004D0DDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -340,6 +342,7 @@
 				2799123F25B6067F004D0DDC /* CommandTextField.swift */,
 				279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */,
 				279F881725C5078A00DA9F66 /* FormattedText.swift */,
+				276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -636,6 +639,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				276CC0C925D76EA800BD7606 /* ChannelPropertiesSheet.swift in Sources */,
 				27A8D1FB25ABDB1000468A20 /* NetworkState.swift in Sources */,
 				279F884225C907DC00DA9F66 /* SnapshotMiddleware.swift in Sources */,
 				2757C2F1254A5AD5002335CB /* ActiveChannelView.swift in Sources */,

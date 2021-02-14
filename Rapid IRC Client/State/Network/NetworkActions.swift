@@ -48,6 +48,7 @@ enum NetworkAction {
     case renameChannel(connection: Connection, oldChannelName: String, newChannelName: String)
     case removeChannel(connection: Connection, channelName: String)
     case modeReceived(connection: Connection, identifier: IRCMessage.Prefix, target: String, modeString: String, modeArgs: [String])
+    case setChannelMode(connection: Connection, channelName: String, mode: String)
     case setUserMode(connection: Connection, channelName: String, nick: String, mode: String)
     case privateMessageReceived(connection: Connection, identifier: IRCMessage.Prefix, recipient: String, message: ChannelMessage)
     case userChannelModeAdded(connection: Connection, channelName: String, nick: String, privilege: User.ChannelPrivilege)

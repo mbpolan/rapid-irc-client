@@ -632,6 +632,12 @@ class NetworkMiddleware: Middleware {
                 }
             }
         
+        case .setChannelMode(let connection, let channelName, let mode):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            target.client.sendMessage("MODE \(channelName) \(mode)")
+        
         case .setUserMode(let connection, let channelName, let nick, let mode):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }

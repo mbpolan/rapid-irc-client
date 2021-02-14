@@ -39,6 +39,21 @@ class UIMiddleware: Middleware {
             // hide the operator login sheet, if it's shown
             output.dispatch(.ui(.hideOperatorSheet))
         
+        case .sendChannelModeChange(let modeChange):
+            let state = getState()
+            
+            // send a MODE command to the server
+            if let channel = state.ui.pendingChannelPropertiesChannel {
+                output.dispatch(.network(
+                                    .setChannelMode(
+                                        connection: channel.connection,
+                                        channelName: channel.name,
+                                        mode: modeChange.toModeString())))
+            }
+            
+            // hide the channel mode properties sheet
+            output.dispatch(.ui(.hideChannelPropertiesSheet))
+        
         case .connectToServer(let serverInfo):
             // initiate the connection to the server
             output.dispatch(.network(.connect(serverInfo: serverInfo)))

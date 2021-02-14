@@ -38,6 +38,10 @@ struct ContentView: View {
                 QuickConnectSheet(onClose: handleConnectToServer)
             case .requestOperator:
                 OperatorLoginSheet(onClose: handleRequestOperator)
+            case .channelProperties:
+                ChannelPropertiesSheet(
+                    initial: self.viewModel.state.pendingChannelAction?.mode,
+                    onCommit: handleChannelProperties)
             }
         }
         .onReceive(onConnectToServer) { event in
@@ -65,6 +69,15 @@ struct ContentView: View {
                                     username: credentials.username,
                                     password: credentials.password))
     }
+    
+    private func handleChannelProperties(result: ChannelPropertiesSheet.Result) {
+        guard let modeChange = result.modeChange, result.accepted else {
+            self.viewModel.dispatch(.closeChannelPropertiesSheet)
+            return
+        }
+        
+        self.viewModel.dispatch(.sendChannelMode(mode: modeChange))
+    }
 }
 
 // MARK: - ViewModel
@@ -77,11 +90,13 @@ enum ContentViewModel {
     }
     
     struct ViewState: Equatable {
-        
         var activeSheet: ActiveSheet?
+        var pendingChannelAction: IRCChannel?
         
         static var empty: ViewState {
-            .init(activeSheet: nil)
+            .init(
+                activeSheet: nil,
+                pendingChannelAction: nil)
         }
     }
     
@@ -91,6 +106,8 @@ enum ContentViewModel {
         case closeConnectSheet
         case sendOperatorLogin(username: String, password: String)
         case closeOperatorLoginSheet
+        case sendChannelMode(mode: ChannelModeChange)
+        case closeChannelPropertiesSheet
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -117,18 +134,31 @@ enum ContentViewModel {
             
         case .closeOperatorLoginSheet:
             return .ui(.hideOperatorSheet)
+        
+        case .sendChannelMode(let mode):
+            return .ui(.sendChannelModeChange(modeChange: mode))
+        
+        case .closeChannelPropertiesSheet:
+            return .ui(.hideChannelPropertiesSheet)
         }
     }
     
     private static func transform(appState: AppState) -> ViewState {
         var activeSheet: ActiveSheet? = nil
+        var pendingChannelAction: IRCChannel? = nil
+        
         if appState.ui.connectSheetShown {
             activeSheet = .connectToServer
         } else if appState.ui.requestOperatorSheetShown {
             activeSheet = .requestOperator
+        } else if appState.ui.channelPropertiesSheetShown {
+            activeSheet = .channelProperties
+            pendingChannelAction = appState.ui.pendingChannelPropertiesChannel
         }
         
-        return ViewState(activeSheet: activeSheet)
+        return ViewState(
+            activeSheet: activeSheet,
+            pendingChannelAction: pendingChannelAction)
     }
 }
 
@@ -137,6 +167,7 @@ extension ContentViewModel {
     enum ActiveSheet: Identifiable {
         case connectToServer
         case requestOperator
+        case channelProperties
         
         var id: Int {
             hashValue

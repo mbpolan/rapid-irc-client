@@ -544,6 +544,21 @@ extension NetworkAction {
         self.modeReceived != nil
     }
 
+    internal var setChannelMode: (connection: Connection, channelName: String, mode: String)? {
+        get {
+            guard case let .setChannelMode(connection, channelName, mode) = self else { return nil }
+            return (connection, channelName, mode)
+        }
+        set {
+            guard case .setChannelMode = self, let newValue = newValue else { return }
+            self = .setChannelMode(connection: newValue.0, channelName: newValue.1, mode: newValue.2)
+        }
+    }
+
+    internal var isSetChannelMode: Bool {
+        self.setChannelMode != nil
+    }
+
     internal var setUserMode: (connection: Connection, channelName: String, nick: String, mode: String)? {
         get {
             guard case let .setUserMode(connection, channelName, nick, mode) = self else { return nil }
@@ -759,6 +774,32 @@ extension UIAction {
         self.hideOperatorSheet != nil
     }
 
+    internal var showChannelPropertiesSheet: (connection: Connection, channelName: String)? {
+        get {
+            guard case let .showChannelPropertiesSheet(connection, channelName) = self else { return nil }
+            return (connection, channelName)
+        }
+        set {
+            guard case .showChannelPropertiesSheet = self, let newValue = newValue else { return }
+            self = .showChannelPropertiesSheet(connection: newValue.0, channelName: newValue.1)
+        }
+    }
+
+    internal var isShowChannelPropertiesSheet: Bool {
+        self.showChannelPropertiesSheet != nil
+    }
+
+    internal var hideChannelPropertiesSheet: Void? {
+        get {
+            guard case .hideChannelPropertiesSheet = self else { return nil }
+            return ()
+        }
+    }
+
+    internal var isHideChannelPropertiesSheet: Bool {
+        self.hideChannelPropertiesSheet != nil
+    }
+
     internal var sendOperatorLogin: (username: String, password: String)? {
         get {
             guard case let .sendOperatorLogin(username, password) = self else { return nil }
@@ -772,6 +813,21 @@ extension UIAction {
 
     internal var isSendOperatorLogin: Bool {
         self.sendOperatorLogin != nil
+    }
+
+    internal var sendChannelModeChange: ChannelModeChange? {
+        get {
+            guard case let .sendChannelModeChange(modeChange) = self else { return nil }
+            return (modeChange)
+        }
+        set {
+            guard case .sendChannelModeChange = self, let newValue = newValue else { return }
+            self = .sendChannelModeChange(modeChange: newValue)
+        }
+    }
+
+    internal var isSendChannelModeChange: Bool {
+        self.sendChannelModeChange != nil
     }
 
     internal var connectToServer: ServerInfo? {

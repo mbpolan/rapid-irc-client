@@ -131,6 +131,18 @@ struct ChannelListView: View {
             }
         }
         .frame(maxWidth: .infinity)
+        .contextMenu {
+            if channel.type != .server {
+                // show an item for changing channel mode
+                Button(action: {
+                    if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                        self.viewModel.dispatch(.showChannelProperties(target))
+                    }
+                }) {
+                    Text("Set Properties")
+                }
+            }
+        }
     }
     
     private func makeChannelIcon(_ channel: ChannelListViewModel.ListItem) -> some View {
@@ -199,6 +211,7 @@ enum ChannelListViewModel {
         case reconnect(Connection)
         case disconnect(Connection)
         case requestOperator(Connection)
+        case showChannelProperties(IRCChannel)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -228,6 +241,12 @@ enum ChannelListViewModel {
         
         case .requestOperator(let connection):
             return .ui(.showOperatorSheet(connection: connection))
+        
+        case .showChannelProperties(let channel):
+            return .ui(
+                .showChannelPropertiesSheet(
+                    connection: channel.connection,
+                    channelName: channel.name))
         }
     }
     
