@@ -31,17 +31,11 @@ extension ChannelModeChange {
         var adding: Bool? = nil
         
         modeString.forEach { ch in
-            switch ch {
-            // following mode flags are added
-            case "+":
-                adding = true
-                
-            // following mode flags are removed
-            case "-":
-                adding = false
-                
+            let flag = ModeFlag(rawValue: ch)
+            
+            switch flag {
             // add or remove banned client masks
-            case "b":
+            case .ban:
                 if let adding = adding,
                    let mask = args.first {
                     
@@ -50,7 +44,7 @@ extension ChannelModeChange {
                 }
                 
             // add or remove ban-exempt client masks
-            case "e":
+            case .exception:
                 if let adding = adding,
                    let mask = args.first {
                     
@@ -59,7 +53,7 @@ extension ChannelModeChange {
                 }
                 
             // set or remove a channel key
-            case "k":
+            case .key:
                 if let adding = adding,
                    let keyValue = args.first {
                     
@@ -68,7 +62,7 @@ extension ChannelModeChange {
                 }
                 
             // set or remove a channel client limit
-            case "l":
+            case .clientLimit:
                 if let adding = adding,
                    let keyValue = args.first {
                     
@@ -77,13 +71,13 @@ extension ChannelModeChange {
                 }
                 
             // set or remove invite only mode
-            case "i":
+            case .inviteOnly:
                 if let adding = adding {
                     inviteOnly = adding
                 }
                 
             // add or remove invite-exempt client masks
-            case "I":
+            case .inviteException:
                 if let adding = adding,
                    let mask = args.first {
                     
@@ -92,31 +86,31 @@ extension ChannelModeChange {
                 }
                 
             // set or remove moderated mode
-            case "m":
+            case .moderated:
                 if let adding = adding {
                     moderated = adding
                 }
                 
             // set or remove no external messages mode
-            case "n":
+            case .noExternalMessages:
                 if let adding = adding {
                     noExternalMessages = adding
                 }
                 
             // set or remove secret mode
-            case "s":
+            case .secret:
                 if let adding = adding {
                     secret = adding
                 }
                 
             // set or remove protected topic mode
-            case "t":
+            case .protectedTopic:
                 if let adding = adding {
                     protectedTopic = adding
                 }
                 
             // set or revoke operator status
-            case "o":
+            case .operator:
                 if let adding = adding,
                    let nick = args.first {
                     adding
@@ -125,7 +119,7 @@ extension ChannelModeChange {
                 }
                 
             // set or revoke half operator status
-            case "h":
+            case .halfOperator:
                 if let adding = adding,
                    let nick = args.first {
                     adding
@@ -134,7 +128,7 @@ extension ChannelModeChange {
                 }
                 
             // set or revoke voiced status
-            case "v":
+            case .voice:
                 if let adding = adding,
                    let nick = args.first {
                     adding
@@ -143,7 +137,20 @@ extension ChannelModeChange {
                 }
                 
             default:
-                print("Ignoring unknown mode string character: \(ch)")
+                // is this an action operator instead?
+                let action = ModeFlagAction(rawValue: ch)
+                switch action {
+                // following mode flags are added
+                case .add:
+                    adding = true
+                    
+                // following mode flags are removed
+                case .remove:
+                    adding = false
+                    
+                default:
+                    print("Ignoring unknown mode string character: \(ch)")
+                }
             }
         }
     }
@@ -168,93 +175,104 @@ extension ChannelModeChange {
     }
     
     func toModeString() -> String {
-        var added: [String] = []
+        var added: [ModeFlag] = []
         var addedParams: [String] = []
-        var removed: [String] = []
+        var removed: [ModeFlag] = []
         var removedParams: [String] = []
         
         if !bansAdded.isEmpty {
-            added.append("b")
+            added.append(.ban)
             addedParams.append(contentsOf: bansAdded)
         }
         
         if !bansRemoved.isEmpty {
-            removed.append("b")
+            removed.append(.ban)
             removedParams.append(contentsOf: bansRemoved)
         }
         
         if !exceptionsAdded.isEmpty {
-            added.append("e")
+            added.append(.exception)
             addedParams.append(contentsOf: exceptionsAdded)
         }
         
         if !exceptionsRemoved.isEmpty {
-            removed.append("e")
-            removed.append(contentsOf: exceptionsRemoved)
+            removed.append(.exception)
+            removedParams.append(contentsOf: exceptionsRemoved)
         }
         
         if !inviteExceptionsAdded.isEmpty {
-            added.append("I")
+            added.append(.inviteException)
             addedParams.append(contentsOf: inviteExceptionsAdded)
         }
         
         if !inviteExceptionsRemoved.isEmpty {
-            removed.append("I")
-            removed.append(contentsOf: inviteExceptionsRemoved)
+            removed.append(.inviteException)
+            removedParams.append(contentsOf: inviteExceptionsRemoved)
         }
         
         if let clientLimit = clientLimit,
            let clientLimitParameter = clientLimit.parameter {
             if clientLimit.added {
-                added.append("l")
+                added.append(.clientLimit)
                 addedParams.append(String(clientLimitParameter))
             } else {
-                removed.append("l")
-                removedParams.append(String(clientLimitParameter))
+                // do not include the parameter on removal of this mode
+                removed.append(.clientLimit)
             }
         }
         
         if let key = key,
            let keyParameter = key.parameter {
             if key.added {
-                added.append("k")
+                added.append(.key)
                 addedParams.append(keyParameter)
             } else {
-                removed.append("k")
+                removed.append(.key)
                 removedParams.append(keyParameter)
             }
         }
         
         if let inviteOnly = inviteOnly {
-            inviteOnly ? added.append("i") : removed.append("i")
+            inviteOnly
+                ? added.append(.inviteOnly)
+                : removed.append(.inviteOnly)
         }
         
         if let moderated = moderated {
-            moderated ? added.append("m") : removed.append("m")
+            moderated
+                ? added.append(.moderated)
+                : removed.append(.moderated)
         }
         
         if let noExternalMessages = noExternalMessages {
-            noExternalMessages ? added.append("n") : removed.append("n")
+            noExternalMessages
+                ? added.append(.noExternalMessages)
+                : removed.append(.noExternalMessages)
         }
         
         if let protectedTopic = protectedTopic {
-            protectedTopic ? added.append("t") : removed.append("t")
+            protectedTopic
+                ? added.append(.protectedTopic)
+                : removed.append(.protectedTopic)
         }
         
         if let secret = secret {
-            secret ? added.append("s") : removed.append("s")
+            secret
+                ? added.append(.secret)
+                : removed.append(.secret)
         }
         
         var modeString = ""
         
         // build the flag list for all added modes
         if !added.isEmpty {
-            modeString = "+\(added.joined())"
+            let addedModes = added.map { String($0.rawValue) }.joined()
+            modeString = "+\(addedModes)"
         }
         
         // build the flag list for all removed modes
         if !removed.isEmpty {
-            let removedModes = "-\(removed.joined())"
+            let removedModes = "-\(removed.map { String($0.rawValue) }.joined())"
             modeString = modeString.isEmpty ? removedModes : "\(modeString)\(removedModes)"
         }
         

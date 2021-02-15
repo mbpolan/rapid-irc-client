@@ -21,6 +21,7 @@
 		2757C315254E527F002335CB /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C314254E527F002335CB /* Command.swift */; };
 		276209EF2585AA8A00212F36 /* NetworkMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */; };
 		276CC0C925D76EA800BD7606 /* ChannelPropertiesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */; };
+		276CC0CE25DA242200BD7606 /* ModeFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC0CD25DA242200BD7606 /* ModeFlag.swift */; };
 		2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE04256CABCC00371A28 /* UIReducer.swift */; };
 		2776AE0D256CABD600371A28 /* UIActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE0C256CABD600371A28 /* UIActions.swift */; };
 		279911DE25AFD9FA004D0DDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 279911DB25AFD9FA004D0DDC /* README.md */; };
@@ -93,6 +94,7 @@
 		2757C314254E527F002335CB /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMiddleware.swift; sourceTree = "<group>"; };
 		276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPropertiesSheet.swift; sourceTree = "<group>"; };
+		276CC0CD25DA242200BD7606 /* ModeFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeFlag.swift; sourceTree = "<group>"; };
 		2776AE04256CABCC00371A28 /* UIReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIReducer.swift; sourceTree = "<group>"; };
 		2776AE0C256CABD600371A28 /* UIActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIActions.swift; sourceTree = "<group>"; };
 		279911DB25AFD9FA004D0DDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				279F882C25C8D81200DA9F66 /* AppSnapshot.swift */,
 				27A1E26325CCDD0100124755 /* ChannelModeChange.swift */,
 				27A1E27425D373DB00124755 /* ChannelMode.swift */,
+				276CC0CD25DA242200BD7606 /* ModeFlag.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -674,6 +677,7 @@
 				279F884F25C908A000DA9F66 /* SnapshotReducer.swift in Sources */,
 				27CF75302544DE2A00DA4598 /* QuickConnectSheet.swift in Sources */,
 				27CF74CB2543ABD900DA4598 /* Main.swift in Sources */,
+				276CC0CE25DA242200BD7606 /* ModeFlag.swift in Sources */,
 				279F884A25C9080E00DA9F66 /* SnapshotAction.swift in Sources */,
 				279F881825C5078A00DA9F66 /* FormattedText.swift in Sources */,
 				279F883925C9074E00DA9F66 /* SnapshotState.swift in Sources */,
