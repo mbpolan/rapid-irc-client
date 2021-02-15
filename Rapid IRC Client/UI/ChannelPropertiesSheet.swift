@@ -11,31 +11,33 @@ struct ChannelPropertiesSheet: View {
     
     private var initial: ChannelMode
     private var onClose: (_ result: Result) -> Void
-    @State private var clientLimit: Bool = false
-    @State private var clientLimitValue: String = ""
-    @State private var inviteOnly: Bool = false
-    @State private var key: Bool = false
-    @State private var keyValue: String = ""
-    @State private var moderated: Bool = false
-    @State private var secret: Bool = false
-    @State private var protected: Bool = false
-    @State private var noExternalMessages: Bool = false
+    @State private var clientLimit: Bool
+    @State private var clientLimitValue: String
+    @State private var inviteOnly: Bool
+    @State private var key: Bool
+    @State private var keyValue: String
+    @State private var moderated: Bool
+    @State private var secret: Bool
+    @State private var protected: Bool
+    @State private var noExternalMessages: Bool
     @State private var formDirty: Bool = false
     
-    init(initial: ChannelMode?,
+    init(initial: ChannelMode,
          onCommit: @escaping(_ result: Result) -> Void) {
         
-        self.initial = initial ?? .default
+        self.initial = initial
         self.onClose = onCommit
-        self.clientLimit = initial?.clientLimit != nil
-        self.clientLimitValue = String(initial?.clientLimit ?? 0)
-        self.inviteOnly = initial?.inviteOnly ?? false
-        self.key = initial?.key != nil
-        self.keyValue = initial?.key ?? ""
-        self.moderated = initial?.moderated ?? false
-        self.secret = initial?.secret ?? false
-        self.protected = initial?.protectedTopic ?? false
-        self.noExternalMessages = initial?.noExternalMessages ?? false
+        
+        // initialize state properties based on the initial channel mode
+        self._clientLimit = .init(initialValue: initial.clientLimit != nil)
+        self._clientLimitValue = .init(initialValue: String(initial.clientLimit ?? 0))
+        self._inviteOnly = .init(initialValue: initial.inviteOnly)
+        self._key = .init(initialValue: initial.key != nil)
+        self._keyValue = .init(initialValue: initial.key ?? "")
+        self._moderated = .init(initialValue: initial.moderated)
+        self._secret = .init(initialValue: initial.secret)
+        self._protected = .init(initialValue: initial.protectedTopic)
+        self._noExternalMessages = .init(initialValue: initial.noExternalMessages)
     }
     
     var body: some View {
@@ -75,6 +77,7 @@ struct ChannelPropertiesSheet: View {
                 }
                 
                 TextField("(limit)", text: makeBinding(\.clientLimitValue))
+                    .disabled(!clientLimit)
             }
             
             Divider()
@@ -132,9 +135,13 @@ struct ChannelPropertiesSheet: View {
             inviteExceptionsRemoved: Set(),
             privilegesAdded: [:],
             privilegesRemoved: [:],
-            clientLimit: ChannelModeChange.UnaryMode(added: self.clientLimit, parameter: Int(self.clientLimitValue)),
+            clientLimit: ChannelModeChange.UnaryMode(
+                added: self.clientLimit,
+                parameter: self.clientLimit ? Int(self.clientLimitValue) : self.initial.clientLimit),
             inviteOnly: self.inviteOnly,
-            key: ChannelModeChange.UnaryMode(added: self.key, parameter: self.keyValue),
+            key: ChannelModeChange.UnaryMode(
+                added: self.key,
+                parameter: self.key ? self.keyValue : self.initial.key),
             moderated: self.moderated,
             protectedTopic: self.protected,
             secret: self.secret,
@@ -161,8 +168,11 @@ extension ChannelPropertiesSheet {
 struct ChannelPropertiesSheet_Previews: PreviewProvider {
     
     static var previews: some View {
-        ChannelPropertiesSheet(
-            initial: .default,
+        var initial = ChannelMode.default
+        initial.moderated = true
+        
+        return ChannelPropertiesSheet(
+            initial: initial,
             onCommit: { _ in })
     }
 }

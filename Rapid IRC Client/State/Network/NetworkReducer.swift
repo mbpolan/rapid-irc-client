@@ -111,7 +111,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
     case .channelModeChanged(let connection, let channelName, let mode):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
-           var channel = target.channels.first(where: { $0.name == channelName}) {
+           var channel = target.channels.first(where: { $0.name == channelName }) {
             channel.mode = mode
         }
         
@@ -120,7 +120,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
     case .userJoinedChannel(let connection, let channelName, let user):
         var newState = state
         if let target = newState.connections.first(where: { $0 === connection }),
-           var channel = target.channels.first(where: { $0.name == channelName}) {
+           var channel = target.channels.first(where: { $0.name == channelName }) {
             channel.users.insert(user)
             channel.lastUserListUpdate = Date()
         }

@@ -708,20 +708,17 @@ extension ServerConnection {
             let modeString = message.parameters[1]
             
             // remaining parameters, if present, are mode arguments
-            let modeArgs = message.parameters[2...].joined(separator: " ").dropLeadingColon()
-            
-            var text = "Channel mode is \(modeString)"
-            if !modeArgs.isEmptyOrWhitespace {
-                text = "\(text) (\(modeArgs))"
+            var modeArgs = Array(message.parameters[2...])
+            if let first = modeArgs.first {
+                modeArgs[0] = first.dropLeadingColon()
             }
             
             self.connection.store.dispatch(.network(
-                                            .messageReceived(
+                                            .channelModeReceived(
                                                 connection: self.connection.connection,
                                                 channelName: channelName,
-                                                message: ChannelMessage(
-                                                    text: text,
-                                                    variant: .modeEvent))))
+                                                modeString: modeString,
+                                                modeArgs: modeArgs)))
         }
         
         private func handleChannelCreationTime(_ message: IRCMessage) {

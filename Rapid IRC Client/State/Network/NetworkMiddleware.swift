@@ -596,41 +596,30 @@ class NetworkMiddleware: Middleware {
             // if the target is a channel, and the mode affects one or more users, we need to determine what that
             // impact is
             if let channel = target.channels.first(where: { $0.name == channelName && $0.descriptor == .multiUser }) {
-                // parse the mode string and apply the deltas to the current channel mode
-                let modeChange = ChannelModeChange(from: modeString, modeArgs: modeArgs)
-                let newMode = channel.mode.apply(modeChange)
-                
-                // update the current channel mode
-                output.dispatch(.network(
-                                    .channelModeChanged(
-                                        connection: target,
-                                        channelName: channelName,
-                                        mode: newMode)))
-                
-                // update modes added for users
-                modeChange.privilegesAdded.forEach { privilege, nicks in
-                    nicks.forEach { nick in
-                        output.dispatch(.network(
-                                            .userChannelModeAdded(
-                                                connection: target,
-                                                channelName: channelName,
-                                                nick: nick,
-                                                privilege: privilege)))
-                    }
-                }
-                
-                // update modes removed from users
-                modeChange.privilegesRemoved.forEach { privilege, nicks in
-                    nicks.forEach { nick in
-                        output.dispatch(.network(
-                                            .userChannelModeRemoved(
-                                                connection: target,
-                                                channelName: channelName,
-                                                nick: nick,
-                                                privilege: privilege)))
-                    }
-                }
+                updateChannelMode(channel: channel, modeString: modeString, modeArgs: modeArgs)
             }
+            
+        case .channelModeReceived(let connection, let channelName, let modeString, let modeArgs):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }),
+                  let channel = target.channels.first(where: { $0.name == channelName }) else { break }
+            
+            var text = "Channel mode is \(modeString)"
+            if !modeArgs.isEmpty {
+                text = "\(text) (\(modeArgs.joined(separator: ", ")))"
+            }
+            
+            // dispatch a message to the channel
+            output.dispatch(.network(
+                                .messageReceived(
+                                    connection: target,
+                                    channelName: channelName,
+                                    message: ChannelMessage(
+                                        text: text,
+                                        variant: .modeEvent))))
+            
+            // update the mode on the channel
+            updateChannelMode(channel: channel, modeString: modeString, modeArgs: modeArgs)
         
         case .setChannelMode(let connection, let channelName, let mode):
             let state = getState()
@@ -857,6 +846,43 @@ class NetworkMiddleware: Middleware {
                                     connection: connection,
                                     connectionState: .disconnected)))
             
+        }
+    }
+    
+    private func updateChannelMode(channel: IRCChannel, modeString: String, modeArgs: [String]) {
+        // parse the mode string and apply the deltas to the current channel mode
+        let modeChange = ChannelModeChange(from: modeString, modeArgs: modeArgs)
+        let newMode = channel.mode.apply(modeChange)
+        
+        // update the current channel mode
+        output.dispatch(.network(
+                            .channelModeChanged(
+                                connection: channel.connection,
+                                channelName: channel.name,
+                                mode: newMode)))
+        
+        // update modes added for users
+        modeChange.privilegesAdded.forEach { privilege, nicks in
+            nicks.forEach { nick in
+                output.dispatch(.network(
+                                    .userChannelModeAdded(
+                                        connection: channel.connection,
+                                        channelName: channel.name,
+                                        nick: nick,
+                                        privilege: privilege)))
+            }
+        }
+        
+        // update modes removed from users
+        modeChange.privilegesRemoved.forEach { privilege, nicks in
+            nicks.forEach { nick in
+                output.dispatch(.network(
+                                    .userChannelModeRemoved(
+                                        connection: channel.connection,
+                                        channelName: channel.name,
+                                        nick: nick,
+                                        privilege: privilege)))
+            }
         }
     }
     

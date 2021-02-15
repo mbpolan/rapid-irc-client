@@ -544,6 +544,21 @@ extension NetworkAction {
         self.modeReceived != nil
     }
 
+    internal var channelModeReceived: (connection: Connection, channelName: String, modeString: String, modeArgs: [String])? {
+        get {
+            guard case let .channelModeReceived(connection, channelName, modeString, modeArgs) = self else { return nil }
+            return (connection, channelName, modeString, modeArgs)
+        }
+        set {
+            guard case .channelModeReceived = self, let newValue = newValue else { return }
+            self = .channelModeReceived(connection: newValue.0, channelName: newValue.1, modeString: newValue.2, modeArgs: newValue.3)
+        }
+    }
+
+    internal var isChannelModeReceived: Bool {
+        self.channelModeReceived != nil
+    }
+
     internal var setChannelMode: (connection: Connection, channelName: String, mode: String)? {
         get {
             guard case let .setChannelMode(connection, channelName, mode) = self else { return nil }

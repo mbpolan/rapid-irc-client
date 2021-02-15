@@ -40,7 +40,7 @@ struct ContentView: View {
                 OperatorLoginSheet(onClose: handleRequestOperator)
             case .channelProperties:
                 ChannelPropertiesSheet(
-                    initial: self.viewModel.state.pendingChannelAction?.mode,
+                    initial: self.viewModel.state.pendingChannelAction?.mode ?? .default,
                     onCommit: handleChannelProperties)
             }
         }
