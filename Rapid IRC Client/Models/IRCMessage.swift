@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+/// An IRC message received from a server.
+///
+/// This struct describes the entirety of a message sent by an IRC server to an IRC client.
+/// The data included encapsulates the message prefix, the command, the receiver of a command, and
+/// zero or more parameters to satisfy the command.
+///
+/// See the RFC for more information: https://tools.ietf.org/html/rfc1459#section-2.3.1
 struct IRCMessage {
     
     var raw: String
@@ -16,6 +23,9 @@ struct IRCMessage {
     var parameters: [String] = []
     var timestamp: Date
     
+    /// Parses a raw IRC message and extracts the various components from it.
+    ///
+    /// - Parameter message: The raw message.
     init(from message: String) {
         var parts = message.components(separatedBy: " ")
         
@@ -29,7 +39,7 @@ struct IRCMessage {
         // prefix is optional, but if it exists, it's always lead by a colon
         var prefix: Prefix? = nil
         if parts.first!.starts(with: ":") {
-            prefix = Prefix.parse(String(parts.first!).subString(from: 1))
+            prefix = Prefix(String(parts.first!).subString(from: 1))
             parts.removeFirst()
         }
         
@@ -57,7 +67,10 @@ struct IRCMessage {
     }
 }
 
+// MARK: - IRCMessage structs
 extension IRCMessage {
+    
+    /// The prefix part of an IRC message.
     struct Prefix: Equatable {
         
         // the raw prefix, without the leading colon
@@ -76,34 +89,10 @@ extension IRCMessage {
             return lhs.raw == rhs.raw
         }
         
-        static func parse(_ raw: String) -> Prefix? {
-            let subject: String
-            var user: String?
-            var host: String?
-            
-            // check for presence of ! separator
-            if let ex = raw.range(of: "!") {
-                subject = String(raw[..<ex.lowerBound])
-                let network = raw[ex.upperBound...]
-                
-                // check for presence of @ separator
-                if let at = network.range(of: "@") {
-                    user = String(network[..<at.lowerBound])
-                    host = String(network[at.upperBound...])
-                } else {
-                    user = String(network)
-                }
-            } else {
-                subject = raw
-            }
-            
-            return Prefix(
-                raw: raw,
-                subject: subject,
-                user: user,
-                host: host)
-        }
-        
+        /// Returns an IRC message prefix with the given subject.
+        ///
+        /// - Parameter subject: The new subject.
+        /// - Returns: The current prefix with the newly provided subject.
         func withSubject(_ subject: String) -> IRCMessage.Prefix {
             return IRCMessage.Prefix(
                 raw: self.raw.replacingOccurrences(of: self.subject, with: subject),
@@ -112,4 +101,35 @@ extension IRCMessage {
                 host: self.host)
         }
     }
+}
+
+// MARK: - IRCMessage.Prefix helper functions
+extension IRCMessage.Prefix {
+    
+    /// Parses a raw IRC message and extracts the prefix.
+    ///
+    /// - Parameter raw: The raw message.
+    init(_ raw: String) {
+        self.raw = raw
+        
+        // check for presence of ! separator
+        if let ex = raw.range(of: "!") {
+            self.subject = String(raw[..<ex.lowerBound])
+            let network = raw[ex.upperBound...]
+            
+            // check for presence of @ separator
+            if let at = network.range(of: "@") {
+                self.user = String(network[..<at.lowerBound])
+                self.host = String(network[at.upperBound...])
+            } else {
+                self.user = String(network)
+                self.host = nil
+            }
+        } else {
+            self.subject = raw
+            self.user = nil
+            self.host = nil
+        }
+    }
+    
 }

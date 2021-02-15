@@ -8,6 +8,9 @@
 import NIO
 import SwiftUI
 
+/// A connection to an IRC server.
+///
+/// This class maintains a handle for interacting and receiving data from a remote IRC server.
 class ServerConnection {
     
     internal var connection: Connection!
@@ -17,15 +20,30 @@ class ServerConnection {
     private var handler: ClientHandler?
     private var channel: Channel?
     
+    /// Prepares a connection to a server.
+    ///
+    /// The connection is not established until a call to `connect()` is done.
+    ///
+    /// - Parameter server: The server to connect to.
+    /// - Parameter store: The redux store to associate with data.
     init(server: ServerInfo, store: Store) {
         self.server = server
         self.store = store
     }
     
+    /// Attachs a `Connection` to this server connection.
+    ///
+    /// - Parameter connection: The actual connection to associate with this server.
     func withConnection(_ connection: Connection) {
         self.connection = connection
     }
     
+    /// Attempts to connect to the remote server.
+    ///
+    /// The connection is done asynchronously, so this function will return immediately. To monitor status
+    /// changes, pass a closure as the `status` parameter to be notified of updates.
+    ///
+    /// - Parameter status: Closure to invoke when the connection status changes.
     func connect(status: @escaping(Result<Connection.State, Error>) -> Void) {
         let bootstrap = ClientBootstrap.init(group: group)
             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
@@ -49,6 +67,12 @@ class ServerConnection {
         }
     }
     
+    /// Disconnects from the remote server.
+    ///
+    /// The disconnec is done asynchronously, so this function will return immediately. To monitor status
+    /// changes, pass a closure as the `status` parameter to be notified of updates.
+    ///
+    /// - Parameter status: Closure to invoke when the connection status changes.
     func disconnect(status: @escaping(Result<Connection.State, Error>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             do {
@@ -60,6 +84,10 @@ class ServerConnection {
         }
     }
     
+    /// Immediately shuts down the connection and cleans up resources.
+    ///
+    /// You should only call this function when there is no more need for this particular server connection
+    /// anymore.
     func terminate() {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             do {
@@ -70,12 +98,19 @@ class ServerConnection {
         }
     }
     
+    /// Sends a raw message to the remote server.
+    ///
+    /// This function will not inspect the message for validity. The actual sending is done asynchrously,
+    /// so this function will return immediately while the message is queued for sending.
     func sendMessage(_ message: String) {
         handler?.send(message)
     }
 }
 
+// MARK: - ServerConnection extensions
 extension ServerConnection {
+    
+    /// Wrapper for the underlying network connection to a server.
     private class ClientHandler: ChannelInboundHandler {
         typealias InboundIn = ByteBuffer
         typealias OutboundOut = ByteBuffer

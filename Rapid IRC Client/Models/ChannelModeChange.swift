@@ -5,6 +5,10 @@
 //  Created by Mike Polan on 2/4/21.
 //
 
+/// Describes a change to a channel mode.
+///
+/// This struct breaks down the individual mode flags and the changes to be applied on
+/// a channel mode.
 struct ChannelModeChange {
     
     var bansAdded: Set<String> = Set()
@@ -24,8 +28,13 @@ struct ChannelModeChange {
     var noExternalMessages: Bool? = nil
 }
 
+// MARK: - ChannelModeChange extension
 extension ChannelModeChange {
     
+    /// Initializes a mode change by parsing an IRC MODE command mode string.
+    ///
+    /// - Parameter modeString: The raw mode string.
+    /// - Parameter modeArgs: List of arguments for each flag that requires ones.
     init(from modeString: String, modeArgs: [String]) {
         var args = modeArgs
         var adding: Bool? = nil
@@ -155,6 +164,13 @@ extension ChannelModeChange {
         }
     }
     
+    /// Computes a delta between two channel mode changes.
+    ///
+    /// This method will determine what mode flag changes are required to transition from the current
+    /// mode change to the given `other`.
+    ///
+    /// - Parameter other: The other mode change to compare against.
+    /// - Returns: A mode change that describes the transition.
     func delta(with other: ChannelModeChange) -> ChannelModeChange {
         return ChannelModeChange(
             bansAdded: self.bansAdded != other.bansAdded ? other.bansAdded : Set(),
@@ -174,6 +190,21 @@ extension ChannelModeChange {
             noExternalMessages: self.noExternalMessages != other.noExternalMessages ? other.noExternalMessages : nil)
     }
     
+    /// Converts the mode change into an actionable IRC MODE command mode string.
+    ///
+    /// A returned mode string that adds the invite only and protected topic flags, while removing
+    /// the moderated and secret flags will look like this:
+    /// ```
+    /// +int-ms
+    /// ```
+    ///
+    /// If the change requires arguments, such as adding a client limit, then the returned mode string
+    /// will include the leading colon as necessary:
+    /// ```
+    /// +l :5
+    /// ```
+    ///
+    /// - Returns: A formatted IRC MODE command mode string.
     func toModeString() -> String {
         var added: [ModeFlag] = []
         var addedParams: [String] = []
@@ -286,15 +317,12 @@ extension ChannelModeChange {
     }
 }
 
+// MARK: - ChannelModeChange structs
 extension ChannelModeChange {
     
+    /// Describes a channel mode that can be enabled or disabled with a parameter.
     struct UnaryMode<T>: Equatable where T: Equatable {
         let added: Bool
         let parameter: T?
-        
-        func preferIfAdded(_ defaultValue: T?) -> T? {
-            guard let parameter = parameter else { return defaultValue }
-            return added ? parameter : defaultValue
-        }
     }
 }

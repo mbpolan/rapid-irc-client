@@ -5,6 +5,7 @@
 //  Created by Mike Polan on 10/31/20.
 //
 
+/// Enumeration of supported IRC protocol commands.
 enum Command {
     case join
     case part
@@ -81,7 +82,13 @@ enum Command {
     case errorNeedMoreParams
 }
 
+// MARK: - Command helper functions
 extension Command {
+    
+    /// Parses an IRC three-digit numeric code and maps it to a command.
+    ///
+    /// - Parameter code: The three-digit, numeric code string.
+    /// - Returns: A Command, or nil if none were matched.
     static func fromCode(code: String) -> Command? {
         switch code {
         case "001":
@@ -212,6 +219,10 @@ extension Command {
         }
     }
 
+    /// Parses an IRC command name and maps it to a command.
+    ///
+    /// - Parameter name: The command name.
+    /// - Returns: A Command, or nil if none were matched.
     static func fromString(name: String) -> Command? {
         switch name.lowercased() {
         case "join":

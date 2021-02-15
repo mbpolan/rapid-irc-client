@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Enumeration of known channel mode flags.
 enum ModeFlag: Character {
     case ban = "b"
     case clientLimit = "l"
@@ -23,6 +24,7 @@ enum ModeFlag: Character {
     case voice = "v"
 }
 
+/// Enumeration of possible change characters to modify one or more mode flags.
 enum ModeFlagAction: Character {
     case add = "+"
     case remove = "-"

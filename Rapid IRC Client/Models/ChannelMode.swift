@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Describes the set of mode flags enabled on a channel.
 struct ChannelMode: Equatable {
     
     var bans: Set<String>
@@ -20,6 +21,7 @@ struct ChannelMode: Equatable {
     var secret: Bool
     var noExternalMessages: Bool
     
+    /// A standard set of mode flags to use as a default.
     static var `default`: ChannelMode {
         return ChannelMode(
             bans: [],
@@ -34,6 +36,12 @@ struct ChannelMode: Equatable {
             noExternalMessages: false)
     }
     
+    /// Converts the current mode flags into a mode change struct.
+    ///
+    /// This method will return a ChanelModeChange struct that describes the mode flag changes
+    /// required to configure this channel mode.
+    ///
+    /// - Returns: A channel mode change delta.
     func toModeChange() -> ChannelModeChange {
         return ChannelModeChange(
             bansAdded: bans,
@@ -53,6 +61,13 @@ struct ChannelMode: Equatable {
             noExternalMessages: noExternalMessages)
     }
     
+    /// Applies a channel mode change to the current channel mode.
+    ///
+    /// This method does not change the instance of this struct that is used. Instead, it will
+    /// return a copy with the changes applied.
+    ///
+    /// - Parameter change: The change to apply.
+    /// - Returns: A modified channel mode.
     func apply(_ change: ChannelModeChange) -> ChannelMode {
         var clientLimit: Int? = self.clientLimit
         if let deltaClientLimit = change.clientLimit {

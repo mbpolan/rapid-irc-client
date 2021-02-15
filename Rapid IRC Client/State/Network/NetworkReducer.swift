@@ -30,7 +30,7 @@ let networkReducer = Reducer<NetworkAction, NetworkState> { (action: NetworkActi
     case .welcomeReceived(let connection, let identifier):
         let newState = state
         if let target = newState.connections.first(where: { $0 === connection }) {
-            target.identifier = IRCMessage.Prefix.parse(identifier)
+            target.identifier = IRCMessage.Prefix(identifier)
         }
         
         return state
