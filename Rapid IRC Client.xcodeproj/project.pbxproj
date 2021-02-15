@@ -22,6 +22,7 @@
 		276209EF2585AA8A00212F36 /* NetworkMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */; };
 		276CC0C925D76EA800BD7606 /* ChannelPropertiesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */; };
 		276CC0CE25DA242200BD7606 /* ModeFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC0CD25DA242200BD7606 /* ModeFlag.swift */; };
+		276CC0DB25DB30E300BD7606 /* .github in Resources */ = {isa = PBXBuildFile; fileRef = 276CC0DA25DB30E300BD7606 /* .github */; };
 		2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE04256CABCC00371A28 /* UIReducer.swift */; };
 		2776AE0D256CABD600371A28 /* UIActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE0C256CABD600371A28 /* UIActions.swift */; };
 		279911DE25AFD9FA004D0DDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 279911DB25AFD9FA004D0DDC /* README.md */; };
@@ -95,6 +96,7 @@
 		276209EE2585AA8A00212F36 /* NetworkMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMiddleware.swift; sourceTree = "<group>"; };
 		276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPropertiesSheet.swift; sourceTree = "<group>"; };
 		276CC0CD25DA242200BD7606 /* ModeFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeFlag.swift; sourceTree = "<group>"; };
+		276CC0DA25DB30E300BD7606 /* .github */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .github; sourceTree = "<group>"; };
 		2776AE04256CABCC00371A28 /* UIReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIReducer.swift; sourceTree = "<group>"; };
 		2776AE0C256CABD600371A28 /* UIActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIActions.swift; sourceTree = "<group>"; };
 		279911DB25AFD9FA004D0DDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 		27CF74BE2543ABD800DA4598 = {
 			isa = PBXGroup;
 			children = (
+				276CC0DA25DB30E300BD7606 /* .github */,
 				279911DD25AFD9FA004D0DDC /* Podfile */,
 				279911DB25AFD9FA004D0DDC /* README.md */,
 				279911DC25AFD9FA004D0DDC /* screenshot.png */,
@@ -496,6 +499,7 @@
 				27CF74D22543ABDA00DA4598 /* Preview Assets.xcassets in Resources */,
 				279911E025AFD9FA004D0DDC /* Podfile in Resources */,
 				279911FE25AFDC6F004D0DDC /* CodeGen in Resources */,
+				276CC0DB25DB30E300BD7606 /* .github in Resources */,
 				27CF74CF2543ABDA00DA4598 /* Assets.xcassets in Resources */,
 				279911F925AFDC3A004D0DDC /* .sourcery.yml in Resources */,
 			);

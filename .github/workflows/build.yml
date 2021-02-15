@@ -1,0 +1,15 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: macos-11.0
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Build and Test
+      run: xcodebuild clean test -scheme 'Rapid IRC Client' -destination 'platform=macos' -showBuildTimingSummary
