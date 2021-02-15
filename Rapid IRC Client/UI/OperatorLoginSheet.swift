@@ -27,8 +27,19 @@ struct OperatorLoginSheet: View {
                 SecureField("", text: $password)
             }
             
+            Divider()
+            
             HStack {
                 Spacer()
+                
+                Button(action: {
+                    onClose(Result(
+                                accepted: false,
+                                credentials: nil))
+                }) {
+                    Text("Cancel")
+                }
+                .keyboardShortcut(.cancelAction)
                 
                 Button(action: {
                     onClose(Result(
@@ -42,14 +53,7 @@ struct OperatorLoginSheet: View {
                 }) {
                     Text("OK")
                 }
-                
-                Button(action: {
-                    onClose(Result(
-                                accepted: false,
-                                credentials: nil))
-                }) {
-                    Text("Cancel")
-                }
+                .keyboardShortcut(.defaultAction)
             }
         }
         .padding()

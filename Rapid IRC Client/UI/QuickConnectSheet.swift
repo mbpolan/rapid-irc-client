@@ -11,16 +11,16 @@ import SwiftUI
 struct QuickConnectSheet: View {
     
     var onClose: (Result) -> Void
-
+    
     @State private var nick = UserDefaults.standard.string(forKey: AppSettings.preferredNick.rawValue) ?? ""
     @State private var realName = UserDefaults.standard.string(forKey: AppSettings.realName.rawValue) ?? ""
     @State private var username = UserDefaults.standard.string(forKey: AppSettings.username.rawValue) ?? ""
     @State private var password = ""
     @State private var server = "localhost"
     @State private var port = "6667"
-
+    
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             LazyVGrid(
                 columns: [
                     GridItem(.flexible(maximum: 100)),
@@ -43,27 +43,31 @@ struct QuickConnectSheet: View {
                 SecureField("", text: $password)
             }
             
+            Divider()
+            
             HStack {
                 Spacer()
+                
+                Button("Cancel") {
+                    onClose(Result(accepted: false))
+                }
+                .keyboardShortcut(.cancelAction)
                 
                 Button("Connect") {
                     // default to the system username if not provided
                     let effectiveUsername = username.isEmptyOrWhitespace ? NSUserName() : username
                     
                     onClose(Result(
-                        accepted: true,
-                        server: ServerInfo(
-                            nick: nick.trimmingCharacters(in: .whitespaces),
-                            realName: realName.trimmingCharacters(in: .whitespaces),
-                            username: effectiveUsername.trimmingCharacters(in: .whitespaces),
-                            host: server.trimmingCharacters(in: .whitespaces),
-                            port: Int(port) ?? -1,
-                            password: password)))
+                                accepted: true,
+                                server: ServerInfo(
+                                    nick: nick.trimmingCharacters(in: .whitespaces),
+                                    realName: realName.trimmingCharacters(in: .whitespaces),
+                                    username: effectiveUsername.trimmingCharacters(in: .whitespaces),
+                                    host: server.trimmingCharacters(in: .whitespaces),
+                                    port: Int(port) ?? -1,
+                                    password: password)))
                 }
-                
-                Button("Cancel") {
-                    onClose(Result(accepted: false))
-                }
+                .keyboardShortcut(.defaultAction)
             }
         }
         .padding()
