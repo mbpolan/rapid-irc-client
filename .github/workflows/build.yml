@@ -12,4 +12,4 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Build and Test
-      run: xcodebuild clean test -scheme 'Rapid IRC Client' -destination 'macos' -showBuildTimingSummary
+      run: xcodebuild clean test -scheme 'Rapid IRC Client' -destination 'platform=macos' -showBuildTimingSummary
