@@ -1,14 +1,15 @@
 name: ci
-on: [push]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
 jobs:
   build:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        run-config:
-          - { scheme: 'Rapid IRC Client', destination: 'platform=macOS' }
     steps:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Build and Test
-      run: xcodebuild clean test -scheme '${{ matrix.run-config['scheme'] }}' -destination '${{ matrix.run-config['destination'] }}' -showBuildTimingSummary
+      run: xcodebuild clean test -scheme 'Rapid IRC Client' -destination 'macos' -showBuildTimingSummary
