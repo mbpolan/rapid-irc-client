@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - View
+
 /// Sheet for editing a channel topic.
 struct ChannelTopicSheet: View {
     
@@ -66,7 +68,7 @@ struct ChannelTopicSheet: View {
     }
 }
 
-// MARK: - ChannelTopicSheet structs
+// MARK: - ChannelTopicSheet extensions
 extension ChannelTopicSheet {
     
     /// Represents the results of the user dismissing the sheet.

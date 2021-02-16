@@ -60,8 +60,7 @@ extension InviteUserPopover {
 }
 
 // MARK: - Preview
-// swiftlint:disable type_name
-struct InviteUserPopover_Preview: PreviewProvider {
+struct InviteUserPopover_Previews: PreviewProvider {
     
     static var previews: some View {
         InviteUserPopover(mode: .inviteUser("mike")) { _ in }

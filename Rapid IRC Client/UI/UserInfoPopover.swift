@@ -41,8 +41,7 @@ struct UserInfoPopover: View {
 }
 
 // MARK: - Preview
-// swiftlint:disable type_name
-struct UserInfoPopover_Preview: PreviewProvider {
+struct UserInfoPopover_Previews: PreviewProvider {
     
     static var previews: some View {
         UserInfoPopover(

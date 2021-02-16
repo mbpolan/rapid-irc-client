@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+// MARK: - View
+
+/// Sheet that presents a set of channel mode properties that can be modified.
 struct ChannelPropertiesSheet: View {
     
     private var initial: ChannelMode
@@ -22,6 +25,10 @@ struct ChannelPropertiesSheet: View {
     @State private var noExternalMessages: Bool
     @State private var formDirty: Bool = false
     
+    /// Initializes a sheet with the given initial set of properties.
+    ///
+    /// - Parameter initial: The initial channel mode.
+    /// - Parameter onCommit: Closure to invoke when the sheet is closed.
     init(initial: ChannelMode,
          onCommit: @escaping(_ result: Result) -> Void) {
         
@@ -153,14 +160,17 @@ struct ChannelPropertiesSheet: View {
     }
 }
 
+// MARK: - View extensions
 extension ChannelPropertiesSheet {
     
+    /// Represents the results of the user dismissing the sheet.
     struct Result {
         var accepted: Bool
         var modeChange: ChannelModeChange?
     }
 }
 
+// MARK: - Preview
 struct ChannelPropertiesSheet_Previews: PreviewProvider {
     
     static var previews: some View {
