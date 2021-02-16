@@ -54,6 +54,21 @@ class UIMiddleware: Middleware {
             // hide the channel mode properties sheet
             output.dispatch(.ui(.hideChannelPropertiesSheet))
         
+        case .sendChannelTopicChange(let topic):
+            let state = getState()
+            
+            // send a TOPIC command to the server
+            if let channel = state.ui.pendingChannelTopicChannel {
+                output.dispatch(.network(
+                                    .setChannelTopic(
+                                        connection: channel.connection,
+                                        channelName: channel.name,
+                                        topic: topic)))
+            }
+            
+            // hide the channel topic sheet
+            output.dispatch(.ui(.hideChannelTopicSheet))
+        
         case .connectToServer(let serverInfo):
             // initiate the connection to the server
             output.dispatch(.network(.connect(serverInfo: serverInfo)))

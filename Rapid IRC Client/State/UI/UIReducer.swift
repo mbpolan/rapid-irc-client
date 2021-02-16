@@ -42,6 +42,21 @@ let uiReducer = Reducer<UIAction, UIState> { action, state in
         newState.pendingChannelPropertiesChannel = nil
         return newState
         
+    case .showChannelTopicSheet(let connection, let channelName):
+        var newState = state
+        if let channel = connection.channels.first(where: { $0.name == channelName }) {
+            newState.channelTopicSheetShown = true
+            newState.pendingChannelTopicChannel = channel
+        }
+        
+        return newState
+        
+    case .hideChannelTopicSheet:
+        var newState = state
+        newState.channelTopicSheetShown = false
+        newState.pendingChannelTopicChannel = nil
+        return newState
+        
     case .toggleConnectSheet(let value):
         var newState = state
         newState.connectSheetShown = value

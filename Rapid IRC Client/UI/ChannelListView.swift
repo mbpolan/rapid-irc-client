@@ -57,37 +57,29 @@ struct ChannelListView: View {
             .font(fontStyle)
             .contextMenu {
                 if server.active {
-                    Button(action: {
+                    Button("Disconnect") {
                         guard let connection = server.connection else { return }
                         self.viewModel.dispatch(.disconnect(connection))
-                    }) {
-                        Text("Disconnect")
                     }
                 } else {
-                    Button(action: {
+                    Button("Connect") {
                         guard let connection = server.connection else { return }
                         self.viewModel.dispatch(.reconnect(connection))
-                    }) {
-                        Text("Connect")
                     }
                 }
                 
                 Divider()
                 
-                Button(action: {
+                Button("Become Operator") {
                     guard let connection = server.connection else { return }
                     self.viewModel.dispatch(.requestOperator(connection))
-                }) {
-                    Text("Become Operator")
                 }
                 
                 Divider()
                 
-                Button(action: {
+                Button("Close") {
                     guard let connection = server.connection else { return }
                     self.viewModel.dispatch(.closeServer(connection))
-                }) {
-                    Text("Close")
                 }
             }
     }
@@ -108,11 +100,11 @@ struct ChannelListView: View {
                 if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
                     self.viewModel.dispatch(.setChannel(target))
                 }
-            }) {
+            }, label: {
                 Text(channel.type == .server ? "Server" : channel.name)
                     .foregroundColor(color)
                     .font(fontStyle)
-            }
+            })
             .buttonStyle(BorderlessButtonStyle())
             
             Spacer()
@@ -124,22 +116,27 @@ struct ChannelListView: View {
                     if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
                         self.viewModel.dispatch(.closeChannel(target))
                     }
-                }) {
+                }, label: {
                     Image(systemName: "xmark")
-                }
+                })
                 .buttonStyle(BorderlessButtonStyle())
             }
         }
         .frame(maxWidth: .infinity)
         .contextMenu {
             if channel.type != .server {
+                // show an item for changing channel topic
+                Button("Change Topic") {
+                    if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                        self.viewModel.dispatch(.showChannelTopicEditor(target))
+                    }
+                }
+                
                 // show an item for changing channel mode
-                Button(action: {
+                Button("Set Properties") {
                     if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
                         self.viewModel.dispatch(.showChannelProperties(target))
                     }
-                }) {
-                    Text("Set Properties")
                 }
             }
         }
@@ -212,6 +209,7 @@ enum ChannelListViewModel {
         case disconnect(Connection)
         case requestOperator(Connection)
         case showChannelProperties(IRCChannel)
+        case showChannelTopicEditor(IRCChannel)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -245,6 +243,12 @@ enum ChannelListViewModel {
         case .showChannelProperties(let channel):
             return .ui(
                 .showChannelPropertiesSheet(
+                    connection: channel.connection,
+                    channelName: channel.name))
+        
+        case .showChannelTopicEditor(let channel):
+            return .ui(
+                .showChannelTopicSheet(
                     connection: channel.connection,
                     channelName: channel.name))
         }

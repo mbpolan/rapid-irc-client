@@ -349,12 +349,17 @@ class NetworkMiddleware: Middleware {
                                     channelName: channelName,
                                     topic: topic)))
             
+            // show a different message if the topic was removed
+            let text = topic.isEmptyOrWhitespace
+                ? "\(identifier.subject) removes the current channel topic"
+                : "\(identifier.subject) sets channel topic to: \(topic)"
+            
             // add a message to the channel
             dispatchChannelMessage(
                 connection: connection,
                 channelName: channelName,
                 message: ChannelMessage(
-                    text: "\(identifier.subject) sets channel topic to: \(topic)",
+                    text: text,
                     variant: .channelTopicEvent))
             
         case .channelTopicMetadataReceived(let connection, let channelName, let who, let when):
@@ -620,6 +625,12 @@ class NetworkMiddleware: Middleware {
             
             // update the mode on the channel
             updateChannelMode(channel: channel, modeString: modeString, modeArgs: modeArgs)
+        
+        case .setChannelTopic(let connection, let channelName, let topic):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            target.client.sendMessage("TOPIC \(channelName) :\(topic)")
         
         case .setChannelMode(let connection, let channelName, let mode):
             let state = getState()

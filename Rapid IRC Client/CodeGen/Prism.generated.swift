@@ -559,6 +559,21 @@ extension NetworkAction {
         self.channelModeReceived != nil
     }
 
+    internal var setChannelTopic: (connection: Connection, channelName: String, topic: String)? {
+        get {
+            guard case let .setChannelTopic(connection, channelName, topic) = self else { return nil }
+            return (connection, channelName, topic)
+        }
+        set {
+            guard case .setChannelTopic = self, let newValue = newValue else { return }
+            self = .setChannelTopic(connection: newValue.0, channelName: newValue.1, topic: newValue.2)
+        }
+    }
+
+    internal var isSetChannelTopic: Bool {
+        self.setChannelTopic != nil
+    }
+
     internal var setChannelMode: (connection: Connection, channelName: String, mode: String)? {
         get {
             guard case let .setChannelMode(connection, channelName, mode) = self else { return nil }
@@ -815,6 +830,32 @@ extension UIAction {
         self.hideChannelPropertiesSheet != nil
     }
 
+    internal var showChannelTopicSheet: (connection: Connection, channelName: String)? {
+        get {
+            guard case let .showChannelTopicSheet(connection, channelName) = self else { return nil }
+            return (connection, channelName)
+        }
+        set {
+            guard case .showChannelTopicSheet = self, let newValue = newValue else { return }
+            self = .showChannelTopicSheet(connection: newValue.0, channelName: newValue.1)
+        }
+    }
+
+    internal var isShowChannelTopicSheet: Bool {
+        self.showChannelTopicSheet != nil
+    }
+
+    internal var hideChannelTopicSheet: Void? {
+        get {
+            guard case .hideChannelTopicSheet = self else { return nil }
+            return ()
+        }
+    }
+
+    internal var isHideChannelTopicSheet: Bool {
+        self.hideChannelTopicSheet != nil
+    }
+
     internal var sendOperatorLogin: (username: String, password: String)? {
         get {
             guard case let .sendOperatorLogin(username, password) = self else { return nil }
@@ -843,6 +884,21 @@ extension UIAction {
 
     internal var isSendChannelModeChange: Bool {
         self.sendChannelModeChange != nil
+    }
+
+    internal var sendChannelTopicChange: String? {
+        get {
+            guard case let .sendChannelTopicChange(topic) = self else { return nil }
+            return (topic)
+        }
+        set {
+            guard case .sendChannelTopicChange = self, let newValue = newValue else { return }
+            self = .sendChannelTopicChange(topic: newValue)
+        }
+    }
+
+    internal var isSendChannelTopicChange: Bool {
+        self.sendChannelTopicChange != nil
     }
 
     internal var connectToServer: ServerInfo? {

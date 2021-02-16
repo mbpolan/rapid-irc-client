@@ -14,8 +14,11 @@ enum UIAction {
     case hideOperatorSheet
     case showChannelPropertiesSheet(connection: Connection, channelName: String)
     case hideChannelPropertiesSheet
+    case showChannelTopicSheet(connection: Connection, channelName: String)
+    case hideChannelTopicSheet
     case sendOperatorLogin(username: String, password: String)
     case sendChannelModeChange(modeChange: ChannelModeChange)
+    case sendChannelTopicChange(topic: String)
     case connectToServer(serverInfo: ServerInfo)
     case toggleConnectSheet(shown: Bool)
     case toggleChatTimestamps(shown: Bool)

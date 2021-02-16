@@ -22,8 +22,7 @@ struct ContentView: View {
             get: {
                 return viewModel.state.activeSheet
             },
-            set: { value in
-            }
+            set: { _ in }
         )
         
         HSplitView {
@@ -42,9 +41,13 @@ struct ContentView: View {
                 ChannelPropertiesSheet(
                     initial: self.viewModel.state.pendingChannelAction?.mode ?? .default,
                     onCommit: handleChannelProperties)
+            case .channelTopic:
+                ChannelTopicSheet(
+                    topic: self.viewModel.state.pendingChannelAction?.topic ?? "",
+                    onClose: handleChannelTopic)
             }
         }
-        .onReceive(onConnectToServer) { event in
+        .onReceive(onConnectToServer) { _ in
             self.viewModel.dispatch(.showConnectSheet)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -78,6 +81,15 @@ struct ContentView: View {
         
         self.viewModel.dispatch(.sendChannelMode(mode: modeChange))
     }
+    
+    private func handleChannelTopic(result: ChannelTopicSheet.Result) {
+        guard let topic = result.topic, result.accepted else {
+            self.viewModel.dispatch(.closeChannelTopicSheet)
+            return
+        }
+        
+        self.viewModel.dispatch(.sendChannelTopic(topic: topic))
+    }
 }
 
 // MARK: - ViewModel
@@ -108,6 +120,8 @@ enum ContentViewModel {
         case closeOperatorLoginSheet
         case sendChannelMode(mode: ChannelModeChange)
         case closeChannelPropertiesSheet
+        case sendChannelTopic(topic: String)
+        case closeChannelTopicSheet
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -140,12 +154,18 @@ enum ContentViewModel {
         
         case .closeChannelPropertiesSheet:
             return .ui(.hideChannelPropertiesSheet)
+        
+        case .sendChannelTopic(let topic):
+            return .ui(.sendChannelTopicChange(topic: topic))
+            
+        case .closeChannelTopicSheet:
+            return .ui(.hideChannelTopicSheet)
         }
     }
     
     private static func transform(appState: AppState) -> ViewState {
-        var activeSheet: ActiveSheet? = nil
-        var pendingChannelAction: IRCChannel? = nil
+        var activeSheet: ActiveSheet?
+        var pendingChannelAction: IRCChannel?
         
         if appState.ui.connectSheetShown {
             activeSheet = .connectToServer
@@ -154,6 +174,9 @@ enum ContentViewModel {
         } else if appState.ui.channelPropertiesSheetShown {
             activeSheet = .channelProperties
             pendingChannelAction = appState.ui.pendingChannelPropertiesChannel
+        } else if appState.ui.channelTopicSheetShown {
+            activeSheet = .channelTopic
+            pendingChannelAction = appState.ui.pendingChannelTopicChannel
         }
         
         return ViewState(
@@ -168,6 +191,7 @@ extension ContentViewModel {
         case connectToServer
         case requestOperator
         case channelProperties
+        case channelTopic
         
         var id: Int {
             hashValue
