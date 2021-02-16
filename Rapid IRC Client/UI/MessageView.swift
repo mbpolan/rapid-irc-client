@@ -106,6 +106,7 @@ struct MessageView: View {
                             .foregroundColor(.blue))
             
         case .client,
+             .userInvited,
              .modeEvent,
              .other:
             text = AnyView(Text(content))

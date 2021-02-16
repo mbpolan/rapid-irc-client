@@ -12,9 +12,10 @@ import SwiftUI
 struct UserListView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<UserListViewModel.ViewAction, UserListViewModel.ViewState>
-    @State var hoveredNick: String?
-    @State var kickReasonNick: String?
+    @State var inviteChannel: String = ""
     @State var kickReason: String = ""
+    @State var popoverNick: String?
+    @State var activePopover: UserPopover?
     
     var body: some View {
         List {
@@ -30,21 +31,19 @@ struct UserListView: View {
     }
     
     func makeUserItem(_ user: UserListViewModel.UserEntry) -> some View {
-        let userInfoBinding = Binding<Bool>(
-            get: { hoveredNick == user.nick },
-            set: { hoveredNick = $0 ? hoveredNick : nil}
-        )
-        
-        let kickReasonBinding = Binding<Bool>(
-            get: { kickReasonNick == user.nick },
-            set: { kickReasonNick = $0 ? kickReasonNick : nil}
+        let popoverBinding = Binding<UserPopover?>(
+            get: { self.popoverNick == user.nick ? self.activePopover : .none },
+            set: { value in
+                if value == .none {
+                    self.popoverNick = .none
+                }
+                
+                self.activePopover = value
+            }
         )
         
         return Text(user.nick)
             .font(.subheadline)
-            .onHover { hovered in
-                self.hoveredNick = hovered ? user.nick : nil
-            }
             .contextMenu {
                 ForEach(makeContextMenu(user), id: \.label) { entry in
                     if let label = entry.label {
@@ -56,55 +55,27 @@ struct UserListView: View {
                     }
                 }
             }
-            .popover(isPresented: userInfoBinding, arrowEdge: .trailing) {
-                let popoverGrid = [
-                    GridItem(.fixed(70), spacing: 5),
-                    GridItem(.fixed(100), spacing: 5)
-                ]
-                
-                let cells = [
-                    "Nick",
-                    user.nick,
-                    "Privilege",
-                    user.privilege
-                ]
-                
-                LazyVGrid(
-                    columns: popoverGrid,
-                    alignment: .leading,
-                    spacing: 5,
-                    pinnedViews: []) {
-                    ForEach(cells, id: \.self) { cell in
-                        Text(cell)
-                    }
-                }.padding()
-            }
-            .popover(isPresented: kickReasonBinding, arrowEdge: .leading) {
-                VStack(alignment: .trailing) {
-                    TextField("(reason)", text: $kickReason)
-                        .frame(minWidth: 300)
-                    
-                    HStack(alignment: .lastTextBaseline) {
-                        Button("Kick") {
-                            guard let currentChannel = self.viewModel.state.currentChannel,
-                                  let user = currentChannel.users.first(where: { $0.nick == kickReasonNick }) else { return }
-                            
-                            self.viewModel.dispatch(.kickUser(
-                                                        channel: currentChannel,
-                                                        user: user,
-                                                        reason: kickReason))
-                            
-                            kickReason = ""
-                            kickReasonNick = ""
-                        }
-                    }
+            .popover(item: popoverBinding, arrowEdge: .leading) { item in
+                switch item {
+                case .userInfo:
+                    UserInfoPopover(nick: user.nick, privilege: user.privilege)
+                case .invite:
+                    InviteUserPopover(onInvite: handleInviteUser)
+                case .kick:
+                    KickUserPopover(onKick: handleKickUser)
                 }
-                .padding()
             }
     }
     
     private func makeContextMenu(_ entry: UserListViewModel.UserEntry) -> [(label: String?, action: () -> Void)] {
         var entries: [(String?, () -> Void)] = []
+        
+        entries.append((label: "Get Info", action: {
+            self.activePopover = .userInfo
+            self.popoverNick = entry.nick
+        }))
+        
+        entries.append((label: nil, action: {}))
         
         // don't allow private messaging or kicking ourselves
         if !entry.identity {
@@ -116,10 +87,16 @@ struct UserListView: View {
                                             user: entry.user))
             }))
             
+            entries.append((label: "Invite to Channel", action: {
+                self.activePopover = .invite
+                self.popoverNick = entry.nick
+            }))
+            
             entries.append((label: nil, action: {}))
             
             entries.append((label: "Kick", action: {
-                kickReasonNick = entry.nick
+                self.activePopover = .kick
+                self.popoverNick = entry.nick
             }))
         }
             
@@ -182,8 +159,49 @@ struct UserListView: View {
         
         return entries
     }
+    
+    private func handleInviteUser(_ channelName: String) {
+        guard let currentChannel = self.viewModel.state.currentChannel,
+              let user = currentChannel.users.first(where: { $0.nick == popoverNick }) else { return }
+        
+        self.viewModel.dispatch(.inviteUser(
+                                    channel: currentChannel,
+                                    user: user,
+                                    inviteChannelName: channelName))
+        
+        activePopover = .none
+        popoverNick = .none
+    }
+    
+    private func handleKickUser(_ reason: String?) {
+        guard let currentChannel = self.viewModel.state.currentChannel,
+              let user = currentChannel.users.first(where: { $0.nick == popoverNick }) else { return }
+        
+        self.viewModel.dispatch(.kickUser(
+                                    channel: currentChannel,
+                                    user: user,
+                                    reason: kickReason))
+        
+        activePopover = .none
+        popoverNick = .none
+    }
 }
 
+// MARK: - View extensions
+extension UserListView {
+    
+    enum UserPopover: Identifiable {
+        case userInfo
+        case invite
+        case kick
+        
+        var id: Int {
+            hashValue
+        }
+    }
+}
+
+// MARK: - ViewModel
 struct UserListViewModel {
     
     static func viewModel<S: StoreType>(from store: S) -> ObservableViewModel<ViewAction, ViewState> where S.ActionType == AppAction, S.StateType == AppState {
@@ -221,6 +239,7 @@ struct UserListViewModel {
         case giveVoice(channel: IRCChannel, user: User)
         case takeVoice(channel: IRCChannel, user: User)
         case kickUser(channel: IRCChannel, user: User, reason: String?)
+        case inviteUser(channel: IRCChannel, user: User, inviteChannelName: String)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -286,6 +305,13 @@ struct UserListViewModel {
                     channelName: channel.name,
                     nick: user.nick,
                     reason: reason))
+        
+        case .inviteUser(let channel, let user, let inviteChannelName):
+            return .network(
+                .inviteUserToChannel(
+                    connection: channel.connection,
+                    nick: user.nick,
+                    channelName: inviteChannelName))
         }
     }
     

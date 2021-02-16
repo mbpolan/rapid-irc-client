@@ -238,6 +238,8 @@ extension ServerConnection {
                 handleUserAway(ircMessage)
             case .motd:
                 handleMotd(ircMessage)
+            case .inviting:
+                handleInviting(ircMessage)
             case.created,
                 .myInfo,
                 .iSupport,
@@ -898,6 +900,26 @@ extension ServerConnection {
                                             message: ChannelMessage(
                                                 text: text,
                                                 variant: .motd))))
+        }
+        
+        private func handleInviting(_ message: IRCMessage) {
+            // expect at least two parameters
+            if message.parameters.count < 2 {
+                print("ERROR: not enough params in INVITING reply: \(message)")
+                return
+            }
+            
+            // first parameter is the nick of the invited user
+            let nick = message.parameters[0]
+            
+            // second parameter is the channel name
+            let channelName = message.parameters[1]
+            
+            connection.store.dispatch(.network(
+                                        .inviteConfirmed(
+                                            connection: self.connection.connection,
+                                            channelName: channelName,
+                                            nick: nick)))
         }
         
         private func handleServerMessage(_ message: IRCMessage) {

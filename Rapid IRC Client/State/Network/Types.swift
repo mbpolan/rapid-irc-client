@@ -61,6 +61,7 @@ extension ChannelMessage {
         case modeEvent
         case error
         case kick
+        case userInvited
         case client
         case other
         case motd

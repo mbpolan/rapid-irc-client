@@ -32,7 +32,7 @@ line_length:
 
 function_body_length:
     warning: 300
-    error: 500
+    error: 750 # FIXME: aim for 500
 
 function_parameter_count:
     warning: 6
@@ -49,6 +49,6 @@ file_length:
 
 cyclomatic_complexity:
     warning: 15
-    error: 100 # FIXME: aim for 25
+    error: 125 # FIXME: aim for 25
 
 reporter: "xcode"

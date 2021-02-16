@@ -735,6 +735,29 @@ class NetworkMiddleware: Middleware {
                                         user: user)))
             }
         
+        case .inviteConfirmed(let connection, let channelName, let nick):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            // if the user has joined the target channel, dispatch the message in that channel
+            // otherwise, dispatch the message to the server channel
+            let text: String
+            let targetChannel: String
+            if target.channels.contains(where: { $0.name == channelName }) {
+                text = "\(nick) has been invited to this channel"
+                targetChannel = channelName
+            } else {
+                text = "\(nick) has been invited to \(channelName)"
+                targetChannel = Connection.serverChannel
+            }
+            
+            dispatchChannelMessage(
+                connection: connection,
+                channelName: targetChannel,
+                message: ChannelMessage(
+                    text: text,
+                    variant: .userInvited))
+        
         case .kickUserFromChannel(let connection, let channelName, let nick, let reason):
             let state = getState()
             guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
@@ -744,6 +767,14 @@ class NetworkMiddleware: Middleware {
                 message = "\(message) :\(reason)"
             }
             
+            target.client.sendMessage(message)
+        
+        case .inviteUserToChannel(let connection, let nick, let inviteChannelName):
+            let state = getState()
+            guard let target = state.network.connections.first(where: { $0 === connection }) else { break }
+            
+            // send an INVITE command with the nick and target channel
+            let message = "INVITE \(nick) \(inviteChannelName)"
             target.client.sendMessage(message)
             
         case .userQuit(let connection, let identifier, let reason):

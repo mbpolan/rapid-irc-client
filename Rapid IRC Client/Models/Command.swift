@@ -61,6 +61,7 @@ enum Command {
     case topicReply
     case topicChanged
     case topicSetByWhen
+    case inviting
     case version
     case nameReply
     case endOfNames
@@ -183,6 +184,8 @@ extension Command {
             return .topicReply
         case "333":
             return .topicSetByWhen
+        case "341":
+            return .inviting
         case "351":
             return .version
         case "353":

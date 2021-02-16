@@ -199,6 +199,21 @@ extension NetworkAction {
         self.kickReceived != nil
     }
 
+    internal var inviteConfirmed: (connection: Connection, channelName: String, nick: String)? {
+        get {
+            guard case let .inviteConfirmed(connection, channelName, nick) = self else { return nil }
+            return (connection, channelName, nick)
+        }
+        set {
+            guard case .inviteConfirmed = self, let newValue = newValue else { return }
+            self = .inviteConfirmed(connection: newValue.0, channelName: newValue.1, nick: newValue.2)
+        }
+    }
+
+    internal var isInviteConfirmed: Bool {
+        self.inviteConfirmed != nil
+    }
+
     internal var messageReceived: (connection: Connection, channelName: String, message: ChannelMessage)? {
         get {
             guard case let .messageReceived(connection, channelName, message) = self else { return nil }
@@ -677,6 +692,21 @@ extension NetworkAction {
 
     internal var isKickUserFromChannel: Bool {
         self.kickUserFromChannel != nil
+    }
+
+    internal var inviteUserToChannel: (connection: Connection, nick: String, channelName: String)? {
+        get {
+            guard case let .inviteUserToChannel(connection, nick, channelName) = self else { return nil }
+            return (connection, nick, channelName)
+        }
+        set {
+            guard case .inviteUserToChannel = self, let newValue = newValue else { return }
+            self = .inviteUserToChannel(connection: newValue.0, nick: newValue.1, channelName: newValue.2)
+        }
+    }
+
+    internal var isInviteUserToChannel: Bool {
+        self.inviteUserToChannel != nil
     }
 
     internal var userQuit: (connection: Connection, identifier: IRCMessage.Prefix, reason: String)? {

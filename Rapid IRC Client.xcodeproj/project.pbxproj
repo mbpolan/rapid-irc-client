@@ -24,6 +24,9 @@
 		276CC0CE25DA242200BD7606 /* ModeFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC0CD25DA242200BD7606 /* ModeFlag.swift */; };
 		276CC0F825DB3E0200BD7606 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 276CC0F725DB3E0200BD7606 /* .swiftlint.yml */; };
 		276CC0FD25DB456400BD7606 /* ChannelTopicSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC0FC25DB456400BD7606 /* ChannelTopicSheet.swift */; };
+		276CC10A25DB66B400BD7606 /* UserInfoPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC10925DB66B400BD7606 /* UserInfoPopover.swift */; };
+		276CC10F25DB672200BD7606 /* KickUserPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC10E25DB672200BD7606 /* KickUserPopover.swift */; };
+		276CC11425DB685E00BD7606 /* InviteUserPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CC11325DB685E00BD7606 /* InviteUserPopover.swift */; };
 		2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE04256CABCC00371A28 /* UIReducer.swift */; };
 		2776AE0D256CABD600371A28 /* UIActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2776AE0C256CABD600371A28 /* UIActions.swift */; };
 		279911DE25AFD9FA004D0DDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 279911DB25AFD9FA004D0DDC /* README.md */; };
@@ -99,6 +102,9 @@
 		276CC0CD25DA242200BD7606 /* ModeFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeFlag.swift; sourceTree = "<group>"; };
 		276CC0F725DB3E0200BD7606 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		276CC0FC25DB456400BD7606 /* ChannelTopicSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTopicSheet.swift; sourceTree = "<group>"; };
+		276CC10925DB66B400BD7606 /* UserInfoPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoPopover.swift; sourceTree = "<group>"; };
+		276CC10E25DB672200BD7606 /* KickUserPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KickUserPopover.swift; sourceTree = "<group>"; };
+		276CC11325DB685E00BD7606 /* InviteUserPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUserPopover.swift; sourceTree = "<group>"; };
 		2776AE04256CABCC00371A28 /* UIReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIReducer.swift; sourceTree = "<group>"; };
 		2776AE0C256CABD600371A28 /* UIActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIActions.swift; sourceTree = "<group>"; };
 		279911DB25AFD9FA004D0DDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -352,6 +358,9 @@
 				279F881725C5078A00DA9F66 /* FormattedText.swift */,
 				276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */,
 				276CC0FC25DB456400BD7606 /* ChannelTopicSheet.swift */,
+				276CC10925DB66B400BD7606 /* UserInfoPopover.swift */,
+				276CC10E25DB672200BD7606 /* KickUserPopover.swift */,
+				276CC11325DB685E00BD7606 /* InviteUserPopover.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -683,9 +692,11 @@
 				2799121C25B4B5DE004D0DDC /* UserListView.swift in Sources */,
 				2757C2EC254A5873002335CB /* ChannelListView.swift in Sources */,
 				2799122625B532D2004D0DDC /* SettingsView.swift in Sources */,
+				276CC10F25DB672200BD7606 /* KickUserPopover.swift in Sources */,
 				2757C2CC254A4F78002335CB /* Store.swift in Sources */,
 				2757C2FD254A6A54002335CB /* ServerConnection.swift in Sources */,
 				2776AE05256CABCC00371A28 /* UIReducer.swift in Sources */,
+				276CC10A25DB66B400BD7606 /* UserInfoPopover.swift in Sources */,
 				27CF74CD2543ABD900DA4598 /* ContentView.swift in Sources */,
 				2799122B25B533CD004D0DDC /* ServersSettingsView.swift in Sources */,
 				2757C308254E4917002335CB /* IRCMessage.swift in Sources */,
@@ -709,6 +720,7 @@
 				279F884A25C9080E00DA9F66 /* SnapshotAction.swift in Sources */,
 				279F881825C5078A00DA9F66 /* FormattedText.swift in Sources */,
 				279F883925C9074E00DA9F66 /* SnapshotState.swift in Sources */,
+				276CC11425DB685E00BD7606 /* InviteUserPopover.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
