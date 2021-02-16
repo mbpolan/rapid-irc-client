@@ -93,23 +93,18 @@ struct AppCommands: Commands {
     @CommandsBuilder var body: some Commands {
         // replace the new window command with a connect command
         CommandGroup(replacing: .newItem) {
-            Button(action: {
+            Button("Quick Connect") {
                 NotificationCenter.default.post(name: .connectToServer, object: nil)
-            }) {
-                Text("Quick Connect")
             }.keyboardShortcut("C", modifiers: [.control, .shift])
         }
         
         CommandMenu("Debug") {
-            Button(action: {
+            Button("Simulate Sleep") {
                 NotificationCenter.default.post(name: .debugSimulateSleep, object: nil)
-            }) {
-                Text("Simulate Sleep")
             }
-            Button(action: {
+            
+            Button("Simulate Wake") {
                 NotificationCenter.default.post(name: .debugSimulateWake, object: nil)
-            }) {
-                Text("Simulate Wake")
             }
         }
     }

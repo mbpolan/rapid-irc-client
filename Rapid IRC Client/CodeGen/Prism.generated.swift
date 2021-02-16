@@ -738,7 +738,7 @@ extension SnapshotAction {
         self.restore != nil
     }
 
-    internal var push: (timestamp: Date, connectionsToChannels: Dictionary<UUID, [String]>)? {
+    internal var push: (timestamp: Date, connectionsToChannels: [UUID: [String]])? {
         get {
             guard case let .push(timestamp, connectionsToChannels) = self else { return nil }
             return (timestamp, connectionsToChannels)

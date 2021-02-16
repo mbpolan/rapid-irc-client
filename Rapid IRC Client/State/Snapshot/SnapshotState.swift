@@ -9,7 +9,7 @@ import Foundation
 
 struct SnapshotState {
     var timestamp: Date
-    var connectionsToChannels: Dictionary<UUID, [String]>
+    var connectionsToChannels: [UUID: [String]]
     
     static var empty: SnapshotState {
         .init(

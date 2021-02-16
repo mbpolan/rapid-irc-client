@@ -59,7 +59,7 @@ struct UserListView: View {
             .popover(isPresented: userInfoBinding, arrowEdge: .trailing) {
                 let popoverGrid = [
                     GridItem(.fixed(70), spacing: 5),
-                    GridItem(.fixed(100), spacing: 5),
+                    GridItem(.fixed(100), spacing: 5)
                 ]
                 
                 let cells = [
@@ -85,7 +85,7 @@ struct UserListView: View {
                         .frame(minWidth: 300)
                     
                     HStack(alignment: .lastTextBaseline) {
-                        Button(action: {
+                        Button("Kick") {
                             guard let currentChannel = self.viewModel.state.currentChannel,
                                   let user = currentChannel.users.first(where: { $0.nick == kickReasonNick }) else { return }
                             
@@ -96,8 +96,6 @@ struct UserListView: View {
                             
                             kickReason = ""
                             kickReasonNick = ""
-                        }) {
-                            Text("Kick")
                         }
                     }
                 }
@@ -105,8 +103,8 @@ struct UserListView: View {
             }
     }
     
-    private func makeContextMenu(_ entry: UserListViewModel.UserEntry) -> Array<(label: String?, action: () -> Void)> {
-        var entries: Array<(String?, () -> Void)> = []
+    private func makeContextMenu(_ entry: UserListViewModel.UserEntry) -> [(label: String?, action: () -> Void)] {
+        var entries: [(String?, () -> Void)] = []
         
         // don't allow private messaging or kicking ourselves
         if !entry.identity {
@@ -297,7 +295,7 @@ struct UserListViewModel {
         }
         
         // categorize users based on their access levels
-        var groups = Dictionary<UserGroup.Category, [User]>()
+        var groups = [UserGroup.Category: [User]]()
         currentChannel.users.forEach { user in
             switch user.highestPrivilege() {
             case .founder,
@@ -338,7 +336,7 @@ extension UserListViewModel {
         let category: Category
         let users: [UserEntry]
         
-        static func ==(lhs: UserGroup, rhs: UserGroup) -> Bool {
+        static func == (lhs: UserGroup, rhs: UserGroup) -> Bool {
             return lhs.category == rhs.category && lhs.users == rhs.users
         }
     }
@@ -349,7 +347,7 @@ extension UserListViewModel {
         let user: User
         let children: [UserEntry]?
         
-        static func ==(lhs: UserEntry, rhs: UserEntry) -> Bool {
+        static func == (lhs: UserEntry, rhs: UserEntry) -> Bool {
             return lhs.nick == rhs.nick
         }
         

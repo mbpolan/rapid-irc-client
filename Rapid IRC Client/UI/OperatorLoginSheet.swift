@@ -18,7 +18,7 @@ struct OperatorLoginSheet: View {
         VStack {
             LazyVGrid(columns: [
                 GridItem(.flexible(maximum: 100)),
-                GridItem(.flexible()),
+                GridItem(.flexible())
             ]) {
                 Text("Username")
                 TextField("", text: $username)
@@ -32,16 +32,14 @@ struct OperatorLoginSheet: View {
             HStack {
                 Spacer()
                 
-                Button(action: {
+                Button("Cancel") {
                     onClose(Result(
                                 accepted: false,
                                 credentials: nil))
-                }) {
-                    Text("Cancel")
                 }
                 .keyboardShortcut(.cancelAction)
                 
-                Button(action: {
+                Button("OK") {
                     onClose(Result(
                                 accepted: true,
                                 credentials: Credentials(
@@ -50,8 +48,6 @@ struct OperatorLoginSheet: View {
                     
                     self.username = ""
                     self.password = ""
-                }) {
-                    Text("OK")
                 }
                 .keyboardShortcut(.defaultAction)
             }

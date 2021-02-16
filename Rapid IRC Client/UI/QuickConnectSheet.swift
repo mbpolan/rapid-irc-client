@@ -24,7 +24,7 @@ struct QuickConnectSheet: View {
             LazyVGrid(
                 columns: [
                     GridItem(.flexible(maximum: 100)),
-                    GridItem(.flexible()),
+                    GridItem(.flexible())
                 ]) {
                 
                 Text("Nick")
@@ -83,10 +83,6 @@ extension QuickConnectSheet {
 
 struct ConnectDialog_Previews: PreviewProvider {
     static var previews: some View {
-        let shown = Binding<Bool>(
-            get: { true },
-            set: { _ in })
-        
         QuickConnectSheet(
             onClose: { _ in })
     }

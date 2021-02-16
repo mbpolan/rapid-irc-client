@@ -150,19 +150,19 @@ extension ServerConnection {
                 bufferedMessage.append(contentsOf: received)
                 
                 // find each complete message, ending in a CRLF
-                while let cr = bufferedMessage.firstIndex(of: 0x0D),
-                      cr < bufferedMessage.count - 1,
-                      bufferedMessage[cr + 1] == 0x0A {
+                while let crIndex = bufferedMessage.firstIndex(of: 0x0D),
+                      crIndex < bufferedMessage.count - 1,
+                      bufferedMessage[crIndex + 1] == 0x0A {
                    
-                    if let decoded = String(bytes: bufferedMessage[0..<cr], encoding: .utf8) {
+                    if let decoded = String(bytes: bufferedMessage[0..<crIndex], encoding: .utf8) {
                         print("Incoming: \(decoded)")
                         processMessage(decoded)
                     } else {
                         print("ERROR: failed to decode message, dropping...")
                     }
                     
-                    if cr + 2 < bufferedMessage.count {
-                        bufferedMessage = Array(bufferedMessage[(cr + 2)...])
+                    if crIndex + 2 < bufferedMessage.count {
+                        bufferedMessage = Array(bufferedMessage[(crIndex + 2)...])
                     } else {
                         bufferedMessage = []
                     }
@@ -414,7 +414,7 @@ extension ServerConnection {
             }
             
             // first parameter is the channel type
-            let type = IRCChannel.AccessType(rawValue: message.parameters[0])
+            _ = IRCChannel.AccessType(rawValue: message.parameters[0])
             
             // second parameter is the channel name, or asterisk for server users
             let target = message.parameters[1]

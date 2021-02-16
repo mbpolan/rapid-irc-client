@@ -72,7 +72,7 @@ extension CommandTextField {
 
 final class NativeCommandTextField: NSTextView {
     
-    var parent: CommandTextField? = nil
+    var parent: CommandTextField?
     
     override func keyDown(with event: NSEvent) {
         // handle key events, looking specifically for up/down arrow keys and

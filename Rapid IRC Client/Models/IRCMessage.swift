@@ -37,7 +37,7 @@ struct IRCMessage {
         }
         
         // prefix is optional, but if it exists, it's always lead by a colon
-        var prefix: Prefix? = nil
+        var prefix: Prefix?
         if parts.first!.starts(with: ":") {
             prefix = Prefix(String(parts.first!).subString(from: 1))
             parts.removeFirst()
@@ -50,7 +50,7 @@ struct IRCMessage {
         parts.removeFirst()
         
         // extract the parameters
-        var parameters = parts.map{ String($0) }
+        var parameters = parts.map { String($0) }
         
         // if the command is a numeric reply, the first parameter is the target
         var target: String?
@@ -113,14 +113,14 @@ extension IRCMessage.Prefix {
         self.raw = raw
         
         // check for presence of ! separator
-        if let ex = raw.range(of: "!") {
-            self.subject = String(raw[..<ex.lowerBound])
-            let network = raw[ex.upperBound...]
+        if let exIndex = raw.range(of: "!") {
+            self.subject = String(raw[..<exIndex.lowerBound])
+            let network = raw[exIndex.upperBound...]
             
             // check for presence of @ separator
-            if let at = network.range(of: "@") {
-                self.user = String(network[..<at.lowerBound])
-                self.host = String(network[at.upperBound...])
+            if let atIndex = network.range(of: "@") {
+                self.user = String(network[..<atIndex.lowerBound])
+                self.host = String(network[atIndex.upperBound...])
             } else {
                 self.user = String(network)
                 self.host = nil

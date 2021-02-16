@@ -85,16 +85,14 @@ struct ChannelPropertiesSheet: View {
             HStack(alignment: .lastTextBaseline) {
                 Spacer()
                 
-                Button(action: {
+                Button("Cancel") {
                     onClose(Result(
                                 accepted: false,
                                 modeChange: nil))
-                }) {
-                    Text("Cancel")
                 }
                 .keyboardShortcut(.cancelAction)
                 
-                Button(action: {
+                Button("OK") {
                     // compute the current mode change, and compare it with the initial channel mode to
                     // come up with a delta
                     let currentModeChange = getModeChange()
@@ -104,8 +102,6 @@ struct ChannelPropertiesSheet: View {
                     onClose(Result(
                                 accepted: true,
                                 modeChange: modeChange))
-                }) {
-                    Text("OK")
                 }
                 .disabled(!formDirty)
                 .keyboardShortcut(.defaultAction)

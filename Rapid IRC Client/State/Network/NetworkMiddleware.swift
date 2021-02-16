@@ -43,7 +43,6 @@ class NetworkMiddleware: Middleware {
                                     connection: connection,
                                     serverChannel: serverChannel)))
             
-            
             output.dispatch(.ui(
                                 .connectionAdded(
                                     connection: connection)))
@@ -410,8 +409,6 @@ class NetworkMiddleware: Middleware {
                     message = "\(parts[0]) :\(parts[1...].joined(separator: " "))"
                 }
                 
-                break
-                
             // when joining a previously parted channel, we can automatically add the channel name to the join
             // command to effectively "rejoin" that channel without the user explicitly stating the channel name
             case _ where text.starts(with: "/join"):
@@ -422,8 +419,6 @@ class NetworkMiddleware: Middleware {
                 if parts.count == 1 {
                     message = "\(parts[0]) \(currentChannel.name)"
                 }
-                
-                break
                 
             // when parting a channel, try and detect if we need to include the name of the currently active
             // channel in the command

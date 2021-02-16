@@ -13,6 +13,6 @@ enum SnapshotAction {
     case save(completion: () -> Void)
     case restore
     
-    case push(timestamp: Date, connectionsToChannels: Dictionary<UUID, [String]>)
+    case push(timestamp: Date, connectionsToChannels: [UUID: [String]])
     case pop
 }

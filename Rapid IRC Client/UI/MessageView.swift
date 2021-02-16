@@ -9,11 +9,14 @@ import CombineRex
 import SwiftRex
 import SwiftUI
 
+// MARK: - View
+
+/// A view that presents the list of messages in an IRC channel.
 struct MessageView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<MessageViewModel.ViewAction, MessageViewModel.ViewState>
     
-    private let dateFormatter = { () -> DateFormatter in
+    private let dateFormatter: DateFormatter = { () -> DateFormatter in
         let format = DateFormatter()
         format.dateFormat = "HH:mm:ss"
         return format
@@ -115,11 +118,12 @@ struct MessageView: View {
     }
 }
 
+// MARK: - ViewModel
 enum MessageViewModel {
     
     static func viewModel<S: StoreType>(from store: S) -> ObservableViewModel<ViewAction, ViewState> where S.ActionType == AppAction, S.StateType == AppState {
         store.projection(
-            action: transform(viewAction:),
+            action: never,
             state: transform(appState:)
         ).asObservableViewModel(initialState: .empty)
     }
@@ -143,12 +147,7 @@ enum MessageViewModel {
         }
     }
     
-    enum ViewAction {
-    }
-    
-    private static func transform(viewAction: ViewAction) -> AppAction? {
-        return nil
-    }
+    enum ViewAction { }
     
     private static func transform(appState: AppState) -> ViewState {
         var messages = appState.ui.currentChannel?.messages ?? []
@@ -186,7 +185,7 @@ struct MessageView_Previews: PreviewProvider {
             ChannelMessage(sender: "jase", text: "hey gyus", variant: .privateMessage),
             ChannelMessage(sender: "mike", text: "a somewhat long message to text this situation", variant: .privateMessage),
             ChannelMessage(text: "jun has joined #mike", variant: .userJoined),
-            ChannelMessage(text: "piotr has left #mike", variant: .userParted),
+            ChannelMessage(text: "piotr has left #mike", variant: .userParted)
         ])
         
         return MessageView(viewModel: .mock(

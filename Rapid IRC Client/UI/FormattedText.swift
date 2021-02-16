@@ -12,7 +12,7 @@ struct FormattedText: View {
     
     private let text: String
     
-    private let colors: Dictionary<UInt16, Palette> = [
+    private let colors: [UInt16: Palette] = [
         0: .white,
         1: .black,
         2: .blue,
@@ -305,7 +305,7 @@ extension FormattedText {
     
     struct URLResult {
         let string: String
-        let urls: Dictionary<String, String>
+        let urls: [String: String]
     }
     
     struct ViewHolder {

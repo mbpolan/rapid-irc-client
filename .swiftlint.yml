@@ -13,6 +13,16 @@ excluded:
 - Rapid IRC ClientTests
 - Rapid IRC ClientUITests
 
+identifier_name:
+  min_length:
+    warning: 3
+    error: 1
+  excluded:
+    - id
+    - ui
+    - api
+    - URL
+
 line_length:
     warning: 150
     error: 200

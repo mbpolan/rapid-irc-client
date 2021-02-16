@@ -17,15 +17,15 @@ struct ChannelModeChange {
     var exceptionsRemoved: Set<String> = Set()
     var inviteExceptionsAdded: Set<String> = Set()
     var inviteExceptionsRemoved: Set<String> = Set()
-    var privilegesAdded: Dictionary<User.ChannelPrivilege, [String]> = [:]
-    var privilegesRemoved: Dictionary<User.ChannelPrivilege, [String]> = [:]
-    var clientLimit: UnaryMode<Int>? = nil
-    var inviteOnly: Bool? = nil
-    var key: UnaryMode<String>? = nil
-    var moderated: Bool? = nil
-    var protectedTopic: Bool? = nil
-    var secret: Bool? = nil
-    var noExternalMessages: Bool? = nil
+    var privilegesAdded: [User.ChannelPrivilege: [String]] = [:]
+    var privilegesRemoved: [User.ChannelPrivilege: [String]] = [:]
+    var clientLimit: UnaryMode<Int>?
+    var inviteOnly: Bool?
+    var key: UnaryMode<String>?
+    var moderated: Bool?
+    var protectedTopic: Bool?
+    var secret: Bool?
+    var noExternalMessages: Bool?
 }
 
 // MARK: - ChannelModeChange extension
@@ -37,10 +37,10 @@ extension ChannelModeChange {
     /// - Parameter modeArgs: List of arguments for each flag that requires ones.
     init(from modeString: String, modeArgs: [String]) {
         var args = modeArgs
-        var adding: Bool? = nil
+        var adding: Bool?
         
-        modeString.forEach { ch in
-            let flag = ModeFlag(rawValue: ch)
+        modeString.forEach { char in
+            let flag = ModeFlag(rawValue: char)
             
             switch flag {
             // add or remove banned client masks
@@ -147,7 +147,7 @@ extension ChannelModeChange {
                 
             default:
                 // is this an action operator instead?
-                let action = ModeFlagAction(rawValue: ch)
+                let action = ModeFlagAction(rawValue: char)
                 switch action {
                 // following mode flags are added
                 case .add:
@@ -158,7 +158,7 @@ extension ChannelModeChange {
                     adding = false
                     
                 default:
-                    print("Ignoring unknown mode string character: \(ch)")
+                    print("Ignoring unknown mode string character: \(char)")
                 }
             }
         }
