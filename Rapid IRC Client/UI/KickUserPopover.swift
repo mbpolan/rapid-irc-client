@@ -5,6 +5,7 @@
 //  Created by Mike Polan on 2/15/21.
 //
 
+import Introspect
 import SwiftUI
 
 // MARK: - View
@@ -18,15 +19,20 @@ struct KickUserPopover: View {
     var body: some View {
         VStack(alignment: .trailing) {
             TextField("(reason)", text: $kickReason)
-                .frame(minWidth: 300)
+                .introspectTextField { $0.becomeFirstResponder() }
             
-            HStack(alignment: .lastTextBaseline) {
+            HStack {
+                Spacer()
+                
                 Button("Kick") {
                     onKick(kickReason.isEmptyOrWhitespace ? .none : kickReason)
                 }
+                .keyboardShortcut(.defaultAction)
             }
+            .frame(maxWidth: .infinity)
         }
         .padding()
+        .frame(minWidth: 300)
     }
 }
 

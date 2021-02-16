@@ -6,6 +6,7 @@ PODS:
   - CNIOWindows (2.25.1)
   - CombineRex (0.8.2):
     - SwiftRex (~> 0.8.2)
+  - Introspect (0.1.2)
   - Sourcery (1.0.2)
   - SwiftLint (0.42.0)
   - SwiftNIO (2.25.1):
@@ -21,6 +22,7 @@ PODS:
 
 DEPENDENCIES:
   - CombineRex
+  - Introspect
   - Sourcery
   - SwiftLint
   - SwiftNIO
@@ -33,6 +35,7 @@ SPEC REPOS:
     - CNIOSHA1
     - CNIOWindows
     - CombineRex
+    - Introspect
     - Sourcery
     - SwiftLint
     - SwiftNIO
@@ -46,12 +49,13 @@ SPEC CHECKSUMS:
   CNIOSHA1: 43c4a0cfdea5e8be20927d9d2237ebe4233071f8
   CNIOWindows: 89048520e4a1484bcd5e20c252edf4089913aa7d
   CombineRex: 86a7f19af54eaded68d9ee0b71fa1988df1a7f4b
+  Introspect: 85a29d2c5ee4d3d15469ad0b75fd8839f3e72674
   Sourcery: e8951e8759ef6a3a0cce412db64832dd23343041
   SwiftLint: 4fa9579c63416865179bc416f0a92d55f009600d
   SwiftNIO: 3f9a197581f6dfebf65a5c85099f25197d892c8c
   SwiftNIOConcurrencyHelpers: 3670690a0fb8d8a0a4759804d07aaf89c9599839
   SwiftRex: 9b88839d283c8b0b09833a8311c736eaa0ea2680
 
-PODFILE CHECKSUM: 34a4b84ee1ac20a5c5e77af2bfa895d74a26b5b5
+PODFILE CHECKSUM: 28b4fa52e3fa767c34059da8672d270b08f2a14e
 
 COCOAPODS: 1.10.0

@@ -5,9 +5,12 @@
 //  Created by Mike Polan on 1/27/21.
 //
 
+import Introspect
 import SwiftUI
 
 // MARK: - View
+
+/// Sheet that asks the user to provide IRC operator login credentials.
 struct OperatorLoginSheet: View {
     
     @State private var username: String = ""
@@ -22,6 +25,7 @@ struct OperatorLoginSheet: View {
             ]) {
                 Text("Username")
                 TextField("", text: $username)
+                    .introspectTextField { $0.becomeFirstResponder() }
                 
                 Text("Password")
                 SecureField("", text: $password)
@@ -56,14 +60,16 @@ struct OperatorLoginSheet: View {
     }
 }
 
-// MARK: - Extensions
+// MARK: - View extensions
 extension OperatorLoginSheet {
     
+    /// Represents the results of the user dismissing the sheet.
     struct Result {
         var accepted: Bool
         var credentials: Credentials?
     }
     
+    /// Stores the operator username and password.
     struct Credentials {
         var username: String
         var password: String

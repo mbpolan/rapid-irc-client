@@ -5,6 +5,7 @@
 //  Created by Mike Polan on 2/15/21.
 //
 
+import Introspect
 import SwiftUI
 
 // MARK: - View
@@ -31,6 +32,7 @@ struct ChannelTopicSheet: View {
     var body: some View {
         VStack(alignment: .leading) {
             TextField("(topic)", text: makeBinding(\.topic))
+                .introspectTextField { $0.becomeFirstResponder() }
             
             Divider()
             

@@ -10,6 +10,7 @@ target 'Rapid IRC Client' do
   pod "CombineRex"
   pod "SwiftNIO"
   pod "SwiftLint"
+  pod "Introspect"
 
   target 'Rapid IRC ClientTests' do
     inherit! :search_paths

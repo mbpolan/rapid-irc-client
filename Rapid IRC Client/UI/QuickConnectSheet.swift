@@ -6,8 +6,12 @@
 //
 
 import Combine
+import Introspect
 import SwiftUI
 
+// MARK: - View
+
+/// Sheet that presents fields for providing server connection information.
 struct QuickConnectSheet: View {
     
     var onClose: (Result) -> Void
@@ -29,6 +33,7 @@ struct QuickConnectSheet: View {
                 
                 Text("Nick")
                 TextField("", text: $nick)
+                    .introspectTextField { $0.becomeFirstResponder() }
                 
                 Text("Real Name")
                 TextField("", text: $realName)
@@ -74,13 +79,17 @@ struct QuickConnectSheet: View {
     }
 }
 
+// MARK: - View extensions
 extension QuickConnectSheet {
+    
+    /// Represents the results of the user dismissing the sheet.
     struct Result {
         var accepted: Bool
         var server: ServerInfo?
     }
 }
 
+// MARK: - Preview
 struct ConnectDialog_Previews: PreviewProvider {
     static var previews: some View {
         QuickConnectSheet(

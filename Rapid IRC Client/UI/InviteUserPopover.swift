@@ -5,6 +5,7 @@
 //  Created by Mike Polan on 2/15/21.
 //
 
+import Introspect
 import SwiftUI
 
 // MARK: - View
@@ -17,22 +18,24 @@ struct InviteUserPopover: View {
     @State private var inviteTarget: String = ""
     
     var body: some View {
-        let text: Text
+        let leadingText: Text
         let placeholder: String
         
         // adjust the leading text to indicate what type of invitation is intended
         switch mode {
         case .inviteToChannel(let channelName):
-            text = Text("Invite another user to ") + Text(channelName).bold() + Text(".")
+            leadingText = Text("Invite another user to ") + Text(channelName).bold() + Text(".")
             placeholder = "(nick)"
         case .inviteUser(let nick):
-            text = Text("Invite ") + Text(nick).bold() + Text(" to a channel.")
+            leadingText = Text("Invite ") + Text(nick).bold() + Text(" to a channel.")
             placeholder = "(channel)"
         }
         
         return VStack(alignment: .leading) {
-            text
+            leadingText
+            
             TextField(placeholder, text: $inviteTarget)
+                .introspectTextField { $0.becomeFirstResponder() }
             
             HStack {
                 Spacer()
@@ -40,6 +43,7 @@ struct InviteUserPopover: View {
                 Button("Invite") {
                     onInvite(inviteTarget)
                 }
+                .keyboardShortcut(.defaultAction)
                 .disabled(inviteTarget.isEmptyOrWhitespace)
             }
             .frame(maxWidth: .infinity)
