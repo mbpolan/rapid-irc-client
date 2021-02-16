@@ -12,22 +12,50 @@ import SwiftUI
 /// A popover that prompts for a channel name for inviting new users.
 struct InviteUserPopover: View {
     
-    var onInvite: (_ channelName: String) -> Void
-    @State private var inviteChannel: String = ""
+    var mode: Mode
+    var onInvite: (_ inviteTarget: String) -> Void
+    @State private var inviteTarget: String = ""
     
     var body: some View {
-        VStack(alignment: .trailing) {
-            TextField("(channel)", text: $inviteChannel)
-                .frame(minWidth: 300)
+        let text: Text
+        let placeholder: String
+        
+        // adjust the leading text to indicate what type of invitation is intended
+        switch mode {
+        case .inviteToChannel(let channelName):
+            text = Text("Invite another user to ") + Text(channelName).bold() + Text(".")
+            placeholder = "(nick)"
+        case .inviteUser(let nick):
+            text = Text("Invite ") + Text(nick).bold() + Text(" to a channel.")
+            placeholder = "(channel)"
+        }
+        
+        return VStack(alignment: .leading) {
+            text
+            TextField(placeholder, text: $inviteTarget)
             
-            HStack(alignment: .lastTextBaseline) {
+            HStack {
+                Spacer()
+                
                 Button("Invite") {
-                    onInvite(inviteChannel)
+                    onInvite(inviteTarget)
                 }
-                .disabled(inviteChannel.isEmptyOrWhitespace)
+                .disabled(inviteTarget.isEmptyOrWhitespace)
             }
+            .frame(maxWidth: .infinity)
+            
         }
         .padding()
+        .frame(maxWidth: 300)
+    }
+}
+
+// MARK: - View extensions
+extension InviteUserPopover {
+    
+    enum Mode {
+        case inviteToChannel(_ channelName: String)
+        case inviteUser(_ nick: String)
     }
 }
 
@@ -36,6 +64,6 @@ struct InviteUserPopover: View {
 struct InviteUserPopover_Preview: PreviewProvider {
     
     static var previews: some View {
-        InviteUserPopover { _ in }
+        InviteUserPopover(mode: .inviteUser("mike")) { _ in }
     }
 }

@@ -16,6 +16,8 @@ struct ChannelListView: View {
     
     @ObservedObject var viewModel: ObservableViewModel<ChannelListViewModel.ViewAction, ChannelListViewModel.ViewState>
     @State private var hoveredChannel: UUID?
+    @State private var activePopover: ActivePopover?
+    @State private var popoverChannel: IRCChannel?
     
     var body: some View {
         VStack {
@@ -92,6 +94,24 @@ struct ChannelListView: View {
             ? .subheadline
             : Font.subheadline.italic()
         
+        let popoverBinding = Binding<ActivePopover?>(
+            get: {
+                if let popoverChannel = self.popoverChannel,
+                   popoverChannel.name == channel.name,
+                   popoverChannel.connection === channel.connection {
+                    return self.activePopover
+                }
+                
+                return nil
+            },
+            set: { value in
+                if value == .none {
+                    self.popoverChannel = .none
+                }
+                
+                self.activePopover = value
+            })
+        
         return HStack {
             makeChannelIcon(channel)
             
@@ -125,6 +145,16 @@ struct ChannelListView: View {
         .frame(maxWidth: .infinity)
         .contextMenu {
             if channel.type != .server {
+                // show an item for inviting a user to this channel
+                Button("Invite User") {
+                    if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                        self.activePopover = .invite
+                        self.popoverChannel = target
+                    }
+                }
+                
+                Divider()
+                
                 // show an item for changing channel topic
                 Button("Change Topic") {
                     if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
@@ -138,6 +168,14 @@ struct ChannelListView: View {
                         self.viewModel.dispatch(.showChannelProperties(target))
                     }
                 }
+            }
+        }
+        .popover(item: popoverBinding) { item in
+            switch item {
+            case .invite:
+                InviteUserPopover(
+                    mode: .inviteToChannel(self.popoverChannel?.name ?? ""),
+                    onInvite: handleInviteToChannel)
             }
         }
     }
@@ -177,8 +215,32 @@ struct ChannelListView: View {
         
         return image
     }
+    
+    private func handleInviteToChannel(_ nick: String) {
+        self.activePopover = .none
+        self.popoverChannel = .none
+        
+        guard let popoverChannel = self.popoverChannel else { return }
+        
+        self.viewModel.dispatch(.inviteUser(
+                                    channel: popoverChannel,
+                                    inviteNick: nick))
+    }
 }
 
+// MARK: - View extensions
+extension ChannelListView {
+    
+    enum ActivePopover: Identifiable {
+        case invite
+        
+        var id: Int {
+            hashValue
+        }
+    }
+}
+
+// MARK: - ViewModel
 enum ChannelListViewModel {
     
     static func viewModel<S: StoreType>(from store: S) -> ObservableViewModel<ViewAction, ViewState> where S.ActionType == AppAction, S.StateType == AppState {
@@ -210,6 +272,7 @@ enum ChannelListViewModel {
         case requestOperator(Connection)
         case showChannelProperties(IRCChannel)
         case showChannelTopicEditor(IRCChannel)
+        case inviteUser(channel: IRCChannel, inviteNick: String)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
@@ -251,6 +314,13 @@ enum ChannelListViewModel {
                 .showChannelTopicSheet(
                     connection: channel.connection,
                     channelName: channel.name))
+        
+        case .inviteUser(let channel, let inviteNick):
+            return .network(
+                .inviteUserToChannel(
+                    connection: channel.connection,
+                    nick: inviteNick,
+                    channelName: channel.name))
         }
     }
     
@@ -288,6 +358,7 @@ enum ChannelListViewModel {
     }
 }
 
+// MARK: - ViewModel extensions
 extension ChannelListViewModel {
     enum ListItemType {
         case root
@@ -309,6 +380,8 @@ extension ChannelListViewModel {
     }
 }
 
+// MARK: - Preview
+// swiftlint:disable type_name
 struct ChannelListView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store()

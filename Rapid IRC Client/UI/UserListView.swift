@@ -60,7 +60,7 @@ struct UserListView: View {
                 case .userInfo:
                     UserInfoPopover(nick: user.nick, privilege: user.privilege)
                 case .invite:
-                    InviteUserPopover(onInvite: handleInviteUser)
+                    InviteUserPopover(mode: .inviteUser(user.nick), onInvite: handleInviteUser)
                 case .kick:
                     KickUserPopover(onKick: handleKickUser)
                 }
