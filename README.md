@@ -26,7 +26,7 @@ support the following functionality prior to release:
 ## Developing
 
 You'll need the following environment to build the project:
-* macOS 11.x
+* macOS 11.0
 * Xcode 12.3 or newer
 * [CocoaPods](https://cocoapods.org/)
 
@@ -46,6 +46,9 @@ implements a simple Redux pattern where state changes flow in one direction from
 Note that during the build, [Sourcery](https://github.com/krzysztofzablocki/Sourcery) will generate boilerplate code for SwiftRex
 constructs, notably any `enum`s commented with the line `sourcery: Prism`. If any of these files have changed as a result, you
 should check them into your next commit to ensure your code changes are fully incorporated.
+
+Linting is provided by [SwiftLint](https://github.com/realm/SwiftLint), which runs during the build and displays warnings and/or errors 
+in Xcode. Before contributing, be sure to address as many issues as possible with new code to keep the overal code quality sane.
 
 ## Contributing
 

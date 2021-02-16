@@ -97,6 +97,5 @@ class Store: ReduxStoreBase<AppAction, AppState> {
 }
 
 // MARK: - Functional helpers
-func ignore<T>(_ t: T) -> Void { }
-func identity<T>(_ t: T) -> T { t }
+func identity<T>(_ type: T) -> T { type }
 func absurd<T>(_ never: Never) -> T { }

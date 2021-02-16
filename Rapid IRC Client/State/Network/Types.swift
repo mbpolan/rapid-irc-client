@@ -182,6 +182,7 @@ class User: Identifiable, Hashable {
     }
     
     func highestPrivilege() -> ChannelPrivilege? {
+        // swiftlint:disable identifier_name
         return privileges.max(by: { (a, b) -> Bool in
             return a.ordinal < b.ordinal
         })

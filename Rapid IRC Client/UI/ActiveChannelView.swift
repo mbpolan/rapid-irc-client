@@ -58,6 +58,7 @@ struct ActiveChannelView: View {
     }
     
     private func sortUsers(_ users: Set<User>) -> [User] {
+        // swiftlint:disable identifier_name
         return users.sorted(by: { (a, b) -> Bool in
             let aOrdinal = a.highestPrivilege()?.ordinal ?? 0
             let bOrdinal = b.highestPrivilege()?.ordinal ?? 0

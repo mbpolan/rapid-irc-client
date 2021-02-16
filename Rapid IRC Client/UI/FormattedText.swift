@@ -42,14 +42,16 @@ struct FormattedText: View {
         // since various formats can produce mixed views, we need to lay them out
         // in a row inside an HStack instead
         HStack(spacing: 0) {
-            ForEach(0..<views.count, id: \.self) { i in
-                views[i]
+            ForEach(0..<views.count, id: \.self) { index in
+                views[index]
             }
         }
     }
     
     private func extractUrls() -> String {
-        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
+            return text
+        }
         
         var string = text
         var matches = detector.matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
@@ -79,11 +81,11 @@ struct FormattedText: View {
         // preprocess the text before we begin formatting it
         let text = extractUrls()
         
-        var i = text.startIndex
-        while i < text.endIndex {
-            let ch = text[i]
+        var index = text.startIndex
+        while index < text.endIndex {
+            let char = text[index]
             
-            switch ControlCharacter(rawValue: ch.asciiValue ?? 0x00) {
+            switch ControlCharacter(rawValue: char.asciiValue ?? 0x00) {
             // toggles bold font
             case .bold:
                 if formatting.bold || !current.isEmpty {
@@ -92,7 +94,7 @@ struct FormattedText: View {
                 }
                 
                 formatting.bold = !formatting.bold
-                i = text.index(after: i)
+                index = text.index(after: index)
                 
             // toggles italics font
             case .italics:
@@ -102,7 +104,7 @@ struct FormattedText: View {
                 }
                 
                 formatting.italics = !formatting.italics
-                i = text.index(after: i)
+                index = text.index(after: index)
                 
             // toggles strikethrough font
             case .strikethrough:
@@ -112,7 +114,7 @@ struct FormattedText: View {
                 }
                 
                 formatting.strikethrough = !formatting.strikethrough
-                i = text.index(after: i)
+                index = text.index(after: index)
                 
             // toggles underline font
             case .underline:
@@ -122,7 +124,7 @@ struct FormattedText: View {
                 }
                 
                 formatting.underline = !formatting.underline
-                i = text.index(after: i)
+                index = text.index(after: index)
                 
             // invert foreground and background colors
             case .invert:
@@ -132,7 +134,7 @@ struct FormattedText: View {
                 }
                 
                 formatting.inverted = !formatting.inverted
-                i = text.index(after: i)
+                index = text.index(after: index)
                 
             // controls foreground and optionally background text color
             case .color:
@@ -143,51 +145,51 @@ struct FormattedText: View {
                     formatting.fgColor = nil
                 }
                 
-                i = text.index(after: i)
+                index = text.index(after: index)
                 
                 // is the following byte an ascii digit?
-                if let fgChar1 = text.peek(i),
+                if let fgChar1 = text.peek(index),
                    let fgByte1 = UInt16(fgChar1) {
                     
                     var fgCode = fgByte1
-                    i = text.index(after: i)
+                    index = text.index(after: index)
                     
                     // is the next byte after that also an ascii digit?
-                    if let fgChar2 = text.peek(i),
+                    if let fgChar2 = text.peek(index),
                        let fgByte2 = UInt16(fgChar2) {
-                       
+                        
                         fgCode = (fgCode * 10) + fgByte2
-                        i = text.index(after: i)
+                        index = text.index(after: index)
                     }
                     
                     formatting.fgColor = (colors[fgCode] ?? .none).toColor()
                     
                     // if the next sequence of bytes is an ascii comma followed by an ascii digit,
                     // then we treat that as a background color
-                    if let bgSeparator = text.peek(i), bgSeparator == ",",
-                       let bgChar1 = text.peek(i, offsetBy: 1),
+                    if let bgSeparator = text.peek(index), bgSeparator == ",",
+                       let bgChar1 = text.peek(index, offsetBy: 1),
                        let bgByte1 = UInt16(bgChar1) {
                         
                         var bgCode = bgByte1
-                        i = text.index(i, offsetBy: 2)
+                        index = text.index(index, offsetBy: 2)
                         
                         // is the next byte also an ascii digit?
-                        if let bgChar2 = text.peek(i),
+                        if let bgChar2 = text.peek(index),
                            let bgByte2 = UInt16(bgChar2) {
                             
                             bgCode = (bgCode * 10) + bgByte2
-                            i = text.index(after: i)
+                            index = text.index(after: index)
                         }
                         
                         formatting.bgColor = (colors[bgCode] ?? .none).toColor()
                     }
-                        
+                    
                 } else {
                     // no digit character - reset both foreground and background colors
                     formatting.fgColor = nil
                     formatting.bgColor = nil
                 }
-            
+                
             // reset all formatting
             case .reset:
                 // apply any currently buffered formatted text
@@ -197,8 +199,8 @@ struct FormattedText: View {
                 }
                 
                 formatting = TextFormatter()
-                i = text.index(after: i)
-            
+                index = text.index(after: index)
+                
             // custom: indicates a url
             case .url:
                 // apply any currently buffered formatted text
@@ -208,12 +210,12 @@ struct FormattedText: View {
                 }
                 
                 formatting.url = !formatting.url
-                i = text.index(after: i)
-            
+                index = text.index(after: index)
+                
             // no formatting; take the character as-is
             default:
-                current.append(ch)
-                i = text.index(after: i)
+                current.append(char)
+                index = text.index(after: index)
             }
         }
         

@@ -48,7 +48,7 @@ class NetworkMiddleware: Middleware {
                                 .connectionAdded(
                                     connection: connection)))
             
-            connection.client.connect() { result in
+            connection.client.connect { result in
                 self.updateServerConnectionStatus(connection: connection, result: result)
                 
                 if let joinChannelNames = joinChannelNames {
@@ -57,7 +57,7 @@ class NetworkMiddleware: Middleware {
             }
             
         case .reconnect(let connection, let joinChannelNames):
-            connection.client.connect() { result in
+            connection.client.connect { result in
                 self.updateServerConnectionStatus(connection: connection, result: result)
                 
                 if let joinChannelNames = joinChannelNames {
@@ -66,7 +66,7 @@ class NetworkMiddleware: Middleware {
             }
             
         case .disconnect(let connection):
-            connection.client.disconnect() { _ in
+            connection.client.disconnect { _ in
                 let serverInfo = connection.client.server
                 
                 // put a message into the server channel indicating we're disconnected

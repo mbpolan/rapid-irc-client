@@ -15,6 +15,7 @@ extension String {
         return String(self[startIndex...endIndex])
     }
 
+    // swiftlint:disable identifier_name
     func subString(from: Int, to: Int) -> String {
         let startIndex = self.index(self.startIndex, offsetBy: from)
         let endIndex = self.index(self.startIndex, offsetBy: to)
@@ -32,10 +33,10 @@ extension String {
     
     func peek(_ index: String.Index, amount: UInt = 1, offsetBy: Int = 0) -> String? {
         var str = ""
-        var i = 0
+        var charIndex = 0
         var idx = self.index(index, offsetBy: offsetBy)
         
-        while i < amount {
+        while charIndex < amount {
             // end of string? return nil to indicate this operation is out of bounds
             if idx == self.endIndex {
                 return nil
@@ -43,7 +44,7 @@ extension String {
             
             str.append(self[idx])
             idx = self.index(after: idx)
-            i += 1
+            charIndex += 1
         }
         
         return str
