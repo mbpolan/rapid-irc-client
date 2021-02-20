@@ -118,6 +118,13 @@ enum AppSettings: String {
     case username = "username"
 }
 
+extension UserDefaults {
+    
+    func stringOrDefault(_ key: AppSettings) -> String {
+        return string(forKey: key.rawValue) ?? ""
+    }
+}
+
 extension Notification.Name {
     static let connectToServer = Notification.Name("connect_to_server")
     

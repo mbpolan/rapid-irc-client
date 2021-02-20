@@ -49,7 +49,7 @@ extension NetworkAction {
         self.disconnect != nil
     }
 
-    internal var messageSent: (channel: IRCChannel, rawMessage: String)? {
+    internal var messageSent: (channel: IRCChannel?, rawMessage: String)? {
         get {
             guard case let .messageSent(channel, rawMessage) = self else { return nil }
             return (channel, rawMessage)

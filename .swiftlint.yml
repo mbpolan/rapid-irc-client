@@ -19,6 +19,7 @@ identifier_name:
     error: 1
   excluded:
     - id
+    - it
     - ui
     - api
     - URL

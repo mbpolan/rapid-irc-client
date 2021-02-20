@@ -13,7 +13,7 @@ enum NetworkAction {
     case connect(serverInfo: ServerInfo, joinChannelNames: [String]? = [])
     case reconnect(connection: Connection, joinChannelNames: [String]? = [])
     case disconnect(connection: Connection)
-    case messageSent(channel: IRCChannel, rawMessage: String)
+    case messageSent(channel: IRCChannel?, rawMessage: String)
     case operatorLogin(connection: Connection, username: String, password: String)
     case disconnectAllForSleep(completion: () -> Void)
     

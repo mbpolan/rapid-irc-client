@@ -16,9 +16,9 @@ struct QuickConnectSheet: View {
     
     var onClose: (Result) -> Void
     
-    @State private var nick = UserDefaults.standard.string(forKey: AppSettings.preferredNick.rawValue) ?? ""
-    @State private var realName = UserDefaults.standard.string(forKey: AppSettings.realName.rawValue) ?? ""
-    @State private var username = UserDefaults.standard.string(forKey: AppSettings.username.rawValue) ?? ""
+    @State private var nick = UserDefaults.standard.stringOrDefault(AppSettings.preferredNick)
+    @State private var realName = UserDefaults.standard.stringOrDefault(AppSettings.realName)
+    @State private var username = UserDefaults.standard.stringOrDefault(AppSettings.username)
     @State private var password = ""
     @State private var server = "localhost"
     @State private var port = "6667"

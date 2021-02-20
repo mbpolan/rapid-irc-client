@@ -386,7 +386,7 @@ class NetworkMiddleware: Middleware {
             
             switch text.lowercased() {
             // prefix away messages with a leading colon
-            case _ where text.starts(with: "/away"):
+            case let it where it.starts(with: "/away"):
                 let parts = text.components(separatedBy: " ")
                 
                 // if there is at least one parameter, that implies there is an away message
@@ -397,7 +397,7 @@ class NetworkMiddleware: Middleware {
                 }
                 
             // add the origin name to a ping commnd
-            case _ where text.starts(with: "/ping"):
+            case let it where it.starts(with: "/ping"):
                 let state = getState()
                 guard let currentChannel = state.ui.currentChannel else { break }
                 
@@ -411,7 +411,7 @@ class NetworkMiddleware: Middleware {
                 
             // when joining a previously parted channel, we can automatically add the channel name to the join
             // command to effectively "rejoin" that channel without the user explicitly stating the channel name
-            case _ where text.starts(with: "/join"):
+            case let it where it.starts(with: "/join"):
                 let state = getState()
                 guard let currentChannel = state.ui.currentChannel else { break }
                 
@@ -422,7 +422,7 @@ class NetworkMiddleware: Middleware {
                 
             // when parting a channel, try and detect if we need to include the name of the currently active
             // channel in the command
-            case _ where text.starts(with: "/part"):
+            case let it where it.starts(with: "/part"):
                 let state = getState()
                 guard let currentChannel = state.ui.currentChannel else { break }
                 
@@ -446,7 +446,7 @@ class NetworkMiddleware: Middleware {
                 message = parts.joined(separator: " ")
                 
             // when setting a channel topic, set the channel name if we are currently in a channel
-            case _ where text.starts(with: "/topic"):
+            case let it where it.starts(with: "/topic"):
                 let state = getState()
                 var parts = text.components(separatedBy: " ")
                 
@@ -466,7 +466,7 @@ class NetworkMiddleware: Middleware {
                 message = parts.joined(separator: " ")
                 
             // when querying or changing a mode, append the channel name if it is missing
-            case _ where text.starts(with: "/mode"):
+            case let it where it.starts(with: "/mode"):
                 let state = getState()
                 guard let currentChannel = state.ui.currentChannel else { break }
                 
@@ -490,7 +490,7 @@ class NetworkMiddleware: Middleware {
                 message = parts.joined(separator: " ")
                 
             // ctcp action command
-            case _ where text.starts(with: "/me"):
+            case let it where it.starts(with: "/me"):
                 let state = getState()
                 
                 guard let currentChannel = state.ui.currentChannel,
@@ -511,7 +511,7 @@ class NetworkMiddleware: Middleware {
                 message = "/privmsg \(currentChannel.name) :\u{01}ACTION \(action)\u{01}"
                 
             // quit commands result in all channels being parted and a quit message sent to the server
-            case _ where text.starts(with: "/quit"):
+            case let it where it.starts(with: "/quit"):
                 var parts = text.components(separatedBy: " ")
                 
                 // if a message is given, prefix it with a colon
@@ -523,8 +523,36 @@ class NetworkMiddleware: Middleware {
                 
                 // defer the disconnect until after we sent the quit command
                 deferred = { [weak self] in
+                    guard let channel = channel else { return }
                     self?.output.dispatch(.network(.disconnect(connection: channel.connection)))
                 }
+            
+            // client-side command to quickly connect to a server
+            case let it where it.starts(with: "/server"):
+                // hostname and port should be in the form: xyz.com[:[+]6667]
+                let parts = text.components(separatedBy: " ")
+                if parts.count < 2 {
+                    break
+                }
+                
+                // parse the hostname and the port
+                let target = parts[1].components(separatedBy: ":")
+                let host = target[0]
+                guard let port = Int(target.count > 1 ? target[1] : "6667") else { break }
+                
+                let nick = UserDefaults.standard.stringOrDefault(AppSettings.preferredNick)
+                let realName = UserDefaults.standard.stringOrDefault(AppSettings.realName)
+                let username = UserDefaults.standard.stringOrDefault(AppSettings.username)
+                
+                output.dispatch(.ui(
+                                    .connectToServer(
+                                        serverInfo: ServerInfo(
+                                            nick: nick,
+                                            realName: realName,
+                                            username: username.isEmptyOrWhitespace ? NSUserName() : username,
+                                            host: host,
+                                            port: port,
+                                            password: nil))))
                 
             // not a command; could be a normal chat message sent in a channel. in this case, convert the plain text
             // message into a /privmsg command
@@ -554,9 +582,10 @@ class NetworkMiddleware: Middleware {
                 break
             }
             
-            // strip the leading slash if the message contains a command
+            // strip the leading slash if the message contains a command. if we are currently in some kind of
+            // channel, whether its the server channel or a user channel, send the message to the server it belongs to.
             message = message.starts(with: "/") ? message.subString(from: 1) : message
-            channel.connection.client.sendMessage(message)
+            channel?.connection.client.sendMessage(message)
             
             // execute any deferred actions now
             if let finalizer = deferred {

@@ -92,8 +92,8 @@ struct ActiveChannelView: View {
     }
     
     private func submit() {
-        if let channel = viewModel.state.currentChannel, !input.isEmpty {
-            viewModel.dispatch(.sendMessage(channel, input))
+        if !input.isEmpty {
+            viewModel.dispatch(.sendMessage(viewModel.state.currentChannel, input))
             
             // push the current text to our history and reset the history index
             history.insert(input, at: 0)
@@ -126,7 +126,7 @@ enum ActiveChannelViewModel {
     }
     
     enum ViewAction {
-        case sendMessage(IRCChannel, String)
+        case sendMessage(IRCChannel?, String)
     }
     
     private static func transform(viewAction: ViewAction) -> AppAction? {
