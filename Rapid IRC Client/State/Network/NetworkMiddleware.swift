@@ -538,7 +538,23 @@ class NetworkMiddleware: Middleware {
                 // parse the hostname and the port
                 let target = parts[1].components(separatedBy: ":")
                 let host = target[0]
-                guard let port = Int(target.count > 1 ? target[1] : "6667") else { break }
+                
+                // the port can be prefixed by a plus sign to indicate a secure connection
+                var secure = false
+                var targetPort: Int?
+                if target.count > 1 {
+                    var portString = target[1]
+                    if portString.starts(with: "+") {
+                        secure = true
+                        portString = String(portString.dropFirst())
+                    }
+                    
+                    targetPort = Int(portString)
+                } else {
+                    targetPort = 6667
+                }
+                
+                guard let port = targetPort else { break }
                 
                 let nick = UserDefaults.standard.stringOrDefault(AppSettings.preferredNick)
                 let realName = UserDefaults.standard.stringOrDefault(AppSettings.realName)
@@ -547,7 +563,7 @@ class NetworkMiddleware: Middleware {
                 output.dispatch(.ui(
                                     .connectToServer(
                                         serverInfo: ServerInfo(
-                                            secure: false,
+                                            secure: secure,
                                             nick: nick,
                                             realName: realName,
                                             username: username.isEmptyOrWhitespace ? NSUserName() : username,

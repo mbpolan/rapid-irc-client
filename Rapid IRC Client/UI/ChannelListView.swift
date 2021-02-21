@@ -55,35 +55,43 @@ struct ChannelListView: View {
             ? .headline
             : Font.headline.italic()
         
-        return Text(server.name)
-            .font(fontStyle)
-            .contextMenu {
-                if server.active {
-                    Button("Disconnect") {
-                        guard let connection = server.connection else { return }
-                        self.viewModel.dispatch(.disconnect(connection))
-                    }
-                } else {
-                    Button("Connect") {
-                        guard let connection = server.connection else { return }
-                        self.viewModel.dispatch(.reconnect(connection))
-                    }
-                }
-                
-                Divider()
-                
-                Button("Become Operator") {
+        return HStack {
+            // show an icon to indicate a secure connection
+            if server.connection?.client.server.secure == true {
+                Image(systemName: "lock.fill")
+                    .help("This connection is secure")
+            }
+            
+            Text(server.name)
+        }
+        .font(fontStyle)
+        .contextMenu {
+            if server.active {
+                Button("Disconnect") {
                     guard let connection = server.connection else { return }
-                    self.viewModel.dispatch(.requestOperator(connection))
+                    self.viewModel.dispatch(.disconnect(connection))
                 }
-                
-                Divider()
-                
-                Button("Close") {
+            } else {
+                Button("Connect") {
                     guard let connection = server.connection else { return }
-                    self.viewModel.dispatch(.closeServer(connection))
+                    self.viewModel.dispatch(.reconnect(connection))
                 }
             }
+            
+            Divider()
+            
+            Button("Become Operator") {
+                guard let connection = server.connection else { return }
+                self.viewModel.dispatch(.requestOperator(connection))
+            }
+            
+            Divider()
+            
+            Button("Close") {
+                guard let connection = server.connection else { return }
+                self.viewModel.dispatch(.closeServer(connection))
+            }
+        }
     }
     
     private func makeChannelItem(_ channel: ChannelListViewModel.ListItem) -> some View {
