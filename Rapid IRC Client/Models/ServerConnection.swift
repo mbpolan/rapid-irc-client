@@ -6,6 +6,7 @@
 //
 
 import NIO
+import NIOSSL
 import SwiftUI
 
 /// A connection to an IRC server.
@@ -48,8 +49,35 @@ class ServerConnection {
         let bootstrap = ClientBootstrap.init(group: group)
             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .channelInitializer { channel in
-                self.handler = ClientHandler(self, channel)
-                return channel.pipeline.addHandler(self.handler!)
+                var handlers: [ChannelHandler] = []
+                
+                do {
+                    // initialize our own irc protocol handler
+                    let ourHandler = ClientHandler(self, channel)
+                    self.handler = ourHandler
+                    
+                    // initialize a handler for securing the connection with tls, if requested
+                    if self.server.secure {
+                        var configuration = TLSConfiguration.forClient()
+                        configuration.maximumTLSVersion = .tlsv12
+                        configuration.certificateVerification = .fullVerification
+                        
+                        let sslContext = try NIOSSLContext(configuration: configuration)
+                        let sslHandler = try NIOSSLClientHandler(
+                            context: sslContext,
+                            serverHostname: nil
+                        )
+                        
+                        handlers.append(sslHandler)
+                    }
+                    
+                    handlers.append(ourHandler)
+                } catch let error {
+                    print("ERROR: failed to prepare SSL: \(error.localizedDescription)")
+                    status(.failure(error))
+                }
+                
+                return channel.pipeline.addHandlers(handlers)
             }
         
         DispatchQueue.global(qos: .userInitiated).async {
@@ -172,6 +200,32 @@ extension ServerConnection {
         
         func errorCaught(context: ChannelHandlerContext, error: Error) {
             print(error)
+            
+            // take the default error description by default
+            var text = error.localizedDescription
+            
+            // depending on the error, try to provide some more context to the user
+            switch error {
+            case let sslError as NIOSSLExtraError:
+                switch sslError {
+                case .failedToValidateHostname:
+                    text = "SSL error: failed to validate the server hostname."
+                    
+                default:
+                    text = "SSL error: an unknown problem prevented a secure connection from being established."
+                }
+                
+                text = "\(text) Reason: \(sslError.description)"
+            default:
+                break
+            }
+            
+            self.connection.store.dispatch(.network(
+                                            .errorReceived(
+                                                connection: self.connection.connection,
+                                                message: ChannelMessage(
+                                                    text: text,
+                                                    variant: .error))))
         }
         
         func send(_ message: String) {

@@ -7,10 +7,11 @@
 
 /// Connection information for an IRC server.
 struct ServerInfo: Equatable {
-    var nick: String
-    var realName: String
-    var username: String
-    var host: String
-    var port: Int
-    var password: String?
+    let secure: Bool
+    let nick: String
+    let realName: String
+    let username: String
+    let host: String
+    let port: Int
+    let password: String?
 }

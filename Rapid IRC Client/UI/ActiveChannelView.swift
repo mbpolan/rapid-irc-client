@@ -157,11 +157,13 @@ struct ActiveChannelView_Previews: PreviewProvider {
             connection: Connection(
                 name: "mike",
                 serverInfo: ServerInfo(
+                    secure: false,
                     nick: "mike",
                     realName: "Rapid User",
                     username: "user",
                     host: "localhost",
-                    port: 6667),
+                    port: 6667,
+                    password: nil),
                 store: store),
             name: "mike",
             descriptor: .multiUser,

@@ -9,6 +9,7 @@ target 'Rapid IRC Client' do
   pod "Sourcery"
   pod "CombineRex"
   pod "SwiftNIO"
+  pod "SwiftNIOSSL"
   pod "SwiftLint"
   pod "Introspect"
 

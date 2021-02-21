@@ -1,5 +1,8 @@
 PODS:
   - CNIOAtomics (2.25.1)
+  - CNIOBoringSSL (2.10.3)
+  - CNIOBoringSSLShims (2.10.3):
+    - CNIOBoringSSL (= 2.10.3)
   - CNIODarwin (2.25.1)
   - CNIOLinux (2.25.1)
   - CNIOSHA1 (2.25.1)
@@ -18,6 +21,14 @@ PODS:
     - SwiftNIOConcurrencyHelpers (= 2.25.1)
   - SwiftNIOConcurrencyHelpers (2.25.1):
     - CNIOAtomics (= 2.25.1)
+  - SwiftNIOSSL (2.10.3):
+    - CNIOBoringSSL (= 2.10.3)
+    - CNIOBoringSSLShims (= 2.10.3)
+    - SwiftNIO (< 3, >= 2.15.0)
+    - SwiftNIOConcurrencyHelpers (< 3, >= 2.15.0)
+    - SwiftNIOTLS (< 3, >= 2.15.0)
+  - SwiftNIOTLS (2.25.1):
+    - SwiftNIO (= 2.25.1)
   - SwiftRex (0.8.2)
 
 DEPENDENCIES:
@@ -26,10 +37,13 @@ DEPENDENCIES:
   - Sourcery
   - SwiftLint
   - SwiftNIO
+  - SwiftNIOSSL
 
 SPEC REPOS:
   trunk:
     - CNIOAtomics
+    - CNIOBoringSSL
+    - CNIOBoringSSLShims
     - CNIODarwin
     - CNIOLinux
     - CNIOSHA1
@@ -40,10 +54,14 @@ SPEC REPOS:
     - SwiftLint
     - SwiftNIO
     - SwiftNIOConcurrencyHelpers
+    - SwiftNIOSSL
+    - SwiftNIOTLS
     - SwiftRex
 
 SPEC CHECKSUMS:
   CNIOAtomics: 2ae668942b9e7ac71e0fe286d11ac9b4fe329024
+  CNIOBoringSSL: 8e20acf863216a6d7b75a56fe0567a36147d8ee0
+  CNIOBoringSSLShims: 72cc9d43e6f5d8a137a2699eb08a0c67865c9797
   CNIODarwin: 3874630a0e3506c3e86f272ad436103d27055831
   CNIOLinux: e6394d7fd56d36ff43ada5796e9d96c14fcb3546
   CNIOSHA1: 43c4a0cfdea5e8be20927d9d2237ebe4233071f8
@@ -54,8 +72,10 @@ SPEC CHECKSUMS:
   SwiftLint: 4fa9579c63416865179bc416f0a92d55f009600d
   SwiftNIO: 3f9a197581f6dfebf65a5c85099f25197d892c8c
   SwiftNIOConcurrencyHelpers: 3670690a0fb8d8a0a4759804d07aaf89c9599839
+  SwiftNIOSSL: ac6e05adff65df9a3b518bbd27ff1f152fa82999
+  SwiftNIOTLS: 434418842a6bebc21864ec84229e5e3d2762ca0b
   SwiftRex: 9b88839d283c8b0b09833a8311c736eaa0ea2680
 
-PODFILE CHECKSUM: 28b4fa52e3fa767c34059da8672d270b08f2a14e
+PODFILE CHECKSUM: e2891e263bb7e126fda02a6c889b8ef8aeb3e286
 
 COCOAPODS: 1.10.0

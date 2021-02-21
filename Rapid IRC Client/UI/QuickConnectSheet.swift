@@ -22,6 +22,7 @@ struct QuickConnectSheet: View {
     @State private var password = ""
     @State private var server = "localhost"
     @State private var port = "6667"
+    @State private var secure = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -45,7 +46,11 @@ struct QuickConnectSheet: View {
                 TextField("", text: $port)
                 
                 Text("Password")
-                SecureField("", text: $password)
+                SecureField("(optional)", text: $password)
+            }
+            
+            Toggle(isOn: $secure) {
+                Text("Secure connection using encrytion")
             }
             
             Divider()
@@ -65,6 +70,7 @@ struct QuickConnectSheet: View {
                     onClose(Result(
                                 accepted: true,
                                 server: ServerInfo(
+                                    secure: secure,
                                     nick: nick.trimmingCharacters(in: .whitespaces),
                                     realName: realName.trimmingCharacters(in: .whitespaces),
                                     username: effectiveUsername.trimmingCharacters(in: .whitespaces),

@@ -547,6 +547,7 @@ class NetworkMiddleware: Middleware {
                 output.dispatch(.ui(
                                     .connectToServer(
                                         serverInfo: ServerInfo(
+                                            secure: false,
                                             nick: nick,
                                             realName: realName,
                                             username: username.isEmptyOrWhitespace ? NSUserName() : username,
