@@ -48,9 +48,11 @@ enum Command {
     case userHost
     case unAway
     case nowAway
+    case who
     case whoIsUser
     case whoIsServer
     case whoIsIdle
+    case endOfWho
     case endOfWhoIs
     case endOfWhoIsChannels
     case channelListStart
@@ -164,6 +166,8 @@ extension Command {
             return .whoIsUser
         case "312":
             return .whoIsServer
+        case "315":
+            return .endOfWho
         case "317":
             return .whoIsIdle
         case "318":
@@ -188,6 +192,8 @@ extension Command {
             return .inviting
         case "351":
             return .version
+        case "352":
+            return .who
         case "353":
             return .nameReply
         case "366":

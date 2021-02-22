@@ -305,6 +305,8 @@ extension ServerConnection {
                 handleMotd(ircMessage)
             case .inviting:
                 handleInviting(ircMessage)
+            case .who:
+                handleWho(ircMessage)
             case.created,
                 .myInfo,
                 .iSupport,
@@ -335,6 +337,7 @@ extension ServerConnection {
                 .endOfInfo,
                 .serverMotd,
                 .endMotd,
+                .endOfWho,
                 .version,
                 .youreOperator,
                 .time:
@@ -985,6 +988,40 @@ extension ServerConnection {
                                             connection: self.connection.connection,
                                             channelName: channelName,
                                             nick: nick)))
+        }
+        
+        private func handleWho(_ message: IRCMessage) {
+            // expect at least five parameters
+            if message.parameters.count < 5 {
+                print("ERROR: not enough params in WHO reply: \(message)")
+                return
+            }
+            
+            // first parameter is the channel name the user is part of (or asterisk)
+            let channelName = message.parameters[0]
+            
+            // second parameter is the username of the user
+            let username = message.parameters[1]
+            
+            // third parameter is the hostname of the user
+            let hostname = message.parameters[2]
+            
+            // fourth parameter is the server the user connected to
+            let server = message.parameters[3]
+            
+            // fifth parameter is the user's nick
+            let nick = message.parameters[4]
+            
+            // form a message and push it to the server channel
+            let text = "\(channelName) - \(nick) (\(username)@\(hostname)) \(server)"
+            
+            connection.store.dispatch(.network(
+                                        .messageReceived(
+                                            connection: self.connection.connection,
+                                            channelName: Connection.serverChannel,
+                                            message: ChannelMessage(
+                                                text: text,
+                                                variant: .other))))
         }
         
         private func handleServerMessage(_ message: IRCMessage) {
