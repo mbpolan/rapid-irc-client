@@ -158,6 +158,7 @@ struct ActiveChannelView_Previews: PreviewProvider {
                 name: "mike",
                 serverInfo: ServerInfo(
                     secure: false,
+                    sslVerificationMode: .full,
                     nick: "mike",
                     realName: "Rapid User",
                     username: "user",

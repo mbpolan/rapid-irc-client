@@ -8,6 +8,7 @@
 /// Connection information for an IRC server.
 struct ServerInfo: Equatable {
     let secure: Bool
+    let sslVerificationMode: SSLVerificationMode?
     let nick: String
     let realName: String
     let username: String

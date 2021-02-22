@@ -60,12 +60,23 @@ class ServerConnection {
                     if self.server.secure {
                         var configuration = TLSConfiguration.forClient()
                         configuration.maximumTLSVersion = .tlsv12
-                        configuration.certificateVerification = .fullVerification
+                        
+                        // configure the certificate verification strategy
+                        switch self.server.sslVerificationMode {
+                        case .full:
+                            configuration.certificateVerification = .fullVerification
+                        case .ignoreHostnames:
+                            configuration.certificateVerification = .noHostnameVerification
+                        case .disabled:
+                            configuration.certificateVerification = .none
+                        default:
+                            break
+                        }
                         
                         let sslContext = try NIOSSLContext(configuration: configuration)
                         let sslHandler = try NIOSSLClientHandler(
                             context: sslContext,
-                            serverHostname: nil
+                            serverHostname: self.server.host
                         )
                         
                         handlers.append(sslHandler)

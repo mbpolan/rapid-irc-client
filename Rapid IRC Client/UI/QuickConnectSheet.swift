@@ -66,11 +66,13 @@ struct QuickConnectSheet: View {
                 Button("Connect") {
                     // default to the system username if not provided
                     let effectiveUsername = username.isEmptyOrWhitespace ? NSUserName() : username
+                    let sslVerificationMode = UserDefaults.standard.sslVerificationModeOrDefault()
                     
                     onClose(Result(
                                 accepted: true,
                                 server: ServerInfo(
                                     secure: secure,
+                                    sslVerificationMode: sslVerificationMode,
                                     nick: nick.trimmingCharacters(in: .whitespaces),
                                     realName: realName.trimmingCharacters(in: .whitespaces),
                                     username: effectiveUsername.trimmingCharacters(in: .whitespaces),

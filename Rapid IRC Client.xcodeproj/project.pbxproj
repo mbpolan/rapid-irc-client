@@ -42,6 +42,7 @@
 		2799122B25B533CD004D0DDC /* ServersSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799122A25B533CD004D0DDC /* ServersSettingsView.swift */; };
 		2799124025B6067F004D0DDC /* CommandTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799123F25B6067F004D0DDC /* CommandTextField.swift */; };
 		2799124D25BBABF9004D0DDC /* CTCPCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799124C25BBABF9004D0DDC /* CTCPCommand.swift */; };
+		279B6CA625E33DA800B69B53 /* SecuritySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279B6CA525E33DA800B69B53 /* SecuritySettingsView.swift */; };
 		279F87FB25BE42D600DA9F66 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FA25BE42D600DA9F66 /* DateFormatter.swift */; };
 		279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */; };
 		279F881825C5078A00DA9F66 /* FormattedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F881725C5078A00DA9F66 /* FormattedText.swift */; };
@@ -120,6 +121,7 @@
 		2799122A25B533CD004D0DDC /* ServersSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServersSettingsView.swift; sourceTree = "<group>"; };
 		2799123F25B6067F004D0DDC /* CommandTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandTextField.swift; sourceTree = "<group>"; };
 		2799124C25BBABF9004D0DDC /* CTCPCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTCPCommand.swift; sourceTree = "<group>"; };
+		279B6CA525E33DA800B69B53 /* SecuritySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsView.swift; sourceTree = "<group>"; };
 		279F87FA25BE42D600DA9F66 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorLoginSheet.swift; sourceTree = "<group>"; };
 		279F881725C5078A00DA9F66 /* FormattedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedText.swift; sourceTree = "<group>"; };
@@ -344,23 +346,24 @@
 		27CF75192544B9FE00DA4598 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				27CF74CC2543ABD900DA4598 /* ContentView.swift */,
-				27CF752F2544DE2A00DA4598 /* QuickConnectSheet.swift */,
-				2757C2D3254A5377002335CB /* MessageView.swift */,
-				2757C2EB254A5873002335CB /* ChannelListView.swift */,
 				2757C2F0254A5AD5002335CB /* ActiveChannelView.swift */,
-				2799121B25B4B5DE004D0DDC /* UserListView.swift */,
-				2799122025B53240004D0DDC /* GeneralSettingsView.swift */,
-				2799122525B532D2004D0DDC /* SettingsView.swift */,
-				2799122A25B533CD004D0DDC /* ServersSettingsView.swift */,
-				2799123F25B6067F004D0DDC /* CommandTextField.swift */,
-				279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */,
-				279F881725C5078A00DA9F66 /* FormattedText.swift */,
+				2757C2EB254A5873002335CB /* ChannelListView.swift */,
 				276CC0C825D76EA800BD7606 /* ChannelPropertiesSheet.swift */,
 				276CC0FC25DB456400BD7606 /* ChannelTopicSheet.swift */,
-				276CC10925DB66B400BD7606 /* UserInfoPopover.swift */,
-				276CC10E25DB672200BD7606 /* KickUserPopover.swift */,
+				2799123F25B6067F004D0DDC /* CommandTextField.swift */,
+				27CF74CC2543ABD900DA4598 /* ContentView.swift */,
+				279F881725C5078A00DA9F66 /* FormattedText.swift */,
+				2799122025B53240004D0DDC /* GeneralSettingsView.swift */,
 				276CC11325DB685E00BD7606 /* InviteUserPopover.swift */,
+				276CC10E25DB672200BD7606 /* KickUserPopover.swift */,
+				2757C2D3254A5377002335CB /* MessageView.swift */,
+				279F87FF25C2324600DA9F66 /* OperatorLoginSheet.swift */,
+				27CF752F2544DE2A00DA4598 /* QuickConnectSheet.swift */,
+				2799122A25B533CD004D0DDC /* ServersSettingsView.swift */,
+				2799122525B532D2004D0DDC /* SettingsView.swift */,
+				276CC10925DB66B400BD7606 /* UserInfoPopover.swift */,
+				2799121B25B4B5DE004D0DDC /* UserListView.swift */,
+				279B6CA525E33DA800B69B53 /* SecuritySettingsView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -707,6 +710,7 @@
 				2799121125B2A735004D0DDC /* UIMiddleware.swift in Sources */,
 				2799122125B53240004D0DDC /* GeneralSettingsView.swift in Sources */,
 				279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */,
+				279B6CA625E33DA800B69B53 /* SecuritySettingsView.swift in Sources */,
 				27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */,
 				27A1E27525D373DB00124755 /* ChannelMode.swift in Sources */,
 				2757C2E7254A575D002335CB /* Types.swift in Sources */,

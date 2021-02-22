@@ -559,11 +559,13 @@ class NetworkMiddleware: Middleware {
                 let nick = UserDefaults.standard.stringOrDefault(AppSettings.preferredNick)
                 let realName = UserDefaults.standard.stringOrDefault(AppSettings.realName)
                 let username = UserDefaults.standard.stringOrDefault(AppSettings.username)
+                let sslVerificationMode = UserDefaults.standard.sslVerificationModeOrDefault()
                 
                 output.dispatch(.ui(
                                     .connectToServer(
                                         serverInfo: ServerInfo(
                                             secure: secure,
+                                            sslVerificationMode: sslVerificationMode,
                                             nick: nick,
                                             realName: realName,
                                             username: username.isEmptyOrWhitespace ? NSUserName() : username,

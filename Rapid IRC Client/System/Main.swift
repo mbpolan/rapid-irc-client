@@ -116,9 +116,28 @@ enum AppSettings: String {
     case realName = "realName"
     case preferredNick = "preferredNick1"
     case username = "username"
+    case sslVerificationMode = "sslVerificationMode"
+}
+
+enum SSLVerificationMode: Int, Identifiable, CaseIterable {
+    case full
+    case ignoreHostnames
+    case disabled
+    
+    var id: Int {
+        rawValue
+    }
 }
 
 extension UserDefaults {
+    
+    func sslVerificationModeOrDefault() -> SSLVerificationMode {
+        if let mode = SSLVerificationMode(rawValue: integer(forKey: AppSettings.sslVerificationMode.rawValue)) {
+            return mode
+        }
+        
+        return .full
+    }
     
     func stringOrDefault(_ key: AppSettings) -> String {
         return string(forKey: key.rawValue) ?? ""
