@@ -60,6 +60,9 @@ struct ChannelListView: View {
             if server.connection?.client.server.secure == true {
                 Image(systemName: "lock.fill")
                     .help("This connection is secure")
+            } else {
+                Image(systemName: "lock.slash")
+                    .help("This connection is not secure")
             }
             
             Text(server.name)
