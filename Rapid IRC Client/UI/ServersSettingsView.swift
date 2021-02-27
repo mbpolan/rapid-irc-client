@@ -12,29 +12,20 @@ import SwiftUI
 /// View for displaying user preferences related to saved IRC servers.
 struct ServerSettingsView: View {
     
-    @AppStorage(AppSettings.savedServers.rawValue) private var servers: SavedServerInfoList = SavedServerInfoList()
-    @State private var selection: Bool = false
-    @State private var selectedServer: SavedServerInfo = .empty
+    @State private var servers: [SavedServerInfo] = []
+    @State private var selectedIndex: Int = -1
     
     var body: some View {
-        let selectedServerBinding = Binding<SavedServerInfo?>(
-            get: { self.selectedServer },
-            set: { value in
-                self.selection = value != nil
-                self.selectedServer = value ?? .empty
-            }
-        )
-        
         return HStack {
-            ServerListView(servers: $servers, selectedServer: selectedServerBinding)
+            ServerListView(servers: $servers, selectedIndex: $selectedIndex)
                 .border(Color(red: 0.3, green: 0.3, blue: 0.3, opacity: 1.0), width: 1)
                 .frame(minWidth: 150, maxWidth: 150, minHeight: 320)
                 .padding(.trailing, 5)
                 .fixedSize()
             
             HStack {
-                if selection {
-                    ServerRowView(server: selectedServer)
+                if selectedIndex > -1 {
+                    ServerRowView(server: servers[selectedIndex])
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     Text("No server selected")
@@ -45,6 +36,20 @@ struct ServerSettingsView: View {
         }
         .padding()
         .frame(width: 600, height: 350, alignment: .top)
+        .onAppear {
+            // if an existing user preference exists, deserialize it as a json string
+            if let savedData = UserDefaults.standard.data(forKey: AppSettings.savedServers.rawValue),
+               let data = try? JSONDecoder().decode([SavedServerInfo].self, from: savedData) {
+                servers = data
+            }
+        }
+        .onDisappear {
+            // serialize the list of servers as a json string and save it to user defaults
+            if let rawData = try? JSONEncoder().encode(servers) {
+                UserDefaults.standard.set(rawData,
+                                          forKey: AppSettings.savedServers.rawValue)
+            }
+        }
     }
 }
 
@@ -54,25 +59,25 @@ struct ServerSettingsView: View {
 struct ServerListView: View {
     
     @Binding var servers: [SavedServerInfo]
-    @Binding var selectedServer: SavedServerInfo?
+    @Binding var selectedIndex: Int
     
     var body: some View {
-        VStack(alignment: .leading) {
+        let selectedId: UUID = selectedIndex > -1 ? servers[selectedIndex].id : UUID()
+        
+        return VStack(alignment: .leading) {
             ScrollView {
                 ForEach(servers, id: \.id) { server in
                     HStack {
                         Text(server.label)
-                            .foregroundColor(server.id == selectedServer?.id ? .white : .primary)
+                            .foregroundColor(server.id == selectedId ? .white : .primary)
                             .padding(.leading, 5)
                         
                         Spacer()
                     }
                     .contentShape(Rectangle())
                     .frame(maxWidth: .infinity, minHeight: 25)
-                    .background(server.id == selectedServer?.id ? Color.accentColor : Color.clear)
-                    .onTapGesture {
-                        self.selectedServer = server
-                    }
+                    .background(server.id == selectedId ? Color.accentColor : Color.clear)
+                    .onTapGesture { handleSelectServer(server) }
                 }
             }
 
@@ -86,12 +91,16 @@ struct ServerListView: View {
                     Image(systemName: "minus")
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                .disabled(selectedServer == nil)
+                .disabled(selectedIndex == -1)
 
                 Spacer()
             }
             .padding(5)
         }
+    }
+    
+    private func handleSelectServer(_ server: SavedServerInfo) {
+        self.selectedIndex = servers.firstIndex(where: { $0.id == server.id }) ?? -1
     }
     
     private func handleAddServer() {
@@ -109,9 +118,9 @@ struct ServerListView: View {
     }
 
     private func handleRemoveServer() {
-        if let selectedServer = selectedServer,
-           let idx = servers.firstIndex(where: { $0.id == selectedServer.id }) {
-            servers.remove(at: idx)
+        if selectedIndex > -1 {
+            servers.remove(at: selectedIndex)
+            selectedIndex = -1
         }
     }
 }
@@ -290,28 +299,6 @@ class SavedServerInfo: Identifiable, ObservableObject, Codable {
         try container.encode(port, forKey: .port)
         try container.encode(password, forKey: .password)
     }
-}
-
-typealias SavedServerInfoList = [SavedServerInfo]
-
-extension SavedServerInfoList: RawRepresentable {
-    public init?(rawValue: String) {
-            guard let data = rawValue.data(using: .utf8),
-                let result = try? JSONDecoder().decode(SavedServerInfoList.self, from: data) else {
-                return nil
-            }
-        
-            self = result
-        }
-
-        public var rawValue: String {
-            guard let data = try? JSONEncoder().encode(self),
-                let result = String(data: data, encoding: .utf8) else {
-                return "[]"
-            }
-            
-            return result
-        }
 }
 
 // MARK: - Preview
