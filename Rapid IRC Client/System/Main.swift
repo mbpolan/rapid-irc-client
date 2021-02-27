@@ -117,9 +117,10 @@ enum AppSettings: String {
     case preferredNick = "preferredNick1"
     case username = "username"
     case sslVerificationMode = "sslVerificationMode"
+    case savedServers = "savedServers"
 }
 
-enum SSLVerificationMode: Int, Identifiable, CaseIterable {
+enum SSLVerificationMode: Int, Identifiable, CaseIterable, Codable {
     case full
     case ignoreHostnames
     case disabled

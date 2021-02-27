@@ -22,6 +22,12 @@ struct SettingsView: View {
                 }
                 .tag(Tabs.general)
             
+            ServerSettingsView()
+                .tabItem {
+                    Label("Servers", systemImage: "network")
+                }
+                .tag(Tabs.servers)
+            
             SecuritySettingsView()
                 .tabItem {
                     Label("Security", systemImage: "key")
@@ -35,6 +41,7 @@ struct SettingsView: View {
 extension SettingsView {
     private enum Tabs: Hashable {
         case general
+        case servers
         case security
     }
 }
