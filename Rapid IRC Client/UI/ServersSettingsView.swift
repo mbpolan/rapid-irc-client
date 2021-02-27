@@ -12,20 +12,19 @@ import SwiftUI
 /// View for displaying user preferences related to saved IRC servers.
 struct ServerSettingsView: View {
     
-    @State private var servers: [SavedServerInfo] = []
-    @State private var selectedIndex: Int = -1
+    @ObservedObject private var viewModel: ServerSettingsViewModel = ServerSettingsViewModel()
     
     var body: some View {
         return HStack {
-            ServerListView(servers: $servers, selectedIndex: $selectedIndex)
+            ServerListView(viewModel: viewModel)
                 .border(Color(red: 0.3, green: 0.3, blue: 0.3, opacity: 1.0), width: 1)
                 .frame(minWidth: 150, maxWidth: 150, minHeight: 320)
                 .padding(.trailing, 5)
                 .fixedSize()
             
             HStack {
-                if selectedIndex > -1 {
-                    ServerRowView(server: servers[selectedIndex])
+                if viewModel.hasSelection {
+                    ServerRowView(viewModel: viewModel)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     Text("No server selected")
@@ -40,16 +39,34 @@ struct ServerSettingsView: View {
             // if an existing user preference exists, deserialize it as a json string
             if let savedData = UserDefaults.standard.data(forKey: AppSettings.savedServers.rawValue),
                let data = try? JSONDecoder().decode([SavedServerInfo].self, from: savedData) {
-                servers = data
+                viewModel.servers = data
             }
         }
         .onDisappear {
             // serialize the list of servers as a json string and save it to user defaults
-            if let rawData = try? JSONEncoder().encode(servers) {
+            if let rawData = try? JSONEncoder().encode(viewModel.servers) {
                 UserDefaults.standard.set(rawData,
                                           forKey: AppSettings.savedServers.rawValue)
             }
         }
+    }
+}
+
+// MARK: - View Model
+
+/// View model for the server settings view and subviews.
+class ServerSettingsViewModel: ObservableObject {
+    
+    @Published var servers: [SavedServerInfo] = []
+    @Published var selectedIndex: Int = -1
+    
+    var hasSelection: Bool {
+        return selectedIndex > -1
+    }
+    
+    func addServer(_ server: SavedServerInfo) {
+        servers.append(server)
+        objectWillChange.send()
     }
 }
 
@@ -58,15 +75,14 @@ struct ServerSettingsView: View {
 /// View for displaying and manipulating a list of servers.
 struct ServerListView: View {
     
-    @Binding var servers: [SavedServerInfo]
-    @Binding var selectedIndex: Int
+    @ObservedObject var viewModel: ServerSettingsViewModel
     
     var body: some View {
-        let selectedId: UUID = selectedIndex > -1 ? servers[selectedIndex].id : UUID()
+        let selectedId: UUID = viewModel.hasSelection ? viewModel.servers[viewModel.selectedIndex].id : UUID()
         
         return VStack(alignment: .leading) {
             ScrollView {
-                ForEach(servers, id: \.id) { server in
+                ForEach(viewModel.servers, id: \.id) { server in
                     HStack {
                         Text(server.label)
                             .foregroundColor(server.id == selectedId ? .white : .primary)
@@ -91,7 +107,7 @@ struct ServerListView: View {
                     Image(systemName: "minus")
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                .disabled(selectedIndex == -1)
+                .disabled(!viewModel.hasSelection)
 
                 Spacer()
             }
@@ -100,27 +116,27 @@ struct ServerListView: View {
     }
     
     private func handleSelectServer(_ server: SavedServerInfo) {
-        self.selectedIndex = servers.firstIndex(where: { $0.id == server.id }) ?? -1
+        viewModel.selectedIndex = viewModel.servers.firstIndex(where: { $0.id == server.id }) ?? -1
     }
     
     private func handleAddServer() {
-        servers.append(SavedServerInfo(
-                        id: UUID(),
-                        label: "New Server",
-                        secure: false,
-                        sslVerificationMode: .disabled,
-                        nick: "Guest",
-                        realName: "Rapid IRC User",
-                        username: "",
-                        host: "irc.example.com",
-                        port: "6667",
-                        password: ""))
+        viewModel.addServer(SavedServerInfo(
+                                id: UUID(),
+                                label: "New Server",
+                                secure: false,
+                                sslVerificationMode: .disabled,
+                                nick: "Guest",
+                                realName: "Rapid IRC User",
+                                username: "",
+                                host: "irc.example.com",
+                                port: "6667",
+                                password: ""))
     }
 
     private func handleRemoveServer() {
-        if selectedIndex > -1 {
-            servers.remove(at: selectedIndex)
-            selectedIndex = -1
+        if viewModel.hasSelection {
+            viewModel.servers.remove(at: viewModel.selectedIndex)
+            viewModel.selectedIndex = -1
         }
     }
 }
@@ -130,7 +146,7 @@ struct ServerListView: View {
 /// View for displaying editing controls for a server.
 struct ServerRowView: View {
     
-    @ObservedObject var server: SavedServerInfo
+    @ObservedObject var viewModel: ServerSettingsViewModel
     
     private let columns = [
         GridItem(.fixed(100)),
@@ -142,39 +158,39 @@ struct ServerRowView: View {
             LazyVGrid(columns: columns, alignment: .leading) {
                 Group {
                     Text("Label")
-                    TextField("", text: $server.label)
+                    TextField("", text: $viewModel.servers[viewModel.selectedIndex].label)
                 }
                 
                 Group {
                     Text("Host")
-                    TextField("(hostname)", text: $server.host)
+                    TextField("(hostname)", text: $viewModel.servers[viewModel.selectedIndex].host)
                     
                     Text("Port")
-                    TextField("(port)", text: $server.port)
+                    TextField("(port)", text: $viewModel.servers[viewModel.selectedIndex].port)
                 }
                 
                 Group {
                     Text("Nick")
-                    TextField("(nick)", text: $server.nick)
+                    TextField("(nick)", text: $viewModel.servers[viewModel.selectedIndex].nick)
                     
                     Text("Real Name")
-                    TextField("(real name)", text: $server.realName)
+                    TextField("(real name)", text: $viewModel.servers[viewModel.selectedIndex].realName)
                 }
                 
                 Group {
                     Text("Username")
-                    TextField("(autodetect)", text: $server.username)
+                    TextField("(autodetect)", text: $viewModel.servers[viewModel.selectedIndex].username)
                     
                     Text("Password")
-                    TextField("(optional)", text: $server.password)
+                    TextField("(optional)", text: $viewModel.servers[viewModel.selectedIndex].password)
                 }
             }
             
-            Toggle(isOn: $server.secure) {
+            Toggle(isOn: $viewModel.servers[viewModel.selectedIndex].secure) {
                 Text("Secure connection using encrytion")
             }
             
-            Picker(selection: $server.sslVerificationMode, label: Text("Verify SSL Certificates")) {
+            Picker(selection: $viewModel.servers[viewModel.selectedIndex].sslVerificationMode, label: Text("Verify SSL Certificates")) {
                 ForEach(SSLVerificationMode.allCases, id: \.self) { mode in
                     switch mode {
                     case .full:
@@ -193,7 +209,7 @@ struct ServerRowView: View {
     }
 }
 
-// MARK: - Model
+// MARK: - SavedServerInfo
 
 /// Model that represents a recorded IRC server.
 class SavedServerInfo: Identifiable, ObservableObject, Codable {
