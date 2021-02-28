@@ -10,8 +10,11 @@ import SwiftUI
 @main
 struct Main: App {
     
-    @Environment(\.scenePhase) private var scenePhase: ScenePhase
     private let coordinator: Coordinator
+    private let onSavedServersChanged = NotificationCenter.default.publisher(for: .savedServersChanged)
+    
+    @Environment(\.scenePhase) private var scenePhase: ScenePhase
+    @State private var servers: [SavedServerInfo] = UserDefaults.standard.savedServerInfo()
     
     init() {
         self.coordinator = Coordinator()
@@ -26,9 +29,12 @@ struct Main: App {
     var body: some Scene {
         WindowGroup {
             ContentView(viewModel: ContentViewModel.viewModel(from: Store.instance))
+                .onReceive(onSavedServersChanged) { _ in
+                    servers = UserDefaults.standard.savedServerInfo()
+                }
         }
         .commands {
-            AppCommands()
+            AppCommands(servers: $servers)
         }
         
         Settings {
@@ -90,11 +96,13 @@ extension Main {
 
 struct AppCommands: Commands {
     
+    @Binding var servers: [SavedServerInfo]
+    
     @CommandsBuilder var body: some Commands {
         // replace the new command with a submenu of saved servers
         CommandGroup(replacing: .newItem) {
             Menu("Connect To...") {
-                ForEach(UserDefaults.standard.savedServerInfo(), id: \.id) { server in
+                ForEach(servers, id: \.id) { server in
                     Button(server.label) {
                         NotificationCenter.default.post(name: .connectToServer, object: server)
                     }
@@ -177,6 +185,8 @@ extension UserDefaults {
 extension Notification.Name {
     static let connectToServer = Notification.Name("connect_to_server")
     static let quickConnect = Notification.Name("quick_connect")
+    
+    static let savedServersChanged = Notification.Name("saved_servers_changed")
     
     static let debugSimulateSleep = Notification.Name("debug_simulate_sleep")
     static let debugSimulateWake = Notification.Name("debug_simulate_wake")

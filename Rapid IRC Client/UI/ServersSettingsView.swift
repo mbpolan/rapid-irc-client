@@ -42,6 +42,9 @@ struct ServerSettingsView: View {
         .onDisappear {
             // update user defaults with latest servers
             UserDefaults.standard.setSavedServerInfo(viewModel.servers)
+            
+            // inform listeners that this setting value has potentially changed
+            NotificationCenter.default.post(name: .savedServersChanged, object: nil)
         }
     }
 }
