@@ -91,10 +91,21 @@ extension Main {
 struct AppCommands: Commands {
     
     @CommandsBuilder var body: some Commands {
-        // replace the new window command with a connect command
+        // replace the new command with a submenu of saved servers
         CommandGroup(replacing: .newItem) {
+            Menu("Connect To...") {
+                ForEach(UserDefaults.standard.savedServerInfo(), id: \.id) { server in
+                    Button(server.label) {
+                        NotificationCenter.default.post(name: .connectToServer, object: server)
+                    }
+                }
+            }
+        }
+        
+        // replace the save command with a connect command
+        CommandGroup(replacing: .saveItem) {
             Button("Quick Connect") {
-                NotificationCenter.default.post(name: .connectToServer, object: nil)
+                NotificationCenter.default.post(name: .quickConnect, object: nil)
             }.keyboardShortcut("C", modifiers: [.control, .shift])
         }
         
@@ -140,6 +151,24 @@ extension UserDefaults {
         return .full
     }
     
+    func savedServerInfo() -> [SavedServerInfo] {
+        // if an existing user preference exists, deserialize it as a json string
+        if let savedData = UserDefaults.standard.data(forKey: AppSettings.savedServers.rawValue),
+           let data = try? JSONDecoder().decode([SavedServerInfo].self, from: savedData) {
+            return data
+        }
+        
+        return []
+    }
+    
+    func setSavedServerInfo(_ servers: [SavedServerInfo]) {
+        // serialize the list of servers as a json string and save it to user defaults
+        if let rawData = try? JSONEncoder().encode(servers) {
+            UserDefaults.standard.set(rawData,
+                                      forKey: AppSettings.savedServers.rawValue)
+        }
+    }
+    
     func stringOrDefault(_ key: AppSettings) -> String {
         return string(forKey: key.rawValue) ?? ""
     }
@@ -147,6 +176,7 @@ extension UserDefaults {
 
 extension Notification.Name {
     static let connectToServer = Notification.Name("connect_to_server")
+    static let quickConnect = Notification.Name("quick_connect")
     
     static let debugSimulateSleep = Notification.Name("debug_simulate_sleep")
     static let debugSimulateWake = Notification.Name("debug_simulate_wake")

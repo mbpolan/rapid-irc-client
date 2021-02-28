@@ -16,6 +16,7 @@ struct ContentView: View {
     @ObservedObject var viewModel: ObservableViewModel<ContentViewModel.ViewAction, ContentViewModel.ViewState>
     
     private let onConnectToServer = NotificationCenter.default.publisher(for: .connectToServer)
+    private let onQuickConnect = NotificationCenter.default.publisher(for: .quickConnect)
     
     var body: some View {
         let sheetBinding: Binding<ContentViewModel.ActiveSheet?> = Binding(
@@ -47,7 +48,12 @@ struct ContentView: View {
                     onClose: handleChannelTopic)
             }
         }
-        .onReceive(onConnectToServer) { _ in
+        .onReceive(onConnectToServer) { event in
+            if let server = event.object as? SavedServerInfo {
+                self.viewModel.dispatch(.connectToServer(server: ServerInfo(from: server)))
+            }
+        }
+        .onReceive(onQuickConnect) { _ in
             self.viewModel.dispatch(.showConnectSheet)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

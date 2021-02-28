@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		273A73C325EB0DAD007E17F0 /* SavedServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273A73C225EB0DAD007E17F0 /* SavedServerInfo.swift */; };
 		2757C2CC254A4F78002335CB /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2CB254A4F78002335CB /* Store.swift */; };
 		2757C2D4254A5377002335CB /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D3254A5377002335CB /* MessageView.swift */; };
 		2757C2DA254A5483002335CB /* NetworkReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2757C2D9254A5483002335CB /* NetworkReducer.swift */; };
@@ -86,6 +87,7 @@
 
 /* Begin PBXFileReference section */
 		22A88395C4FB638885BFDEAD /* Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rapid_IRC_Client_Rapid_IRC_ClientUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		273A73C225EB0DAD007E17F0 /* SavedServerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedServerInfo.swift; sourceTree = "<group>"; };
 		2757C2CB254A4F78002335CB /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2757C2D3254A5377002335CB /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		2757C2D9254A5483002335CB /* NetworkReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReducer.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				276CC0CD25DA242200BD7606 /* ModeFlag.swift */,
 				2757C2FC254A6A54002335CB /* ServerConnection.swift */,
 				2757C2F7254A5DE0002335CB /* ServerInfo.swift */,
+				273A73C225EB0DAD007E17F0 /* SavedServerInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -711,6 +714,7 @@
 				2799122125B53240004D0DDC /* GeneralSettingsView.swift in Sources */,
 				279F880025C2324600DA9F66 /* OperatorLoginSheet.swift in Sources */,
 				279B6CA625E33DA800B69B53 /* SecuritySettingsView.swift in Sources */,
+				273A73C325EB0DAD007E17F0 /* SavedServerInfo.swift in Sources */,
 				27A8D1F625ABDAD300468A20 /* UIState.swift in Sources */,
 				27A1E27525D373DB00124755 /* ChannelMode.swift in Sources */,
 				2757C2E7254A575D002335CB /* Types.swift in Sources */,
