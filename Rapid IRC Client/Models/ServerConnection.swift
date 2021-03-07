@@ -169,7 +169,12 @@ extension ServerConnection {
             
             let nick = connection.server.nick
             let realName = connection.server.realName
-            let username = connection.server.username
+            
+            // set a default username if none is given
+            var username = connection.server.username
+            if username.isEmptyOrWhitespace {
+                username = NSUserName()
+            }
             
             // if a password was given, send the PASS command
             if let password = connection.server.password, !password.isEmptyOrWhitespace {

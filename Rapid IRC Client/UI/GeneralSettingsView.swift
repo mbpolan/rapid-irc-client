@@ -36,7 +36,7 @@ struct GeneralSettingsView: View {
             })
         
         Form {
-            Section(header: Text("User Profile").font(.headline)) {
+            Section(header: Text("Quick Connect Profile").font(.headline)) {
                 LazyVGrid(
                     columns: profileColumns,
                     alignment: .leading) {
