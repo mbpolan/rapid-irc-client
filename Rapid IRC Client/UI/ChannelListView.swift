@@ -126,17 +126,10 @@ struct ChannelListView: View {
         return HStack {
             makeChannelIcon(channel)
             
-            // button containing the channel name
-            Button(action: {
-                if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
-                    self.viewModel.dispatch(.setChannel(target))
-                }
-            }, label: {
-                Text(channel.type == .server ? "Server" : channel.name)
-                    .foregroundColor(color)
-                    .font(fontStyle)
-            })
-            .buttonStyle(BorderlessButtonStyle())
+            // label containing the channel name
+            Text(channel.type == .server ? "Server" : channel.name)
+                .foregroundColor(color)
+                .font(fontStyle)
             
             Spacer()
             
@@ -154,6 +147,11 @@ struct ChannelListView: View {
             }
         }
         .frame(maxWidth: .infinity)
+        .onTapGesture {
+            if let target = channel.connection?.channels.first(where: { $0.id == channel.id }) {
+                self.viewModel.dispatch(.setChannel(target))
+            }
+        }
         .contextMenu {
             if channel.type != .server {
                 // show an item for inviting a user to this channel
