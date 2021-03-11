@@ -47,7 +47,8 @@ struct ActiveChannelView: View {
                 }
                 .padding(3)
                 .layoutPriority(1)
-            }.layoutPriority(2)
+            }
+            .layoutPriority(2)
             
             // display a list of users on the right side, unless we are currently in the server channel
             if viewModel.state.showUserList {

@@ -26,12 +26,21 @@ struct ContentView: View {
             set: { _ in }
         )
         
-        HSplitView {
+        NavigationView {
             ChannelListView(viewModel: ChannelListViewModel.viewModel(from: Store.instance))
                 .layoutPriority(1)
+                .toolbar {
+                    ToolbarItem(placement: .automatic) {
+                        Button(action: toggleChannelListView) {
+                            Image(systemName: "sidebar.left")
+                        }
+                    }
+                }
+            
             ActiveChannelView(viewModel: ActiveChannelViewModel.viewModel(from: Store.instance))
                 .layoutPriority(2)
         }
+        .navigationTitle(viewModel.state.currentChannelName ?? "")
         .sheet(item: sheetBinding) { sheet in
             switch sheet {
             case .connectToServer:
@@ -57,6 +66,12 @@ struct ContentView: View {
             self.viewModel.dispatch(.showConnectSheet)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private func toggleChannelListView() {
+            NSApp.keyWindow?.firstResponder?.tryToPerform(
+                #selector(NSSplitViewController.toggleSidebar(_:)),
+                with: nil)
     }
     
     private func handleConnectToServer(result: QuickConnectSheet.Result) {
@@ -108,11 +123,13 @@ enum ContentViewModel {
     }
     
     struct ViewState: Equatable {
+        let currentChannelName: String?
         var activeSheet: ActiveSheet?
         var pendingChannelAction: IRCChannel?
         
         static var empty: ViewState {
             .init(
+                currentChannelName: nil,
                 activeSheet: nil,
                 pendingChannelAction: nil)
         }
@@ -172,6 +189,7 @@ enum ContentViewModel {
     private static func transform(appState: AppState) -> ViewState {
         var activeSheet: ActiveSheet?
         var pendingChannelAction: IRCChannel?
+        var currentChanneName: String?
         
         if appState.ui.connectSheetShown {
             activeSheet = .connectToServer
@@ -185,7 +203,17 @@ enum ContentViewModel {
             pendingChannelAction = appState.ui.pendingChannelTopicChannel
         }
         
+        if let currentChannel = appState.ui.currentChannel {
+            switch currentChannel.descriptor {
+            case .server:
+                currentChanneName = currentChannel.connection.name
+            default:
+                currentChanneName = currentChannel.name
+            }
+        }
+        
         return ViewState(
+            currentChannelName: currentChanneName,
             activeSheet: activeSheet,
             pendingChannelAction: pendingChannelAction)
     }
