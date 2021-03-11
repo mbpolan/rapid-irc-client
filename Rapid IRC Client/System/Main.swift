@@ -33,6 +33,7 @@ struct Main: App {
                     servers = UserDefaults.standard.savedServerInfo()
                 }
         }
+        .windowToolbarStyle(UnifiedCompactWindowToolbarStyle())
         .commands {
             AppCommands(servers: $servers)
         }
